@@ -1,0 +1,32 @@
+language: python
+notifications:
+  email: false
+
+cache: pip
+
+python:
+  - "3.6"
+  # whitelist
+# branches:
+#   only:
+#     - master
+
+env:
+    - TRAVISCI=true
+# command to install dependencies
+install:
+    - pip install --upgrade pip
+    - pip install -r requirements.txt
+    - pip install coverage pytest-cov pytest --upgrade
+    - pip install -e .
+# command to run tests
+script:
+    - cd autodepgraph
+    - py.test --cov=autodepgraph --cov-report xml --cov-config=.coveragerc
+
+after_success:
+    # install codacy coverage plugin and sphinx only on traivs
+    - python-codacy-coverage -r coverage.xml
+    - cd ..
+    # build the docs
+    # - make -f docs/Makefile gh-pages
