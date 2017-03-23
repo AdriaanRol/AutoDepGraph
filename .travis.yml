@@ -21,7 +21,7 @@ install:
     - pip install -e .
 # command to run tests
 script:
-    - cd autodepgraph
+    # - cd autodepgraph
     - py.test --cov=autodepgraph --cov-report xml --cov-config=.coveragerc
 
 after_success:
