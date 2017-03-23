@@ -10,5 +10,5 @@ setup(name='autodepgraph',
       author_email='adriaan.rol@gmail.com',
       packages=['autodepgraph'],
       ext_package='autodepgraph',
-      requires=["pytools", "numpy(>=1.12)", "pytest", "matplotlib"]
+      requires=["pytools", "numpy(>=1.12)", "pytest", "pytest.cov", "matplotlib"]
       )
