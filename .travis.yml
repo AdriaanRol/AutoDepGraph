@@ -26,6 +26,7 @@ script:
 
 after_success:
     # install codacy coverage plugin and sphinx only on traivs
+    - pip install codacy-coverage sphinx sphinx_rtd_theme jsonschema sphinxcontrib-jsonschema
     - python-codacy-coverage -r coverage.xml
     - cd ..
     # build the docs
