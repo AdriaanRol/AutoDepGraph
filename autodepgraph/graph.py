@@ -5,6 +5,10 @@ class graph():
     """
     A class containing nodes
     """
+    def load_graph(self, graph_file):
+        """
+        Takes in a graph
+        """
 
 
 class node():
