@@ -5,9 +5,16 @@ class graph():
     """
     A class containing nodes
     """
-    def load_graph(self, graph_file):
+
+
+    def load_graph(self, filename):
         """
-        Takes in a graph
+        Saves the current graph in a text based format
+        """
+
+    def save_graph(self, filename):
+        """
+        Saves a text based representation of the current graph
         """
 
 
