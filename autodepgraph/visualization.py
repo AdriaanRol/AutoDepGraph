@@ -1,4 +1,4 @@
 """
-This module should visaulize/plot a graph
+This module should visualize/plot a graph
 plotting widget here?
 """
