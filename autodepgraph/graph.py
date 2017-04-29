@@ -2,19 +2,18 @@ from qcodes.instrument.base import Instrument
 from qcodes.instrument.parameter import ManualParameter
 from qcodes.utils import validators as vals
 import yaml
-"""
-This contains the definition
-"""
+import logging
 
 
 class Graph(Instrument):
     """
     A class containing nodes
     """
+
     def __init__(self, name):
         self.name = name
 
-        self._nodes = []
+        self._nodes = {}
 
     def load_graph(self, filename, load_node_state=False):
         """
@@ -28,19 +27,21 @@ class Graph(Instrument):
                 # no parameters indicates closed instrument -> open a new one
                 if not hasattr(node, 'parameters'):
                     node = CalibrationNode(node_snap['name'])
-            except KeyError:#node_snap['name']):
+            except KeyError:
                 # If the node does not exist, create a new node
                 node = CalibrationNode(node_snap['name'])
             # these are the directed edges of each node
-            # node.dependencies(node_snap['parameters']['dependencies'])
 
-            # these are autodepgraph specific node properties
-            # node.check_functions(node_snap['parameters']['check_functions'])
-            # node.calibrate_functions(
-                # node_snap['parameters']['calibrate_functions'])
-            # if load_node_state:
-                # node.state(node_snap['parameters']['state'])
+            pars_to_update = ['dependencies', 'check_functions',
+                              'calibrate_functions']
+            if load_node_state:
+                pars_to_update += ['state']
 
+            pars = node_snap['parameters']
+            for parname in pars_to_update:
+                val = pars[parname]['value']
+                if val is not None:
+                    node.set(parname, val)
             self.add_node(node)
 
     def save_graph(self, filename):
@@ -53,17 +54,18 @@ class Graph(Instrument):
     def snapshot(self, update=False):
         snap = {'nodes': {},
                 'meta': {}}
-        for node in self._nodes:
+        for nodename, node in self._nodes.items():
             snap['nodes'][node.name] = node.snapshot(update=update)
         return snap
 
     def add_node(self, node):
-        self._nodes += [node]
-        # self._graph['nodes'][node.name] = node
-        # self.nodes.append(node)
+        if node.name in self._nodes.keys():
+            logging.warning('Node already exists in graph')
+        self._nodes[node.name] = node
 
 
 class CalibrationNode(Instrument):
+
     def __init__(self, name):
         super().__init__(name)
         self.add_parameter('state', parameter_class=ManualParameter,

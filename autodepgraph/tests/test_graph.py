@@ -7,6 +7,7 @@ test_dir = os.path.join(adg.__path__[0], 'tests', 'test_data')
 
 
 class Test_Node(TestCase):
+
     @classmethod
     def setUpClass(self):
         self.node_A = CalibrationNode('A')
@@ -17,10 +18,16 @@ class Test_Node(TestCase):
     def test_adding_node(self):
         test_graph = Graph('test_graph_adding_node')
         nodes_before = test_graph._nodes
-        self.assertEqual(len(nodes_before), 0)
+        self.assertEqual(len(nodes_before.keys()), 0)
         test_graph.add_node(self.node_A)
         nodes_after = test_graph._nodes
-        self.assertEqual(nodes_after, [self.node_A])
+        self.assertEqual(nodes_after, {self.node_A.name: self.node_A})
+
+        # Adding the same node multiple times
+        test_graph.add_node(self.node_A)
+        test_graph.add_node(self.node_A)
+        nodes_after = test_graph._nodes
+        self.assertEqual(nodes_after, {self.node_A.name: self.node_A})
 
     def test_save_graph(self):
         test_graph = Graph('test_graph_saving')
@@ -43,34 +50,26 @@ class Test_Node(TestCase):
         # Could also test if the values of the attributes are identical
 
     def test_loading_graph_from_file(self):
-        # Save the existing graph
-        # test_graph = Graph('test_graph_loading')
-
-        # test_graph.add_node(self.node_A)
-        # test_graph.add_node(self.node_B)
-
-        # test_graph.add_node(CalibrationNode('E'))
-        # test_graph.add_node(CalibrationNode('F'))
 
         fn = os.path.join(test_dir, 'test_graph_new_nodes.yaml')
-        # test_graph.save_graph(filename=fn)
-
         new_graph = Graph('new_graph')
-        new_graph.load_graph(fn)
+        new_graph.load_graph(fn, load_node_state=False)
         # Test that both graphs refer to the same (existing) objects.
-        self.assertEqual(set([node.name for node in new_graph._nodes]),
+        self.assertEqual(set(new_graph._nodes.keys()),
                          set(['A', 'B', 'E', 'F']))
+        for nodename, node in new_graph._nodes.items():
+            self.assertEqual(node.state(), 'unknown')
 
-        # # Test that loading works when a node was closed but not deleted.
-        # # self.node_D.close()
-        # new_graph.load_graph(fn)
-        # # Test that both graphs refer to the same (existing) objects.
-        # self.assertEqual(set(new_graph._nodes), set(self.test_graph._nodes))
-        # test_graph.close()
-        # new_graph.close()
+        new_graph_2 = Graph('new_graph_2')
+        new_graph_2.load_graph(fn, load_node_state=True)
+        self.assertEqual(set(new_graph_2._nodes.keys()),
+                         set(['A', 'B', 'E', 'F']))
+        A = new_graph_2._nodes['A']
+        B = new_graph_2._nodes['B']
+        E = new_graph_2._nodes['E']
 
+        self.assertEqual(A.state(), 'good')
+        self.assertEqual(B.state(), 'bad')
+        self.assertEqual(E.state(), 'unknown')
 
-
-
-        # pass
-
+        # TODO: add a test for also loading functions
