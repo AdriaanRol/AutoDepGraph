@@ -146,14 +146,15 @@ class Test_GraphLogic(TestCase):
         self.assertEqual(self.node_b.state(), 'bad')
         self.assertEqual(self.node_c.state(), 'good')
 
-
-        @classmethod
-        def tearDownClass(self):
-            # finds and closes all qcodes instruments
+    @classmethod
+    def tearDownClass(self):
+        # finds and closes all qcodes instruments
+        try:
             all_instrs = deepcopy(list(self.node_a._all_instruments.keys()))
             for insname in all_instrs:
                 try:
                     self.node_A.find_instrument(insname).close()
                 except KeyError:
                     pass
-
+        except AttributeError:
+            pass
