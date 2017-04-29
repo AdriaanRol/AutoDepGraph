@@ -1,33 +1,69 @@
 from qcodes.instrument.base import Instrument
 from qcodes.instrument.parameter import ManualParameter
 from qcodes.utils import validators as vals
-"""
-This contains the definition
-"""
+import yaml
+import logging
 
 
-class graph():
+class Graph(Instrument):
     """
     A class containing nodes
     """
 
-    def load_graph(self, filename):
+    def __init__(self, name):
+        super().__init__(name)
+        self._nodes = {}
+
+    def load_graph(self, filename, load_node_state=False):
         """
         Loads a graph.
         """
-        raise NotImplementedError()
+        graph_snap = yaml.safe_load(open(filename, 'r'))
+        for key, node_snap in graph_snap['nodes'].items():
+            try:
+                # Look for an existing node
+                node = self.find_instrument(node_snap['name'])
+                # no parameters indicates closed instrument -> open a new one
+                if not hasattr(node, 'parameters'):
+                    node = CalibrationNode(node_snap['name'])
+            except KeyError:
+                # If the node does not exist, create a new node
+                node = CalibrationNode(node_snap['name'])
+
+            pars_to_update = ['dependencies', 'check_functions',
+                              'calibrate_functions']
+            if load_node_state:
+                pars_to_update += ['state']
+
+            pars = node_snap['parameters']
+            for parname in pars_to_update:
+                val = pars[parname]['value']
+                if val is not None:
+                    node.set(parname, val)
+            self.add_node(node)
 
     def save_graph(self, filename):
         """
         Saves a text based representation of the current graph
         """
-        raise NotImplementedError()
+        f = open(filename, 'w')
+        yaml.dump(self.snapshot(), f)
+
+    def snapshot(self, update=False):
+        snap = {'nodes': {},
+                'meta': {}}
+        for nodename, node in self._nodes.items():
+            snap['nodes'][node.name] = node.snapshot(update=update)
+        return snap
 
     def add_node(self, node):
-        self.nodes.append(node)
+        if node.name in self._nodes.keys():
+            logging.warning('Node already exists in graph')
+        self._nodes[node.name] = node
 
 
 class CalibrationNode(Instrument):
+
     def __init__(self, name):
         super().__init__(name)
         self.add_parameter('state', parameter_class=ManualParameter,
