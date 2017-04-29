@@ -2,7 +2,7 @@ from autodepgraph.node import CalibrationNode
 from unittest import TestCase
 
 
-class Test_Graph(TestCase):
+class Test_GraphLogic(TestCase):
     # Test graph:
     #     B <-- A
     #     |    /

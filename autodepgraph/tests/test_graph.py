@@ -1,4 +1,5 @@
 from unittest import TestCase
+from copy import deepcopy
 import autodepgraph as adg
 from autodepgraph.graph import CalibrationNode, Graph
 import yaml
@@ -6,7 +7,7 @@ import os
 test_dir = os.path.join(adg.__path__[0], 'tests', 'test_data')
 
 
-class Test_Node(TestCase):
+class Test_Graph(TestCase):
 
     @classmethod
     def setUpClass(self):
@@ -73,3 +74,14 @@ class Test_Node(TestCase):
         self.assertEqual(E.state(), 'unknown')
 
         # TODO: add a test for also loading functions
+
+    @classmethod
+    def tearDownClass(self):
+        # finds and closes all qcodes instruments
+        all_instrs = deepcopy(list(self.node_A._all_instruments.keys()))
+        for insname in all_instrs:
+            try:
+                self.node_A.find_instrument(insname).close()
+            except KeyError:
+                pass
+
