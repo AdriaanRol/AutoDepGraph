@@ -13,7 +13,6 @@ env:
 install:
     - pip install --upgrade pip
     - pip install -r requirements.txt
-    - pip install qcodes
     - pip install coverage pytest-cov pytest --upgrade
     - pip install codacy-coverage
     - pip install -e .
