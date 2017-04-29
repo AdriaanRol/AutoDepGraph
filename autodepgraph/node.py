@@ -16,16 +16,19 @@ class CalibrationNode(Instrument):
                            initial_value='unknown')
         self.add_parameter('dependencies',
                            docstring='a list of names of Calibration nodes',
+                           initial_value=[],
                            vals=vals.Lists(vals.Strings()),
                            parameter_class=ManualParameter)
         self.add_parameter('check_functions',
                            docstring='Name of the function that corresponds '
                                      + 'to checking the node',
+                           initial_value=[],
                            vals=vals.Lists(vals.Strings()),
                            parameter_class=ManualParameter)
         self.add_parameter('calibrate_functions',
                            docstring='Name of the function that calibrating '
                            + 'the node',
+                           initial_value=[],
                            vals=vals.Lists(vals.Strings()),
                            parameter_class=ManualParameter)
 
