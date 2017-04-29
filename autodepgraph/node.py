@@ -6,6 +6,7 @@ from qcodes.instrument.parameter import ManualParameter
 
 
 class CalibrationNode(Instrument):
+
     def __init__(self, name, verbose=False):
         super().__init__(name)
         self.add_parameter('state', parameter_class=ManualParameter,
@@ -18,11 +19,13 @@ class CalibrationNode(Instrument):
                            vals=vals.Lists(vals.Strings()),
                            parameter_class=ManualParameter)
         self.add_parameter('check_functions',
-                           docstring='Name of the function that corresponds to checking the node',
+                           docstring='Name of the function that corresponds '
+                                     + 'to checking the node',
                            vals=vals.Lists(vals.Strings()),
                            parameter_class=ManualParameter)
         self.add_parameter('calibrate_functions',
-                           docstring='Name of the function that calibrating the node',
+                           docstring='Name of the function that calibrating '
+                           + 'the node',
                            vals=vals.Lists(vals.Strings()),
                            parameter_class=ManualParameter)
 

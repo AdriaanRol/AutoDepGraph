@@ -1,5 +1,3 @@
-import autodepgraph.node_functions.calibration_functions as cal_f
-import autodepgraph.node_functions.check_functions as check_f
 from autodepgraph.node import CalibrationNode
 from unittest import TestCase
 
@@ -10,6 +8,7 @@ class Test_Graph(TestCase):
     #     |    /
     #     v   /
     #     C <-
+
     @classmethod
     def setUpClass(self):
         # Construct the nodes
