@@ -1,5 +1,6 @@
 from autodepgraph.node import CalibrationNode
 from unittest import TestCase
+from copy import deepcopy
 
 
 class Test_GraphLogic(TestCase):
@@ -144,3 +145,16 @@ class Test_GraphLogic(TestCase):
         self.assertEqual(self.node_a.state(), 'unknown')
         self.assertEqual(self.node_b.state(), 'bad')
         self.assertEqual(self.node_c.state(), 'good')
+
+    @classmethod
+    def tearDownClass(self):
+        # finds and closes all qcodes instruments
+        try:
+            all_instrs = deepcopy(list(self.node_a._all_instruments.keys()))
+            for insname in all_instrs:
+                try:
+                    self.node_A.find_instrument(insname).close()
+                except KeyError:
+                    pass
+        except AttributeError:
+            pass

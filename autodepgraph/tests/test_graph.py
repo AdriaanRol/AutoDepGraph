@@ -84,4 +84,3 @@ class Test_Graph(TestCase):
                 self.node_A.find_instrument(insname).close()
             except KeyError:
                 pass
-
