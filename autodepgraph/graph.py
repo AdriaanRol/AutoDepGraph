@@ -1,13 +1,13 @@
 from qcodes.instrument.base import Instrument
 from qcodes.instrument.parameter import ManualParameter
 from qcodes.utils import validators as vals
-from yaml import load, dump
+import yaml
 """
 This contains the definition
 """
 
 
-class Graph():
+class Graph(Instrument):
     """
     A class containing nodes
     """
@@ -16,18 +16,39 @@ class Graph():
 
         self._nodes = []
 
-    def load_graph(self, filename):
+    def load_graph(self, filename, load_node_state=False):
         """
         Loads a graph.
         """
-        raise NotImplementedError()
+        graph_snap = yaml.load(open(filename, 'r'))
+        for key, node_snap in graph_snap['nodes'].items():
+            try:
+                # Look for an existing node
+                node = self.find_instrument(node_snap['name'])
+                # no parameters indicates closed instrument -> open a new one
+                if not hasattr(node, 'parameters'):
+                    node = CalibrationNode(node_snap['name'])
+            except KeyError:#node_snap['name']):
+                # If the node does not exist, create a new node
+                node = CalibrationNode(node_snap['name'])
+            # these are the directed edges of each node
+            # node.dependencies(node_snap['parameters']['dependencies'])
+
+            # these are autodepgraph specific node properties
+            # node.check_functions(node_snap['parameters']['check_functions'])
+            # node.calibrate_functions(
+                # node_snap['parameters']['calibrate_functions'])
+            # if load_node_state:
+                # node.state(node_snap['parameters']['state'])
+
+            self.add_node(node)
 
     def save_graph(self, filename):
         """
         Saves a text based representation of the current graph
         """
         f = open(filename, 'w')
-        print(dump(self.snapshot(), f))
+        yaml.dump(self.snapshot(), f)
 
     def snapshot(self, update=False):
         snap = {'nodes': {},
