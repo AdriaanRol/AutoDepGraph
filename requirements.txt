@@ -1,3 +1,3 @@
 numpy
 PyYAML
-qcodes
+<!-- qcodes to be installed using git -->
