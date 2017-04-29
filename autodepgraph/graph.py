@@ -11,15 +11,14 @@ class Graph(Instrument):
     """
 
     def __init__(self, name):
-        self.name = name
-
+        super().__init__(name)
         self._nodes = {}
 
     def load_graph(self, filename, load_node_state=False):
         """
         Loads a graph.
         """
-        graph_snap = yaml.load(open(filename, 'r'))
+        graph_snap = yaml.safe_load(open(filename, 'r'))
         for key, node_snap in graph_snap['nodes'].items():
             try:
                 # Look for an existing node
@@ -30,7 +29,6 @@ class Graph(Instrument):
             except KeyError:
                 # If the node does not exist, create a new node
                 node = CalibrationNode(node_snap['name'])
-            # these are the directed edges of each node
 
             pars_to_update = ['dependencies', 'check_functions',
                               'calibrate_functions']

@@ -39,7 +39,7 @@ class Test_Node(TestCase):
         fn = os.path.join(test_dir, 'tg.yaml')
         test_graph.save_graph(filename=fn)
         f = open(fn)
-        loaded_snap = yaml.load(f)
+        loaded_snap = yaml.safe_load(f)
         f.close()
 
         self.assertEqual(snap, loaded_snap)
