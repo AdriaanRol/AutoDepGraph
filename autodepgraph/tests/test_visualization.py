@@ -1,5 +1,5 @@
 import os
-from autodepgraph.graph import Graph, CalibrationNode
+from autodepgraph.graph import Graph
 from copy import deepcopy
 from autodepgraph.visualization import snapshot_to_nxGraph
 from unittest import TestCase
@@ -24,9 +24,14 @@ class Test_visualization(TestCase):
         snap = self.test_graph.snapshot()
         print(self.test_graph._nodes)
         nxG = snapshot_to_nxGraph(snap)
-        print(list(snap['nodes'].keys()))
         self.assertEqual(set(nxG.nodes()), set(['A', 'B',  'E', 'F']))
         self.assertEqual(set(nxG.edges()), set([('B', 'A')]))
+
+    def test_get_state_col_map(self):
+        raise NotImplementedError()
+
+    def draw_graph_mpl(self):
+        raise NotImplementedError()
 
     @classmethod
     def tearDownClass(self):
@@ -37,4 +42,3 @@ class Test_visualization(TestCase):
                 self.node_A.find_instrument(insname).close()
             except KeyError:
                 pass
-
