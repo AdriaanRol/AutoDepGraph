@@ -1,6 +1,28 @@
 import networkx as nx
 
 
+# Colormap used to map states to node colors
+state_cmap = {'unknown': '#7f7f7f',            # middle gray
+              'active': '#1f77b4',             # muted blue
+              'good': '#2ca02c',               # cooked asparagus green
+              'needs calibration': '#ff7f0e',  # safety orange
+              'bad': '#d62728',                # brick red
+              }
+
+
+def get_state_col_map(snapshot):
+    """
+    Creates a dictionary with node names as keys and their state dependent
+    color as item.
+    """
+    col_map = {}
+    for node in snapshot['nodes'].values():
+        col_map[node['name']] = \
+            state_cmap[node['parameters']['state']['value']]
+
+    return col_map
+
+
 def snapshot_to_nxGraph(snapshot):
     """
     Creates a networkx graph object from a snapshot of a graph.
@@ -10,13 +32,9 @@ def snapshot_to_nxGraph(snapshot):
     g_snap = snapshot['nodes']
     nxG = nx.DiGraph()
     nxG.add_nodes_from(g_snap)
-    print(list(g_snap.keys()))
-    print(nxG.nodes())
     for node_name, n_snap in g_snap.items():
         for dependency in n_snap['parameters']['dependencies']['value']:
             nxG.add_edge(node_name, dependency)
-    print(nxG.nodes())
-    print(nxG.edges())
     return nxG
 
 
@@ -28,7 +46,11 @@ def draw_graph_mpl(snapshot):
     nxG = snapshot_to_nxGraph(snapshot)
     pos = nx.spring_layout(nxG)
     # Edge colors need to be set using a value mapping and a cmap
-    nx.draw_networkx_nodes(nxG, pos, )  # node_color=)
+
+    cm = get_state_col_map(snapshot)
+    colors_list = [cm[node] for node in nxG.nodes()]
+
+    nx.draw_networkx_nodes(nxG, pos, node_color=colors_list)
     # Arrows look pretty bad
     nx.draw_networkx_edges(nxG, pos, arrows=True)
     nx.draw_networkx_labels(nxG, pos)
