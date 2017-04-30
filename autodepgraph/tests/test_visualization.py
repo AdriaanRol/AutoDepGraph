@@ -18,7 +18,10 @@ class Test_visualization(TestCase):
         print(self.test_graph._nodes)
         self.test_graph.load_graph(fn, load_node_state=False)
         self.node_A = self.test_graph._nodes['A']
-        print(self.test_graph._nodes)
+
+        self.test_graph_2 = Graph('test_graph_2')
+        fn2 = os.path.join(test_dir, 'test_graph_states.yaml')
+        self.test_graph_2.load_graph(fn2)
 
     def test_snapshot_to_nxGraph(self):
         snap = self.test_graph.snapshot()
@@ -30,7 +33,7 @@ class Test_visualization(TestCase):
     def test_get_state_col_map(self):
         raise NotImplementedError()
 
-    def draw_graph_mpl(self):
+    def test_draw_graph_mpl(self):
         raise NotImplementedError()
 
     @classmethod
