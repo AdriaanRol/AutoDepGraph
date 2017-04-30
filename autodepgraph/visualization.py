@@ -38,13 +38,29 @@ def snapshot_to_nxGraph(snapshot):
     return nxG
 
 
-def draw_graph_mpl(snapshot):
+def draw_graph_mpl(snapshot, layout='spring'):
     """
     Function to create a quick plot of a graph using matplotlib.
     Intended mostly for for debugging purposes
+    Args:
+        snapshot
+        layout (str) : layout to position the nodes options are:
+            spring, shell, spectral and circular.
+
     """
     nxG = snapshot_to_nxGraph(snapshot)
-    pos = nx.spring_layout(nxG)
+
+    if layout == 'spring':
+        pos = nx.spring_layout(nxG)
+    elif layout == 'shell':
+        pos = nx.shell_layout(nxG)
+    elif layout == 'spectral':
+        pos = nx.spectral_layout(nxG)
+    elif layout == 'circular':
+        pos = nx.circular_layout(nxG)
+    else:
+        raise ValueError('layout not recognized')
+
     # Edge colors need to be set using a value mapping and a cmap
 
     cm = get_state_col_map(snapshot)
