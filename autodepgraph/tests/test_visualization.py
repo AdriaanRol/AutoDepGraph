@@ -1,6 +1,8 @@
 import os
+import qcodes as qc
 from autodepgraph.graph import Graph
 from autodepgraph.visualization import snapshot_to_nxGraph
+import unittest
 from unittest import TestCase
 import autodepgraph as adg
 test_dir = os.path.join(adg.__path__[0], 'tests', 'test_data')
@@ -10,37 +12,33 @@ class Test_visualization(TestCase):
 
     @classmethod
     def setUpClass(self):
-        # self.node_A = CalibrationNode('A')
-
-        fn = os.path.join(test_dir, 'test_graph_new_nodes.yaml')
+        fn = os.path.join(test_dir, 'test_graph_states.yaml')
         self.test_graph = Graph('test_graph')
-        print(self.test_graph._nodes)
-        self.test_graph.load_graph(fn, load_node_state=False)
-        self.node_A = self.test_graph._nodes['A']
-
-        self.test_graph_2 = Graph('test_graph_2')
-        fn2 = os.path.join(test_dir, 'test_graph_states.yaml')
-        self.test_graph_2.load_graph(fn2)
+        self.test_graph.load_graph(fn, load_node_state=True)
 
     def test_snapshot_to_nxGraph(self):
         snap = self.test_graph.snapshot()
-        print(self.test_graph._nodes)
         nxG = snapshot_to_nxGraph(snap)
-        self.assertEqual(set(nxG.nodes()), set(['A', 'B',  'E', 'F']))
-        self.assertEqual(set(nxG.edges()), set([('B', 'A')]))
+        self.assertEqual(set(nxG.nodes()),
+                         set(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']))
+        dep_edges = set([('D', 'C'), ('D', 'A'), ('E', 'D'), ('G', 'F'),
+                        ('C', 'B'), ('B', 'A'), ('G', 'D'), ('H', 'G')])
+        self.assertEqual(set(nxG.edges()), dep_edges)
 
+    @unittest.skip('Test not impemented')
     def test_get_state_col_map(self):
         raise NotImplementedError()
 
+    @unittest.skip('Test not impemented')
     def test_draw_graph_mpl(self):
         raise NotImplementedError()
 
     @classmethod
     def tearDownClass(self):
         # finds and closes all qcodes instruments
-        all_instrs = (list(self.node_A._all_instruments.keys()))
+        all_instrs = (list(qc.Instrument._all_instruments.keys()))
         for insname in all_instrs:
             try:
-                self.node_A.find_instrument(insname).close()
+                qc.Instrument.find_instrument(insname).close()
             except KeyError:
                 pass

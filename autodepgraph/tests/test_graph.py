@@ -1,5 +1,6 @@
 from unittest import TestCase
 import autodepgraph as adg
+import qcodes as qc
 from autodepgraph.graph import CalibrationNode, Graph
 import yaml
 import os
@@ -77,9 +78,9 @@ class Test_Graph(TestCase):
     @classmethod
     def tearDownClass(self):
         # finds and closes all qcodes instruments
-        all_instrs = (list(self.node_A._all_instruments.keys()))
+        all_instrs = (list(qc.Instrument._all_instruments.keys()))
         for insname in all_instrs:
             try:
-                self.node_A.find_instrument(insname).close()
+                qc.Instrument.find_instrument(insname).close()
             except KeyError:
                 pass
