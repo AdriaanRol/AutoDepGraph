@@ -2,7 +2,10 @@
 from qcodes.instrument.base import Instrument
 import yaml
 import logging
+import time
 from autodepgraph.node import CalibrationNode
+import autodepgraph.visualization as vis
+import matplotlib.pyplot as plt
 
 
 class Graph(Instrument):
@@ -70,5 +73,26 @@ class Graph(Instrument):
             except KeyError:
                 node = CalibrationNode(node)
         if node.name in self.nodes.keys():
-            logging.warning('Node already exists in graph')
+            logging.warning(
+                'Node "{}" already exists in graph'.format(node.name))
+        # gives the node a reference to the parent graph
+        node._parenth_graph = self.name
         self.nodes[node.name] = node
+
+        # Clears the node positions used for plotting when a new node is added
+        self._node_pos = None
+
+    def clear_node_state(self):
+        for node in self.nodes.values():
+            node.state('unknown')
+
+    def update_monitor(self):
+        """
+        Empty function to be overwritten
+        """
+        # plt.ion()
+        plt.clf()
+        self._node_pos = vis.draw_graph_mpl(
+            self.snapshot(), pos=self._node_pos, layout='spring')
+        plt.draw()
+        plt.pause(.01)
