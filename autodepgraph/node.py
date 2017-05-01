@@ -44,39 +44,52 @@ class CalibrationNode(Instrument):
 
     def execute_node(self, verbose=False):
         """
-        Checks the state of the node and executes the logic to try and reach a
-        'good' state.
+        Executing a node performs the following steps:
+            - check the state of the node, if good and valid, return the
+                state without performing any additional actions
+            - if the state is anything else, start by checking dependencies
+                after that the check experiment is performed
+
+            - if calibration is needed run calibrations then update state and
+                return true
+            - if broken, execute dependencies, then recheck status and
+                calibrate if needed. If check still returns broken. Abort.
         """
         if verbose:
             print('Executing node "{}".'.format(self.name))
 
+        # Corresponds to a known good state.
+        # An optional calibration valid time could be added to nodes.
         if self.state() == 'good':
             # Nothing to do
             self.update_monitor()
             return self.state()
+
         # If state is not good, start by checking dependencies
         # -> try to find the first node in the graph that is 'good'
         self.state('active')
         if not self.check_dependencies(verbose=verbose):
-            # At least one dependency is not satisfied.
-            self.state('unknown')
-            self.update_monitor()
-            return self.state()
+            self.state('bad')
+            raise ValueError(
+                    'Could not satisfy dependencies of {}'.format(self.name))
 
         # If dependencies are satisfied, check the node itself.
-        result = self.check(verbose=verbose)
-        # if result is 'good' no calibration is necessary
-        # if result is 'bad', calibration is not possible
-        if result == 'needs calibration':
-            if self.calibrate(verbose=verbose):
-                # calibration successful
-                self.update_monitor()
-                self.state('good')
-            else:
-                # calibration unsuccessful
-                self.update_monitor()
-                self.state('bad')
+        state = self.check(verbose=verbose)
 
+        if state == 'needs calibration':
+            self.calibrate(verbose=verbose)
+        elif state == 'bad':
+            if self.check_dependencies(verbose=verbose):
+                # Force a new check on all dependencies
+                for dep_name in self.dependencies():
+                    dep = self.find_instrument(dep_name)
+                    dep.state('unknown')
+                self.calibrate(verbose=verbose)
+            else:
+                self.state('bad')
+                raise ValueError(
+                    'Could not satisfy dependencies of {}'.format(self.name))
+        self.update_monitor()
         return self.state()
 
     def check_dependencies(self, verbose=False):

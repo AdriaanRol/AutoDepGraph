@@ -114,8 +114,9 @@ class Test_GraphLogic(TestCase):
         # calibrations should be called.
         self.node_a(verbose=True)
 
-        self.assertEqual(self.node_a.state(), 'unknown')
-        self.assertEqual(self.node_b.state(), 'bad')
+        # All calibration functions are set to "good"
+        self.assertEqual(self.node_a.state(), 'good')
+        self.assertEqual(self.node_b.state(), 'good')
         self.assertEqual(self.node_c.state(), 'good')
 
     def test_B_calibration_bad(self):
@@ -140,12 +141,13 @@ class Test_GraphLogic(TestCase):
 
         # Execute node a. Since it depends on B and C, all checks and
         # calibrations should be called.
-        self.node_a(verbose=True)
+        with self.assertRaises(ValueError):
+            self.node_a(verbose=True)
 
-        self.assertEqual(self.node_a.state(), 'unknown')
+        # State set to bad when calibration fails
+        self.assertEqual(self.node_a.state(), 'bad')
         self.assertEqual(self.node_b.state(), 'bad')
         self.assertEqual(self.node_c.state(), 'good')
-
 
     @classmethod
     def tearDownClass(self):
