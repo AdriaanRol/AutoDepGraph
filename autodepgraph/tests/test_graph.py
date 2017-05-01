@@ -18,17 +18,27 @@ class Test_Graph(TestCase):
 
     def test_adding_node(self):
         test_graph = Graph('test_graph_adding_node')
-        nodes_before = test_graph._nodes
+        nodes_before = test_graph.nodes
         self.assertEqual(len(nodes_before.keys()), 0)
         test_graph.add_node(self.node_A)
-        nodes_after = test_graph._nodes
+        nodes_after = test_graph.nodes
         self.assertEqual(nodes_after, {self.node_A.name: self.node_A})
 
         # Adding the same node multiple times
         test_graph.add_node(self.node_A)
         test_graph.add_node(self.node_A)
-        nodes_after = test_graph._nodes
+        nodes_after = test_graph.nodes
         self.assertEqual(nodes_after, {self.node_A.name: self.node_A})
+
+        # Adding a node as a string that exists
+        test_graph.add_node('B')
+        nodes_after = test_graph.nodes.keys()
+        self.assertEqual(nodes_after, set(['A', 'B']))
+
+        # Adding a node as a string that does not exist yet
+        test_graph.add_node('E')
+        nodes_after = test_graph.nodes.keys()
+        self.assertEqual(nodes_after, set(['A', 'B', 'E']))
 
     def test_save_graph(self):
         test_graph = Graph('test_graph_saving')
@@ -56,18 +66,18 @@ class Test_Graph(TestCase):
         new_graph = Graph('new_graph')
         new_graph.load_graph(fn, load_node_state=False)
         # Test that both graphs refer to the same (existing) objects.
-        self.assertEqual(set(new_graph._nodes.keys()),
+        self.assertEqual(set(new_graph.nodes.keys()),
                          set(['A', 'B', 'E', 'F']))
-        for nodename, node in new_graph._nodes.items():
+        for nodename, node in new_graph.nodes.items():
             self.assertEqual(node.state(), 'unknown')
 
         new_graph_2 = Graph('new_graph_2')
         new_graph_2.load_graph(fn, load_node_state=True)
-        self.assertEqual(set(new_graph_2._nodes.keys()),
+        self.assertEqual(set(new_graph_2.nodes.keys()),
                          set(['A', 'B', 'E', 'F']))
-        A = new_graph_2._nodes['A']
-        B = new_graph_2._nodes['B']
-        E = new_graph_2._nodes['E']
+        A = new_graph_2.nodes['A']
+        B = new_graph_2.nodes['B']
+        E = new_graph_2.nodes['E']
 
         self.assertEqual(A.state(), 'good')
         self.assertEqual(B.state(), 'bad')

@@ -9,10 +9,11 @@ class Graph(Instrument):
     """
     A class containing nodes
     """
+    delegate_attr_dicts = ['nodes']
 
     def __init__(self, name):
         super().__init__(name)
-        self._nodes = {}
+        self.nodes = {}
 
     def load_graph(self, filename, load_node_state=False):
         """
@@ -52,11 +53,22 @@ class Graph(Instrument):
     def snapshot(self, update=False):
         snap = {'nodes': {},
                 'meta': {}}
-        for node in self._nodes.values():
+        for node in self.nodes.values():
             snap['nodes'][node.name] = node.snapshot(update=update)
         return snap
 
     def add_node(self, node):
-        if node.name in self._nodes.keys():
+        """
+        Adds a node to the graph.
+        Args:
+            node (instr/str) : the node to be added. Can be either by
+                                name (str) or as a Node object (instrument)
+        """
+        if isinstance(node, str):
+            try:  # look for an existing node instrument
+                node = self.find_instrument(node)
+            except KeyError:
+                node = CalibrationNode(node)
+        if node.name in self.nodes.keys():
             logging.warning('Node already exists in graph')
-        self._nodes[node.name] = node
+        self.nodes[node.name] = node
