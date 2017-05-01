@@ -1,6 +1,5 @@
 from autodepgraph.node import CalibrationNode
 from unittest import TestCase
-from copy import deepcopy
 
 
 class Test_GraphLogic(TestCase):
@@ -150,7 +149,7 @@ class Test_GraphLogic(TestCase):
     def tearDownClass(self):
         # finds and closes all qcodes instruments
         try:
-            all_instrs = deepcopy(list(self.node_a._all_instruments.keys()))
+            all_instrs = (list(self.node_a._all_instruments.keys()))
             for insname in all_instrs:
                 try:
                     self.node_A.find_instrument(insname).close()

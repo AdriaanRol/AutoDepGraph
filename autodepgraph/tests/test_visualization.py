@@ -1,6 +1,5 @@
 import os
 from autodepgraph.graph import Graph
-from copy import deepcopy
 from autodepgraph.visualization import snapshot_to_nxGraph
 from unittest import TestCase
 import autodepgraph as adg
@@ -39,7 +38,7 @@ class Test_visualization(TestCase):
     @classmethod
     def tearDownClass(self):
         # finds and closes all qcodes instruments
-        all_instrs = deepcopy(list(self.node_A._all_instruments.keys()))
+        all_instrs = (list(self.node_A._all_instruments.keys()))
         for insname in all_instrs:
             try:
                 self.node_A.find_instrument(insname).close()
