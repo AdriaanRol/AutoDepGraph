@@ -68,7 +68,7 @@ class Test_Graph(TestCase):
         # Test that both graphs refer to the same (existing) objects.
         self.assertEqual(set(new_graph.nodes.keys()),
                          set(['A', 'B', 'E', 'F']))
-        for nodename, node in new_graph.nodes.items():
+        for node in new_graph.nodes.values():
             self.assertEqual(node.state(), 'unknown')
 
         new_graph_2 = Graph('new_graph_2')
