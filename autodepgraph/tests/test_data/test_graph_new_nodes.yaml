@@ -39,7 +39,7 @@ nodes:
         unit: '', vals: '<Lists : <Strings>>', value: null}
       dependencies: {__class__: qcodes.instrument.parameter.ManualParameter, instrument: autodepgraph.graph.CalibrationNode,
         instrument_name: B, label: dependencies, name: dependencies, ts: null, unit: '',
-        vals: '<Lists : <Strings>>', value: null}
+        vals: '<Lists : <Strings>>', value: [A]}
       state: {__class__: qcodes.instrument.parameter.ManualParameter, instrument: autodepgraph.graph.CalibrationNode,
         instrument_name: B, label: state, name: state, ts: '2017-04-29 16:41:13',
         unit: '', vals: '<Enum: {''good'', ''unknown'', ''active'', ''needs calibration'',
@@ -61,7 +61,7 @@ nodes:
         unit: '', vals: '<Lists : <Strings>>', value: null}
       dependencies: {__class__: qcodes.instrument.parameter.ManualParameter, instrument: autodepgraph.graph.CalibrationNode,
         instrument_name: E, label: dependencies, name: dependencies, ts: null, unit: '',
-        vals: '<Lists : <Strings>>', value: null}
+        vals: '<Lists : <Strings>>', value: ['A']}
       state: {__class__: qcodes.instrument.parameter.ManualParameter, instrument: autodepgraph.graph.CalibrationNode,
         instrument_name: E, label: state, name: state, ts: '2017-04-29 16:41:13',
         unit: '', vals: '<Enum: {''good'', ''unknown'', ''active'', ''needs calibration'',
