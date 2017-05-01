@@ -2,7 +2,6 @@
 from qcodes.instrument.base import Instrument
 import yaml
 import logging
-import time
 from autodepgraph.node import CalibrationNode
 import autodepgraph.visualization as vis
 import matplotlib.pyplot as plt
@@ -90,9 +89,8 @@ class Graph(Instrument):
         """
         Empty function to be overwritten
         """
-        # plt.ion()
         plt.clf()
         self._node_pos = vis.draw_graph_mpl(
             self.snapshot(), pos=self._node_pos, layout='spring')
         plt.draw()
-        plt.pause(.01)
+        plt.pause(.05)

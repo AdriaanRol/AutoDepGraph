@@ -48,7 +48,7 @@ class CalibrationNode(Instrument):
         'good' state.
         """
         if verbose:
-            print("Node {} state is '{}'.".format(self.name, self.state()))
+            print('Executing node "{}".'.format(self.name))
 
         if self.state() == 'good':
             # Nothing to do
@@ -85,7 +85,7 @@ class CalibrationNode(Instrument):
         and only if all dependencies report 'good' state.
         '''
         if verbose:
-            print('Checking dependencies of node {}.'.format(self.name))
+            print('\tChecking dependencies of node {}.'.format(self.name))
         checksPassed = True
         for dep in self.dependencies():
             depNode = self.find_instrument(dep)
@@ -93,7 +93,7 @@ class CalibrationNode(Instrument):
                 checksPassed = False
 
         if verbose:
-            print('All dependencies of node {} satisfied: {}'
+            print('\tAll dependencies of node {} satisfied: {}'
                   .format(self.name, checksPassed))
 
         return checksPassed
@@ -104,7 +104,7 @@ class CalibrationNode(Instrument):
         the node state.
         '''
         if verbose:
-            print('Calibrating node {}.'.format(self.name))
+            print('\tCalibrating node {}.'.format(self.name))
 
         self.state('active')
         result = True
@@ -114,7 +114,7 @@ class CalibrationNode(Instrument):
             result = (f() and result)
 
         if verbose:
-            print('Calibration of node {} successful: {}'
+            print('\tCalibration of node {} successful: {}'
                   .format(self.name, result))
 
         if result is True:
@@ -134,7 +134,7 @@ class CalibrationNode(Instrument):
             'bad': at least one check fails
         '''
         if verbose:
-            print('Checking node {}.'.format(self.name))
+            print('\tChecking node {}.'.format(self.name))
 
         self.state('active')
         needsCalib = False  # Set to True if a check finds 'needs calibration'
@@ -148,8 +148,8 @@ class CalibrationNode(Instrument):
                 broken = True
 
         if verbose:
-            print('Needs {} calibration: {}'.format(self.name, needsCalib))
-            print('Node {} broken: {}'.format(self.name, broken))
+            print('\tNeeds {} calibration: {}'.format(self.name, needsCalib))
+            print('\tNode {} broken: {}'.format(self.name, broken))
 
         if not needsCalib and not broken:
             self.state('good')
