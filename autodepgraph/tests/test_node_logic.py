@@ -1,5 +1,5 @@
 import qcodes as qc
-from autodepgraph.node import CalibrationNode
+from autodepgraph.graph import CalibrationNode, Graph
 from unittest import TestCase
 
 
@@ -13,9 +13,13 @@ class Test_GraphLogic(TestCase):
     @classmethod
     def setUpClass(self):
         # Construct the nodes
+        self.dummy_graph = Graph('dummy_graph')
         self.node_a = CalibrationNode('A')
         self.node_b = CalibrationNode('B')
         self.node_c = CalibrationNode('C')
+        self.dummy_graph.add_node(self.node_a)
+        self.dummy_graph.add_node(self.node_b)
+        self.dummy_graph.add_node(self.node_c)
 
         # Link the nodes
         self.node_a.dependencies(['B', 'C'])
@@ -146,6 +150,10 @@ class Test_GraphLogic(TestCase):
         self.assertEqual(self.node_b.state(), 'bad')
         self.assertEqual(self.node_c.state(), 'good')
 
+    def test_node_without_graph(self):
+        node_d = CalibrationNode('D')
+        with self.assertRaises(AttributeError):
+            node_d()
 
     @classmethod
     def tearDownClass(self):

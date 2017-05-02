@@ -3,16 +3,19 @@ from qcodes.instrument.base import Instrument
 import yaml
 import logging
 from autodepgraph.node import CalibrationNode
+import autodepgraph.visualization as vis
+import matplotlib.pyplot as plt
 
 
 class Graph(Instrument):
     """
     A class containing nodes
     """
+    delegate_attr_dicts = ['nodes']
 
     def __init__(self, name):
         super().__init__(name)
-        self._nodes = {}
+        self.nodes = {}
 
     def load_graph(self, filename, load_node_state=False):
         """
@@ -52,11 +55,44 @@ class Graph(Instrument):
     def snapshot(self, update=False):
         snap = {'nodes': {},
                 'meta': {}}
-        for node in self._nodes.values():
+        for node in self.nodes.values():
             snap['nodes'][node.name] = node.snapshot(update=update)
         return snap
 
     def add_node(self, node):
-        if node.name in self._nodes.keys():
-            logging.warning('Node already exists in graph')
-        self._nodes[node.name] = node
+        """
+        Adds a node to the graph.
+        Args:
+            node (instr/str) : the node to be added. Can be either by
+                                name (str) or as a Node object (instrument)
+        """
+        if isinstance(node, str):
+            try:  # look for an existing node instrument
+                node = self.find_instrument(node)
+            except KeyError:
+                node = CalibrationNode(node)
+        if node.name in self.nodes.keys():
+            logging.warning(
+                'Node "{}" already exists in graph'.format(node.name))
+        # gives the node a reference to the parent graph
+        node._parenth_graph = self.name
+        self.nodes[node.name] = node
+
+        # Clears the node positions used for plotting when a new node is added
+        self._node_pos = None
+
+    def clear_node_state(self):
+        for node in self.nodes.values():
+            node.state('unknown')
+
+    def update_monitor(self):
+        """
+        Updates a plot using the draw_graph_mpl function from the
+        visualization module.
+        The current visualization is based on matplotlib.
+        """
+        plt.clf()
+        self._node_pos = vis.draw_graph_mpl(
+            self.snapshot(), pos=self._node_pos, layout='spring')
+        plt.draw()
+        plt.pause(.05)

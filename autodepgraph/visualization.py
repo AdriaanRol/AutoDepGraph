@@ -38,7 +38,7 @@ def snapshot_to_nxGraph(snapshot):
     return nxG
 
 
-def draw_graph_mpl(snapshot, layout='spring'):
+def draw_graph_mpl(snapshot, pos=None, layout='spring'):
     """
     Function to create a quick plot of a graph using matplotlib.
     Intended mostly for for debugging purposes
@@ -46,20 +46,22 @@ def draw_graph_mpl(snapshot, layout='spring'):
         snapshot
         layout (str) : layout to position the nodes options are:
             spring, shell, spectral and circular.
+    returns:
+        pos
 
     """
     nxG = snapshot_to_nxGraph(snapshot)
-
-    if layout == 'spring':
-        pos = nx.spring_layout(nxG)
-    elif layout == 'shell':
-        pos = nx.shell_layout(nxG)
-    elif layout == 'spectral':
-        pos = nx.spectral_layout(nxG)
-    elif layout == 'circular':
-        pos = nx.circular_layout(nxG)
-    else:
-        raise ValueError('layout not recognized')
+    if pos is None:
+        if layout == 'spring':
+            pos = nx.spring_layout(nxG, iterations=5000)
+        elif layout == 'shell':
+            pos = nx.shell_layout(nxG)
+        elif layout == 'spectral':
+            pos = nx.spectral_layout(nxG)
+        elif layout == 'circular':
+            pos = nx.circular_layout(nxG)
+        else:
+            raise ValueError('layout not recognized')
 
     # Edge colors need to be set using a value mapping and a cmap
 
@@ -70,3 +72,4 @@ def draw_graph_mpl(snapshot, layout='spring'):
     # Arrows look pretty bad
     nx.draw_networkx_edges(nxG, pos, arrows=True)
     nx.draw_networkx_labels(nxG, pos)
+    return pos
