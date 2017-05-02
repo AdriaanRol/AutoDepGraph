@@ -37,77 +37,68 @@ class CalibrationNode(Instrument):
 
     def execute_node(self, verbose=False):
         """
-        Executing a node performs the following steps:
-            - check the state of the node, if good and valid, return the
-                state without performing any additional actions
-            - if the state is anything else, start by checking dependencies
-                after that the check experiment is performed
+        Executing a node attempts to go from any state to a good state.
+            any_state -> good
 
-            - if calibration is needed run calibrations then update state and
-                return true
-            - if broken, execute dependencies, then recheck status and
-                calibrate if needed. If check still returns broken. Abort.
+        Executing a node performs the following steps:
+            1. get the state of the dependency nodes. If all are OK or unknown,
+               perform a check on the node itself.
+               If a node is any other state, execute it to move it to a
+               good state
+            2. perform the "check" experiment on the node itself. This quick
+               check
+            3. Perform calibration and second round of executing dependencies
+
         """
         if not hasattr(self, '_parenth_graph'):
             raise AttributeError(
                 'Node "{}" must be attached to a graph'.format(self.name))
-
         if verbose:
             print('Executing node "{}".'.format(self.name))
 
-        # Corresponds to a known good state.
-        # An optional calibration valid time could be added to nodes.
-        if self.state() == 'good':
-            # Nothing to do
-            self.find_instrument(self._parenth_graph).update_monitor()
-            return self.state()
-
-        # If state is not good, start by checking dependencies
-        # -> try to find the first node in the graph that is 'good'
-        self.state('active')
-        if not self.check_dependencies(verbose=verbose):
-            self.state('bad')
-            raise ValueError(
-                    'Could not satisfy dependencies of {}'.format(self.name))
-
-        # If dependencies are satisfied, check the node itself.
-        state = self.check(verbose=verbose)
-        self.find_instrument(self._parenth_graph).update_monitor()
-
-        if state == 'needs calibration':
-            self.calibrate(verbose=verbose)
-        elif state == 'bad':
-            if self.check_dependencies(verbose=verbose):
-                # Force a new check on all dependencies
-                for dep_name in self.dependencies():
-                    dep = self.find_instrument(dep_name)
-                    dep.state('unknown')
-                self.calibrate(verbose=verbose)
+        # 1. Going over the states of the dependencies
+        # get the last known states of all dependencies
+        dep_states = []
+        for dep in self.dependencies():
+            dep_state = self.find_instrument(dep).state()
+            dep_states += [dep_state]
+            if dep_state in ['good', 'unknown']:
+                continue  # to self.check()
             else:
-                self.state('bad')
+                # executing a node should change the state to good
+                dep_state = dep.execute()
+                if dep_state == 'bad':
+                    raise ValueError('Could not calibrate "{}"'.format(dep))
+
+        # 2. Determine action to be taken
+        if self.state() != 'needs calibration':
+            # skip the check if it is already known that calibration is needed
+            state = self.check(verbose=verbose)
+        else:
+            state = self.state()
+
+        # 3. calibrate the node and it's requirements
+        if state == 'needs calibration':
+            cal_succes = self.calibrate(verbose=verbose)
+            # the calibration can still fail if dependencies that were good
+            # or unknown were bad. In that case all dependencies will
+            # explicitly be executed and calibration will be retried
+            if not cal_succes:
+                state = 'bad'
+
+        if state == 'bad':
+            # if the state is bad it will execute *all* dependencies. Even
+            # the ones that were updated before.
+            for dep_name in self.dependencies():
+                dep = self.find_instrument(dep_name)
+                dep.execute()
+            self.calibrate()
+            if self.state() != 'good':
                 raise ValueError(
-                    'Could not satisfy dependencies of {}'.format(self.name))
+                    'Calibration of "{}" failed.'.format(self.name))
+
         self.find_instrument(self._parenth_graph).update_monitor()
         return self.state()
-
-    def check_dependencies(self, verbose=False):
-        '''
-        Executes all nodes listed as dependencies and returns True if and
-        and only if all dependencies report 'good' state.
-        '''
-        if verbose:
-            print('\tChecking dependencies of node {}.'.format(self.name))
-        checksPassed = True
-        for dep in self.dependencies():
-            depNode = self.find_instrument(dep)
-            if depNode(verbose=verbose) != 'good':
-                checksPassed = False
-
-        if verbose:
-            print('\tAll dependencies of node {} satisfied: {}'
-                  .format(self.name, checksPassed))
-
-        return checksPassed
 
     def calibrate(self, verbose=False):
         '''
@@ -118,6 +109,7 @@ class CalibrationNode(Instrument):
             print('\tCalibrating node {}.'.format(self.name))
 
         self.state('active')
+        self.find_instrument(self._parenth_graph).update_monitor()
         result = True
         for funcStr in self.calibrate_functions():
             f = getattr(cal_f, funcStr)
@@ -148,6 +140,7 @@ class CalibrationNode(Instrument):
             print('\tChecking node {}.'.format(self.name))
 
         self.state('active')
+        self.find_instrument(self._parenth_graph).update_monitor()
         needsCalib = False  # Set to True if a check finds 'needs calibration'
         broken = False  # Set to True if a check fails.
         for funcStr in self.check_functions():
