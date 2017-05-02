@@ -31,16 +31,9 @@ class CalibrationNode(Instrument):
                            initial_value=[],
                            vals=vals.Lists(vals.Strings()),
                            parameter_class=ManualParameter)
-        self._parenth_graph = None
 
     def __call__(self, verbose=False):
         return self.execute_node(verbose=verbose)
-
-    def update_monitor(self):
-        # calls the update_monitor function on the parent graph
-        if self._parenth_graph is not None:
-            pg = self.find_instrument(self._parenth_graph)
-            pg.update_monitor()
 
     def execute_node(self, verbose=False):
         """
@@ -55,6 +48,10 @@ class CalibrationNode(Instrument):
             - if broken, execute dependencies, then recheck status and
                 calibrate if needed. If check still returns broken. Abort.
         """
+        if not hasattr(self, '_parenth_graph'):
+            raise AttributeError(
+                'Node "{}" must be attached to a graph'.format(self.name))
+
         if verbose:
             print('Executing node "{}".'.format(self.name))
 
@@ -62,7 +59,7 @@ class CalibrationNode(Instrument):
         # An optional calibration valid time could be added to nodes.
         if self.state() == 'good':
             # Nothing to do
-            self.update_monitor()
+            self.find_instrument(self._parenth_graph).update_monitor()
             return self.state()
 
         # If state is not good, start by checking dependencies
@@ -75,6 +72,7 @@ class CalibrationNode(Instrument):
 
         # If dependencies are satisfied, check the node itself.
         state = self.check(verbose=verbose)
+        self.find_instrument(self._parenth_graph).update_monitor()
 
         if state == 'needs calibration':
             self.calibrate(verbose=verbose)
@@ -89,7 +87,7 @@ class CalibrationNode(Instrument):
                 self.state('bad')
                 raise ValueError(
                     'Could not satisfy dependencies of {}'.format(self.name))
-        self.update_monitor()
+        self.find_instrument(self._parenth_graph).update_monitor()
         return self.state()
 
     def check_dependencies(self, verbose=False):
