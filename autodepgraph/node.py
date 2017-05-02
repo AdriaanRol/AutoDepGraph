@@ -59,16 +59,18 @@ class CalibrationNode(Instrument):
         # 1. Going over the states of the dependencies
         # get the last known states of all dependencies
         dep_states = []
-        for dep in self.dependencies():
-            dep_state = self.find_instrument(dep).state()
+        for dep_name in self.dependencies():
+            dep_state = self.find_instrument(dep_name).state()
             dep_states += [dep_state]
             if dep_state in ['good', 'unknown']:
                 continue  # to self.check()
             else:
                 # executing a node should change the state to good
-                dep_state = dep.execute()
+                dep_state = self.find_instrument(dep_name).execute_node(
+                    verbose=verbose)
                 if dep_state == 'bad':
-                    raise ValueError('Could not calibrate "{}"'.format(dep))
+                    raise ValueError('Could not calibrate "{}"'.format(
+                        dep_name))
 
         # 2. Determine action to be taken
         if self.state() != 'needs calibration':
@@ -76,6 +78,7 @@ class CalibrationNode(Instrument):
             state = self.check(verbose=verbose)
         else:
             state = self.state()
+        self.find_instrument(self._parenth_graph).update_monitor()
 
         # 3. calibrate the node and it's requirements
         if state == 'needs calibration':
@@ -91,7 +94,7 @@ class CalibrationNode(Instrument):
             # the ones that were updated before.
             for dep_name in self.dependencies():
                 dep = self.find_instrument(dep_name)
-                dep.execute()
+                dep.execute_node(verbose=verbose)
             self.calibrate()
             if self.state() != 'good':
                 raise ValueError(
@@ -102,6 +105,9 @@ class CalibrationNode(Instrument):
 
     def calibrate(self, verbose=False):
         '''
+        Performs the calibrations of a node, ideally moving the state to good
+            needs calibration -> good
+
         Executes all calibration functions of the node, updates and returns
         the node state.
         '''
