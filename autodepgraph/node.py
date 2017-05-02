@@ -31,28 +31,25 @@ class CalibrationNode(Instrument):
                            initial_value=[],
                            vals=vals.Lists(vals.Strings()),
                            parameter_class=ManualParameter)
-        self._parenth_graph = None
 
     def __call__(self, verbose=False):
         return self.execute_node(verbose=verbose)
-
-    def update_monitor(self):
-        # calls the update_monitor function on the parent graph
-        if self._parenth_graph is not None:
-            pg = self.find_instrument(self._parenth_graph)
-            pg.update_monitor()
 
     def execute_node(self, verbose=False):
         """
         Checks the state of the node and executes the logic to try and reach a
         'good' state.
         """
+        if not hasattr(self, '_parenth_graph'):
+            raise AttributeError(
+                'Node "{}" must be attached to a graph'.format(self.name))
+
         if verbose:
             print('Executing node "{}".'.format(self.name))
 
         if self.state() == 'good':
             # Nothing to do
-            self.update_monitor()
+            self.find_instrument(self._parenth_graph).update_monitor()
             return self.state()
         # If state is not good, start by checking dependencies
         # -> try to find the first node in the graph that is 'good'
@@ -60,7 +57,7 @@ class CalibrationNode(Instrument):
         if not self.check_dependencies(verbose=verbose):
             # At least one dependency is not satisfied.
             self.state('unknown')
-            self.update_monitor()
+            self.find_instrument(self._parenth_graph).update_monitor()
             return self.state()
 
         # If dependencies are satisfied, check the node itself.
@@ -70,11 +67,11 @@ class CalibrationNode(Instrument):
         if result == 'needs calibration':
             if self.calibrate(verbose=verbose):
                 # calibration successful
-                self.update_monitor()
+                self.find_instrument(self._parenth_graph).update_monitor()
                 self.state('good')
             else:
                 # calibration unsuccessful
-                self.update_monitor()
+                self.find_instrument(self._parenth_graph).update_monitor()
                 self.state('bad')
 
         return self.state()

@@ -87,7 +87,9 @@ class Graph(Instrument):
 
     def update_monitor(self):
         """
-        Empty function to be overwritten
+        Updates a plot using the draw_graph_mpl function from the
+        visualization module.
+        The current visualization is based on matplotlib.
         """
         plt.clf()
         self._node_pos = vis.draw_graph_mpl(
