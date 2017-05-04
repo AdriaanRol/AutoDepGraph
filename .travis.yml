@@ -17,6 +17,11 @@ install:
     - pip install coverage pytest-cov pytest --upgrade
     - pip install codacy-coverage
     - pip install -e .
+before_script: # configure a headless display to test plot generation
+- "export DISPLAY=:99.0"
+- "sh -e /etc/init.d/xvfb start"
+- sleep 3 # give xvfb some time to start
+
 # command to run tests
 script:
     - py.test --cov=autodepgraph --cov-report xml --cov-config=.coveragerc
