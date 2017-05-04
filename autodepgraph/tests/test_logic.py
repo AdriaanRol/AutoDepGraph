@@ -44,8 +44,6 @@ class Test_GraphLogic(TestCase):
         # All checks and calibrations pass.
         print('\n')
         print("Testing case 'all good'.")
-
-        # Reset the node states
         self.node_a.state('unknown')
         self.node_b.state('unknown')
         self.node_c.state('unknown')
@@ -59,23 +57,45 @@ class Test_GraphLogic(TestCase):
         self.node_b.calibrate_functions(['test_calibration_True'])
         self.node_c.calibrate_functions(['test_calibration_True'])
 
-        # Execute node a. Since it depends on B and C, all checks and
-        # calibrations should be called.
+        # Execute node a. Nodes B and C should be asked for their state but
+        # not executed
+        self.node_a._exec_cnt = 0
+        self.node_b._exec_cnt = 0
+        self.node_c._exec_cnt = 0
+
+        self.node_a._check_cnt = 0
+        self.node_b._check_cnt = 0
+        self.node_c._check_cnt = 0
+
+        self.node_a._calib_cnt = 0
+        self.node_b._calib_cnt = 0
+        self.node_c._calib_cnt = 0
+
         self.node_a(verbose=True)
-
         self.assertEqual(self.node_a.state(), 'good')
-        self.assertEqual(self.node_b.state(), 'good')
-        self.assertEqual(self.node_c.state(), 'good')
+        self.assertEqual(self.node_b.state(), 'unknown')
+        self.assertEqual(self.node_c.state(), 'unknown')
 
-    def test_all_need_calib(self):
+        self.assertEqual(self.node_a._exec_cnt, 1)
+        self.assertEqual(self.node_b._exec_cnt, 0)
+        self.assertEqual(self.node_c._exec_cnt, 0)
+
+        self.assertEqual(self.node_a._check_cnt, 1)
+        self.assertEqual(self.node_b._check_cnt, 0)
+        self.assertEqual(self.node_c._check_cnt, 0)
+
+        self.assertEqual(self.node_a._calib_cnt, 0)
+        self.assertEqual(self.node_b._calib_cnt, 0)
+        self.assertEqual(self.node_c._calib_cnt, 0)
+
+    def test_need_calib_check(self):
         # All nodes need calibration.
-
         print('\n')
         print("Testing case 'all need calibration'.")
 
         # Reset the node states
         self.node_a.state('unknown')
-        self.node_b.state('unknown')
+        self.node_b.state('needs calibration')
         self.node_c.state('unknown')
 
         # Populate nodes with checks and calibration functions
@@ -87,35 +107,65 @@ class Test_GraphLogic(TestCase):
         self.node_b.calibrate_functions(['test_calibration_True'])
         self.node_c.calibrate_functions(['test_calibration_True'])
 
-        # Execute node a. Since it depends on B and C, all checks and
-        # calibrations should be called.
-        self.node_a(verbose=True)
+        self.node_a._exec_cnt = 0
+        self.node_b._exec_cnt = 0
+        self.node_c._exec_cnt = 0
 
+        self.node_a._check_cnt = 0
+        self.node_b._check_cnt = 0
+        self.node_c._check_cnt = 0
+
+        self.node_a._calib_cnt = 0
+        self.node_b._calib_cnt = 0
+        self.node_c._calib_cnt = 0
+
+        # Execute node a. since it depends on B and C and only B is not
+        # in good/unknown only B will also be checked and calibrated
+        self.node_a(verbose=True)
         self.assertEqual(self.node_a.state(), 'good')
         self.assertEqual(self.node_b.state(), 'good')
-        self.assertEqual(self.node_c.state(), 'good')
+        self.assertEqual(self.node_c.state(), 'unknown')
 
-    def test_B_check_bad(self):
-        # All nodes need calibration.
-        print('\n')
-        print("Testing case 'B check bad'.")
+        self.assertEqual(self.node_a._exec_cnt, 1)
+        self.assertEqual(self.node_b._exec_cnt, 1)
+        self.assertEqual(self.node_c._exec_cnt, 0)
 
+        self.assertEqual(self.node_a._check_cnt, 1)
+        # needs calibration will always skip the check and go to calibrating
+        self.assertEqual(self.node_b._check_cnt, 0)
+        self.assertEqual(self.node_c._check_cnt, 0)
+
+        self.assertEqual(self.node_a._calib_cnt, 1)
+        self.assertEqual(self.node_b._calib_cnt, 1)
+        self.assertEqual(self.node_c._calib_cnt, 0)
+
+    def test_check_A_bad(self):
         # Reset the node states
         self.node_a.state('unknown')
         self.node_b.state('unknown')
         self.node_c.state('unknown')
 
         # Populate nodes with checks and calibration functions
-        self.node_a.check_functions(['test_check_needs_calibration'])
-        self.node_b.check_functions(['test_check_bad'])
+        self.node_a.check_functions(['test_check_bad'])
+        self.node_b.check_functions(['test_check_needs_calibration'])
         self.node_c.check_functions(['test_check_good'])
 
         self.node_a.calibrate_functions(['test_calibration_True'])
         self.node_b.calibrate_functions(['test_calibration_True'])
         self.node_c.calibrate_functions(['test_calibration_True'])
 
-        # Execute node a. Since it depends on B and C, all checks and
-        # calibrations should be called.
+        # Execute node a. Since check returns bad, all nodes should be called
+        self.node_a._exec_cnt = 0
+        self.node_b._exec_cnt = 0
+        self.node_c._exec_cnt = 0
+
+        self.node_a._check_cnt = 0
+        self.node_b._check_cnt = 0
+        self.node_c._check_cnt = 0
+
+        self.node_a._calib_cnt = 0
+        self.node_b._calib_cnt = 0
+        self.node_c._calib_cnt = 0
         self.node_a(verbose=True)
 
         # All calibration functions are set to "good"
@@ -123,11 +173,20 @@ class Test_GraphLogic(TestCase):
         self.assertEqual(self.node_b.state(), 'good')
         self.assertEqual(self.node_c.state(), 'good')
 
+        self.assertEqual(self.node_a._exec_cnt, 1)
+        self.assertEqual(self.node_b._exec_cnt, 1)
+        self.assertEqual(self.node_c._exec_cnt, 1)
+
+        self.assertEqual(self.node_a._check_cnt, 1)
+        self.assertEqual(self.node_b._check_cnt, 1)
+        self.assertEqual(self.node_c._check_cnt, 1)
+
+        self.assertEqual(self.node_a._calib_cnt, 1)
+        self.assertEqual(self.node_b._calib_cnt, 1)
+        self.assertEqual(self.node_c._calib_cnt, 0)  # check returns good
+
     def test_B_calibration_bad(self):
         # All nodes need calibration.
-
-        print('\n')
-        print("Testing case 'B calibration bad'.")
 
         # Reset the node states
         self.node_a.state('unknown')
@@ -135,13 +194,25 @@ class Test_GraphLogic(TestCase):
         self.node_c.state('unknown')
 
         # Populate nodes with checks and calibration functions
-        self.node_a.check_functions(['test_check_needs_calibration'])
+        self.node_a.check_functions(['test_check_bad'])
         self.node_b.check_functions(['test_check_needs_calibration'])
         self.node_c.check_functions(['test_check_good'])
 
         self.node_a.calibrate_functions(['test_calibration_True'])
         self.node_b.calibrate_functions(['test_calibration_False'])
         self.node_c.calibrate_functions(['test_calibration_True'])
+
+        self.node_a._exec_cnt = 0
+        self.node_b._exec_cnt = 0
+        self.node_c._exec_cnt = 0
+
+        self.node_a._check_cnt = 0
+        self.node_b._check_cnt = 0
+        self.node_c._check_cnt = 0
+
+        self.node_a._calib_cnt = 0
+        self.node_b._calib_cnt = 0
+        self.node_c._calib_cnt = 0
 
         # Execute node a. Since it depends on B and C, all checks and
         # calibrations should be called.
@@ -152,6 +223,19 @@ class Test_GraphLogic(TestCase):
         self.assertEqual(self.node_a.state(), 'bad')
         self.assertEqual(self.node_b.state(), 'bad')
         self.assertEqual(self.node_c.state(), 'good')
+
+        self.assertEqual(self.node_a._exec_cnt, 1)
+        self.assertEqual(self.node_b._exec_cnt, 1)
+        self.assertEqual(self.node_c._exec_cnt, 1)
+
+        self.assertEqual(self.node_a._check_cnt, 1)
+        self.assertEqual(self.node_b._check_cnt, 1)
+        self.assertEqual(self.node_c._check_cnt, 1)
+
+        # Cannot satisfy dependency so it will not calibrate
+        self.assertEqual(self.node_a._calib_cnt, 0)
+        # not testing the calib count of the others as the order of
+        # dependencies is unordered
 
     def test_node_without_graph(self):
         node_d = CalibrationNode('D')

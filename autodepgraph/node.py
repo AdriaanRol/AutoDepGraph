@@ -32,6 +32,12 @@ class CalibrationNode(Instrument):
                            vals=vals.Lists(vals.Strings()),
                            parameter_class=ManualParameter)
 
+        # counters to count how often functions get called for debugging
+        # purposes
+        self._exec_cnt = 0
+        self._calib_cnt = 0
+        self._check_cnt = 0
+
     def __call__(self, verbose=False):
         return self.execute_node(verbose=verbose)
 
@@ -50,6 +56,7 @@ class CalibrationNode(Instrument):
             3. Perform calibration and second round of executing dependencies
 
         """
+        self._exec_cnt += 1
         if not hasattr(self, '_parenth_graph'):
             raise AttributeError(
                 'Node "{}" must be attached to a graph'.format(self.name))
@@ -111,6 +118,7 @@ class CalibrationNode(Instrument):
         Executes all calibration functions of the node, updates and returns
         the node state.
         '''
+        self._calib_cnt+=1
         if verbose:
             print('\tCalibrating node {}.'.format(self.name))
 
@@ -142,6 +150,7 @@ class CalibrationNode(Instrument):
                 calibration and no check fails
             'bad': at least one check fails
         '''
+        self._check_cnt +=1
         if verbose:
             print('\tChecking node {}.'.format(self.name))
 
