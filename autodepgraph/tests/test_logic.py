@@ -35,10 +35,6 @@ class Test_GraphLogic(TestCase):
         self.node_b.calibrate_functions()
         self.node_c.calibrate_functions()
 
-    def test_name(self):
-        self.assertEqual(self.node_a.name, 'A')
-        self.assertEqual(self.node_b.name, 'B')
-        self.assertEqual(self.node_c.name, 'C')
 
     def test_all_good(self):
         # All checks and calibrations pass.
@@ -241,6 +237,39 @@ class Test_GraphLogic(TestCase):
         node_d = CalibrationNode('D')
         with self.assertRaises(AttributeError):
             node_d()
+
+    @classmethod
+    def tearDownClass(self):
+        # finds and closes all qcodes instruments
+        all_instrs = (list(qc.Instrument._all_instruments.keys()))
+        for insname in all_instrs:
+            try:
+                qc.Instrument.find_instrument(insname).close()
+            except KeyError:
+                pass
+
+
+class Test_Node(TestCase):
+    """
+    Tests the logic of nodes that does not relate to other nodes or graphs.
+    """
+    def test_name(self):
+        node_a = CalibrationNode('A')
+        self.assertEqual(node_a.name, 'A')
+
+    def test_timeout(self):
+        node_b = CalibrationNode('B')
+        node_b.state('good')
+        node_b.calibration_timeout(1)
+        state_before_timeout = node_b.state()
+        self.assertEqual(state_before_timeout, 'good')
+        import time
+        time.sleep(1)
+        node_b.calibration_timeout(0)
+        state_after_timeout = node_b.state()
+        print(state_after_timeout)
+
+        self.assertEqual(state_after_timeout, 'needs calibration')
 
     @classmethod
     def tearDownClass(self):

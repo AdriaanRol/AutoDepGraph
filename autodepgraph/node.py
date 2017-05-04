@@ -1,4 +1,6 @@
 import qcodes.utils.validators as vals
+import numpy as np
+from datetime import datetime, timedelta
 import autodepgraph.node_functions.calibration_functions as cal_f
 import autodepgraph.node_functions.check_functions as check_f
 from qcodes.instrument.base import Instrument
@@ -9,11 +11,22 @@ class CalibrationNode(Instrument):
 
     def __init__(self, name, verbose=False):
         super().__init__(name)
-        self.add_parameter('state', parameter_class=ManualParameter,
+        self.add_parameter(
+            'state',
+            docstring=('Returns the last known state of a node, if the state '
+                       'is older than the "calibration_timeout" it will'
+                       ' return needs calibration.'),
+            get_cmd=self._get_state, set_cmd=self._set_state,
+            vals=vals.Enum('good', 'needs calibration',
+                           'bad', 'unknown', 'active'))
+        self.state('unknown')  # sets the initial value
+
+        self.add_parameter('calibration_timeout', unit='s',
                            docstring='',
-                           vals=vals.Enum('good', 'needs calibration',
-                                          'bad', 'unknown', 'active'),
-                           initial_value='unknown')
+                           initial_value=np.inf,
+                           parameter_class=ManualParameter,
+                           vals=vals.Numbers(min_value=0))
+
         self.add_parameter('dependencies',
                            docstring='a list of names of Calibration nodes',
                            initial_value=[],
@@ -37,6 +50,18 @@ class CalibrationNode(Instrument):
         self._exec_cnt = 0
         self._calib_cnt = 0
         self._check_cnt = 0
+
+    def _set_state(self, val):
+        self._state = val
+
+    def _get_state(self):
+        deltaT = (datetime.now() - self.state._latest_ts).total_seconds()
+        print('Getting state', deltaT, self.calibration_timeout())
+        if deltaT > self.calibration_timeout():
+            self._state = 'needs calibration'
+            print('updating timeout?')
+        print('or not')
+        return self._state
 
     def __call__(self, verbose=False):
         return self.execute_node(verbose=verbose)
