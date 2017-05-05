@@ -92,6 +92,9 @@ class Graph(Instrument):
         The current visualization is based on matplotlib.
         """
         plt.clf()
+        for node in self.nodes.values():
+            # ensures states are updated before taking snapshot
+            node.state()
         self._node_pos = vis.draw_graph_mpl(
             self.snapshot(), pos=self._node_pos, layout='spring')
         plt.draw()
