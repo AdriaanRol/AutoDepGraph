@@ -1,6 +1,6 @@
 import qcodes.utils.validators as vals
 import numpy as np
-from datetime import datetime, timedelta
+from datetime import datetime
 import autodepgraph.node_functions.calibration_functions as cal_f
 import autodepgraph.node_functions.check_functions as check_f
 from qcodes.instrument.base import Instrument
