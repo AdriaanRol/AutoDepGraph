@@ -56,11 +56,8 @@ class CalibrationNode(Instrument):
 
     def _get_state(self):
         deltaT = (datetime.now() - self.state._latest_ts).total_seconds()
-        print('Getting state', deltaT, self.calibration_timeout())
         if deltaT > self.calibration_timeout():
             self._state = 'needs calibration'
-            print('updating timeout?')
-        print('or not')
         return self._state
 
     def __call__(self, verbose=False):
@@ -143,7 +140,7 @@ class CalibrationNode(Instrument):
         Executes all calibration functions of the node, updates and returns
         the node state.
         '''
-        self._calib_cnt+=1
+        self._calib_cnt += 1
         if verbose:
             print('\tCalibrating node {}.'.format(self.name))
 
@@ -175,7 +172,7 @@ class CalibrationNode(Instrument):
                 calibration and no check fails
             'bad': at least one check fails
         '''
-        self._check_cnt +=1
+        self._check_cnt += 1
         if verbose:
             print('\tChecking node {}.'.format(self.name))
 
