@@ -52,10 +52,11 @@ class CalibrationNode(Instrument):
         self._check_cnt = 0
 
     def _set_state(self, val):
+        self.state._latest_set_ts = datetime.now()
         self._state = val
 
     def _get_state(self):
-        deltaT = (datetime.now() - self.state._latest_ts).total_seconds()
+        deltaT = (datetime.now() - self.state._latest_set_ts).total_seconds()
         if deltaT > self.calibration_timeout():
             self._state = 'needs calibration'
         return self._state
