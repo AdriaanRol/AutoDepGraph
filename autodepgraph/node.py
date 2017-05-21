@@ -32,15 +32,29 @@ class CalibrationNode(Instrument):
                            initial_value=[],
                            vals=vals.Lists(vals.Strings()),
                            parameter_class=ManualParameter)
+
+        chk_docst = (
+            'Name of the function used to perform the check, can be either a '
+            'function in the check_functions module or a method of an '
+            'instrument. If it is a method of an instrument it can be '
+            'specified as "instr_name.method_name".\nA check function must '
+            'return one of the possible states of a node, see also the state'
+            'docstring.')
+
         self.add_parameter('check_functions',
-                           docstring='Name of the function that corresponds '
-                                     + 'to checking the node',
+                           docstring=chk_docst,
                            initial_value=[],
                            vals=vals.Lists(vals.Strings()),
                            parameter_class=ManualParameter)
+        cal_docst = (
+            'Name of the function used to calibrate a node, can be either a '
+            'function in the calibrate_functions module or a method of an '
+            'instrument. If it is a method of an instrument it can be '
+            'specified as "instr_name.method_name".\nA calibrate function '
+            'must return True or False indicating the success of the '
+            'calibration.')
         self.add_parameter('calibrate_functions',
-                           docstring='Name of the function that calibrating '
-                           + 'the node',
+                           docstring=cal_docst,
                            initial_value=[],
                            vals=vals.Lists(vals.Strings()),
                            parameter_class=ManualParameter)
