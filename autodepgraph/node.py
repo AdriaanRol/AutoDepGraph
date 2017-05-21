@@ -108,7 +108,7 @@ class CalibrationNode(Instrument):
             state = self.check(verbose=verbose)
         else:
             state = self.state()
-        self.find_instrument(self._parenth_graph).update_monitor()
+        self.update_graph_monitor()
 
         # 3. calibrate the node and it's requirements
         if state == 'needs calibration':
@@ -130,7 +130,7 @@ class CalibrationNode(Instrument):
                 raise ValueError(
                     'Calibration of "{}" failed.'.format(self.name))
 
-        self.find_instrument(self._parenth_graph).update_monitor()
+        self.update_graph_monitor()
         return self.state()
 
     def calibrate(self, verbose=False):
@@ -146,10 +146,15 @@ class CalibrationNode(Instrument):
             print('\tCalibrating node {}.'.format(self.name))
 
         self.state('active')
-        self.find_instrument(self._parenth_graph).update_monitor()
+        self.update_graph_monitor()
         result = True
         for funcStr in self.calibrate_functions():
-            f = getattr(cal_f, funcStr)
+            if '.' in funcStr:
+                instr_name, method = funcStr.split('.')
+                instr = self.find_instrument(instr_name)
+                f = getattr(instr, method)
+            else:
+                f = getattr(cal_f, funcStr)
             # If any of the calibrations returns False, result will be False
             result = (f() and result)
 
@@ -178,11 +183,17 @@ class CalibrationNode(Instrument):
             print('\tChecking node {}.'.format(self.name))
 
         self.state('active')
-        self.find_instrument(self._parenth_graph).update_monitor()
+        self.update_graph_monitor()
         needsCalib = False  # Set to True if a check finds 'needs calibration'
         broken = False  # Set to True if a check fails.
         for funcStr in self.check_functions():
-            f = getattr(check_f, funcStr)
+            if '.' in funcStr:
+                instr_name, method = funcStr.split('.')
+                instr = self.find_instrument(instr_name)
+                f = getattr(instr, method)
+            else:
+                f = getattr(check_f, funcStr)
+
             result = f()
             if result == 'needs calibration':
                 needsCalib = True
@@ -201,3 +212,11 @@ class CalibrationNode(Instrument):
             self.state('bad')
 
         return self.state()
+
+    def update_graph_monitor(self):
+        """
+        if the node is part of a graph it will update the monitor using
+        the update_monitor method of the parenth_graph
+        """
+        if hasattr(self, '_parenth_graph'):
+            self.find_instrument(self._parenth_graph).update_monitor()

@@ -1,6 +1,7 @@
 import qcodes as qc
 from autodepgraph.graph import CalibrationNode, Graph
 from unittest import TestCase
+from qcodes.instrument.base import Instrument
 
 
 class Test_GraphLogic(TestCase):
@@ -34,7 +35,6 @@ class Test_GraphLogic(TestCase):
         self.node_a.calibrate_functions()
         self.node_b.calibrate_functions()
         self.node_c.calibrate_functions()
-
 
     def test_all_good(self):
         # All checks and calibrations pass.
@@ -253,6 +253,7 @@ class Test_Node(TestCase):
     """
     Tests the logic of nodes that does not relate to other nodes or graphs.
     """
+
     def test_name(self):
         node_a = CalibrationNode('A')
         self.assertEqual(node_a.name, 'A')
@@ -271,6 +272,21 @@ class Test_Node(TestCase):
 
         self.assertEqual(state_after_timeout, 'needs calibration')
 
+    def test_instrument_method_as_calibfunc(self):
+        node_c = CalibrationNode('C')
+        mock_instr = MockInstrument('mock_instr')
+
+        node_c.calibrate_functions(['mock_instr.calibrate'])
+        node_c.check_functions(['mock_instr.check_state'])
+
+        self.assertEqual(mock_instr.check_cnt, 0)
+        node_c.check()
+        self.assertEqual(mock_instr.check_cnt, 1)
+
+        self.assertEqual(mock_instr.cal_cnt, 0)
+        node_c.calibrate()
+        self.assertEqual(mock_instr.cal_cnt, 1)
+
     @classmethod
     def tearDownClass(self):
         # finds and closes all qcodes instruments
@@ -280,3 +296,21 @@ class Test_Node(TestCase):
                 qc.Instrument.find_instrument(insname).close()
             except KeyError:
                 pass
+
+
+class MockInstrument(Instrument):
+    '''
+    '''
+
+    def __init__(self, name, **kw):
+        super().__init__(name, **kw)
+        self.check_cnt = 0
+        self.cal_cnt = 0
+
+    def check_state(self):
+        self.check_cnt += 1
+        return 'good'
+
+    def calibrate(self):
+        self.cal_cnt += 1
+        return True
