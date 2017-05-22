@@ -40,6 +40,41 @@ class Test_Graph(TestCase):
         nodes_after = test_graph.nodes.keys()
         self.assertEqual(nodes_after, set(['A', 'B', 'E']))
 
+    def test_add_remove_edges(self):
+        # reset all edges
+        for i in [self.node_A, self.node_B, self.node_C, self.node_D]:
+            i.parents([])
+            i.children([])
+
+        self.node_A.add_parent('B')
+        self.node_A.add_parent('D')
+        self.node_C.add_child('D')
+        self.node_D.add_parent('B')
+
+        self.assertEqual(self.node_A.parents(), ['B', 'D'])
+        self.assertEqual(self.node_A.children(), [])
+        self.assertEqual(self.node_B.parents(), [])
+        self.assertEqual(self.node_B.children(), ['A', 'D'])
+        self.assertEqual(self.node_C.parents(), [])
+        self.assertEqual(self.node_C.children(), ['D'])
+        self.assertEqual(self.node_D.parents(), ['C', 'B'])
+        self.assertEqual(self.node_D.children(), [])
+
+        self.node_A.remove_parent('B')
+        self.node_A.remove_parent('D')
+        self.node_C.remove_child('D')
+        self.node_B.remove_child('B')
+
+        self.assertEqual(self.node_A.parents(), [])
+        self.assertEqual(self.node_B.parents(), [])
+        self.assertEqual(self.node_C.parents(), [])
+        self.assertEqual(self.node_D.parents(), [])
+
+        self.assertEqual(self.node_A.children(), [])
+        self.assertEqual(self.node_B.children(), [])
+        self.assertEqual(self.node_C.children(), [])
+        self.assertEqual(self.node_D.children(), [])
+
     def test_save_graph(self):
         test_graph = Graph('test_graph_saving')
 

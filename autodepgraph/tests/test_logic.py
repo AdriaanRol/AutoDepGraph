@@ -23,9 +23,9 @@ class Test_GraphLogic(TestCase):
         self.dummy_graph.add_node(self.node_c)
 
         # Link the nodes
-        self.node_a.dependencies(['B', 'C'])
-        self.node_b.dependencies(['C'])
-        self.node_c.dependencies([])
+        self.node_a.parents(['B', 'C'])
+        self.node_b.parents(['C'])
+        self.node_c.parents([])
 
         # Populate nodes with checks and calibration functions
         self.node_a.check_functions()

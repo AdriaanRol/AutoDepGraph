@@ -1,4 +1,5 @@
 import qcodes.utils.validators as vals
+import logging
 import numpy as np
 from datetime import datetime
 import autodepgraph.node_functions.calibration_functions as cal_f
@@ -27,8 +28,15 @@ class CalibrationNode(Instrument):
                            parameter_class=ManualParameter,
                            vals=vals.Numbers(min_value=0))
 
-        self.add_parameter('dependencies',
-                           docstring='a list of names of Calibration nodes',
+        self.add_parameter('parents',
+                           docstring='List of names of Calibration nodes '
+                                     + 'on which this node depends',
+                           initial_value=[],
+                           vals=vals.Lists(vals.Strings()),
+                           parameter_class=ManualParameter)
+        self.add_parameter('children',
+                           docstring='List of names of Calibration nodes '
+                                     + 'which depend on this node',
                            initial_value=[],
                            vals=vals.Lists(vals.Strings()),
                            parameter_class=ManualParameter)
@@ -78,6 +86,106 @@ class CalibrationNode(Instrument):
     def __call__(self, verbose=False):
         return self.execute_node(verbose=verbose)
 
+    def close(self):
+        '''
+        Removes reference to this node from its parents and close the
+        instrument.
+        Note: References to this node from child nodes are not removed
+        because we want to know about it if removing this breaks a dependency.
+        '''
+        for node in self.parents():
+            try:
+                self.find_instrument(node).remove_child(self.name)
+            except KeyError:
+                logging.warning('Could not remove reference from node "{}": '
+                                .format(node) + 'node not found')
+
+        super().close()
+
+    def add_child(self, name, add_parent=True):
+        '''
+        Adds a child to this node. By default also adds this node to the
+        parents of the new child node.
+        '''
+        childNode = self.find_instrument(name)
+
+        if name not in self.children():
+            self.children().append(name)
+        else:
+            logging.warning('Node "{}" is already a child of node "{}"'
+                            .format(name, self.name))
+
+        if add_parent:
+            childNode.add_parent(self.name, add_child=False)
+
+    def remove_child(self, name, remove_parent=True):
+        '''
+        Removes a child from this node. By default also removes this node from
+        the parent nodes of the removed child.
+        '''
+        if name in self.children():
+            self.children().remove(name)
+        else:
+            logging.warning('Could not remove child "{}" from node "{}": '
+                            .format(name, self.name)
+                            + '"{}" not in self.children()'.format(name))
+
+        if remove_parent:
+            try:
+                childNode = self.find_instrument(name)
+                childNode.remove_parent(self.name, remove_child=False)
+            except:
+                logging.warning('Node "{}" not found.'.format(name))
+
+    def add_parent(self, name, add_child=True):
+        '''
+        Adds a parent to this node. By default also adds this node to the
+        children of the new parent node.
+        '''
+        parentNode = self.find_instrument(name)
+
+        if name not in self.parents():
+            self.parents().append(name)
+        else:
+            logging.warning('Node "{}" is already a parent of node "{}"'
+                            .format(name, self.name))
+
+        if add_child:
+            parentNode.add_child(self.name, add_parent=False)
+
+    def remove_parent(self, name, remove_child=True):
+        '''
+        Removes a parent node from this node. By default also removes this
+        node from the child nodes of the removed parent.
+        '''
+        if name in self.parents():
+            self.parents().remove(name)
+        else:
+            logging.warning('Could not remove parent "{}" from node "{}": '
+                            .format(name, self.name)
+                            + '"{}" not in self.parents()'.format(name))
+
+        if remove_child:
+            try:
+                parentNode = self.find_instrument(name)
+                parentNode.remove_child(self.name, remove_parent=False)
+            except:
+                logging.warning('Node "{}" not found.'.format(name))
+
+    def propagate_error(self, state):
+        '''
+        Sets the state of this node to 'state' and calls this method for all
+        child nodes (nodes that depend on this node). Used for recursively
+        propagate errors.
+        '''
+        self.state(state)
+        for child_name in self.children():
+            # This will result in a depth-first search through the graph
+            # that is quite inefficient and can visit many nodes multiple
+            # times. We don't really care though, since the graph shouldn't
+            # larger than ~100 nodes.
+            self.find_instrument(child_name).propagate_error(state)
+
     def execute_node(self, verbose=False):
         """
         Executing a node attempts to go from any state to a good state.
@@ -103,7 +211,7 @@ class CalibrationNode(Instrument):
         # 1. Going over the states of the dependencies
         # get the last known states of all dependencies
         dep_states = []
-        for dep_name in self.dependencies():
+        for dep_name in self.parents():
             dep_state = self.find_instrument(dep_name).state()
             dep_states += [dep_state]
             if dep_state in ['good', 'unknown']:
@@ -136,7 +244,7 @@ class CalibrationNode(Instrument):
         if state == 'bad':
             # if the state is bad it will execute *all* dependencies. Even
             # the ones that were updated before.
-            for dep_name in self.dependencies():
+            for dep_name in self.parents():
                 dep = self.find_instrument(dep_name)
                 dep.execute_node(verbose=verbose)
             self.calibrate()
