@@ -58,12 +58,12 @@ class Test_Graph(TestCase):
         self.assertEqual(self.node_C.parents(), [])
         self.assertEqual(self.node_C.children(), ['D'])
         self.assertEqual(self.node_D.parents(), ['C', 'B'])
-        self.assertEqual(self.node_D.children(), [])
+        self.assertEqual(self.node_D.children(), ['A'])
 
         self.node_A.remove_parent('B')
         self.node_A.remove_parent('D')
         self.node_C.remove_child('D')
-        self.node_B.remove_child('B')
+        self.node_B.remove_child('D')
 
         self.assertEqual(self.node_A.parents(), [])
         self.assertEqual(self.node_B.parents(), [])

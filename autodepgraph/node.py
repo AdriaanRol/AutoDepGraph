@@ -73,6 +73,9 @@ class CalibrationNode(Instrument):
         self._calib_cnt = 0
         self._check_cnt = 0
 
+    def __call__(self, verbose=False):
+        return self.execute_node(verbose=verbose)
+
     def _set_state(self, val):
         self.state._latest_set_ts = datetime.now()
         self._state = val
@@ -82,9 +85,6 @@ class CalibrationNode(Instrument):
         if deltaT > self.calibration_timeout():
             self._state = 'needs calibration'
         return self._state
-
-    def __call__(self, verbose=False):
-        return self.execute_node(verbose=verbose)
 
     def close(self):
         '''
@@ -97,8 +97,9 @@ class CalibrationNode(Instrument):
             try:
                 self.find_instrument(node).remove_child(self.name)
             except KeyError:
-                logging.warning('Could not remove reference from node "{}": '
-                                .format(node) + 'node not found')
+                # if the other node is not found, the reference does not need
+                # to be removed anyway
+                pass
 
         super().close()
 
