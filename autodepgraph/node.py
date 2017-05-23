@@ -93,9 +93,11 @@ class CalibrationNode(Instrument):
         Note: References to this node from child nodes are not removed
         because we want to know about it if removing this breaks a dependency.
         '''
-        for node in self.parents():
+        for node_name in self.parents():
             try:
-                self.find_instrument(node).remove_child(self.name)
+                node = self.find_instrument(node_name)
+                if self.name in node.children():
+                    node.children.remove(self.name)
             except KeyError:
                 # if the other node is not found, the reference does not need
                 # to be removed anyway
@@ -103,45 +105,10 @@ class CalibrationNode(Instrument):
 
         super().close()
 
-    def add_child(self, name, add_parent=True):
+    def add_parent(self, name):
         '''
-        Adds a child to this node. By default also adds this node to the
-        parents of the new child node.
-        '''
-        childNode = self.find_instrument(name)
-
-        if name not in self.children():
-            self.children().append(name)
-        else:
-            logging.warning('Node "{}" is already a child of node "{}"'
-                            .format(name, self.name))
-
-        if add_parent:
-            childNode.add_parent(self.name, add_child=False)
-
-    def remove_child(self, name, remove_parent=True):
-        '''
-        Removes a child from this node. By default also removes this node from
-        the parent nodes of the removed child.
-        '''
-        if name in self.children():
-            self.children().remove(name)
-        else:
-            logging.warning('Could not remove child "{}" from node "{}": '
-                            .format(name, self.name)
-                            + '"{}" not in self.children()'.format(name))
-
-        if remove_parent:
-            try:
-                childNode = self.find_instrument(name)
-                childNode.remove_parent(self.name, remove_child=False)
-            except:
-                logging.warning('Node "{}" not found.'.format(name))
-
-    def add_parent(self, name, add_child=True):
-        '''
-        Adds a parent to this node. By default also adds this node to the
-        children of the new parent node.
+        Adds a parent to this node. Also adds this node to the children of
+        the new parent node.
         '''
         parentNode = self.find_instrument(name)
 
@@ -151,10 +118,10 @@ class CalibrationNode(Instrument):
             logging.warning('Node "{}" is already a parent of node "{}"'
                             .format(name, self.name))
 
-        if add_child:
-            parentNode.add_child(self.name, add_parent=False)
+        if self.name not in parentNode.children():
+            parentNode.children().append(self.name)
 
-    def remove_parent(self, name, remove_child=True):
+    def remove_parent(self, name):
         '''
         Removes a parent node from this node. By default also removes this
         node from the child nodes of the removed parent.
@@ -166,12 +133,12 @@ class CalibrationNode(Instrument):
                             .format(name, self.name)
                             + '"{}" not in self.parents()'.format(name))
 
-        if remove_child:
-            try:
-                parentNode = self.find_instrument(name)
-                parentNode.remove_child(self.name, remove_parent=False)
-            except:
-                logging.warning('Node "{}" not found.'.format(name))
+        try:
+            parentNode = self.find_instrument(name)
+            if self.name in parentNode.children():
+                parentNode.children().remove(self.name)
+        except:
+            logging.warning('Parent node "{}" not found.'.format(name))
 
     def propagate_error(self, state):
         '''
