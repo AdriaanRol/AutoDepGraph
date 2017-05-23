@@ -1,7 +1,6 @@
 import autodepgraph as adg
 import autodepgraph.graph as g
 import autodepgraph.node as n
-import autodepgraph.visualization as v
 import os
 
 test_dir = os.path.join(adg.__path__[0], 'tests', 'test_data')

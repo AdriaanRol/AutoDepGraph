@@ -137,7 +137,7 @@ class CalibrationNode(Instrument):
             parentNode = self.find_instrument(name)
             if self.name in parentNode.children():
                 parentNode.children().remove(self.name)
-        except:
+        except KeyError:
             logging.warning('Parent node "{}" not found.'.format(name))
 
     def propagate_error(self, state):
