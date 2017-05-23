@@ -29,13 +29,13 @@ class CalibrationNode(Instrument):
                            vals=vals.Numbers(min_value=0))
 
         self.add_parameter('parents',
-                           docstring='List of names of Calibration nodes '
+                           docstring='List of names of nodes '
                                      + 'on which this node depends',
                            initial_value=[],
                            vals=vals.Lists(vals.Strings()),
                            parameter_class=ManualParameter)
         self.add_parameter('children',
-                           docstring='List of names of Calibration nodes '
+                           docstring='List of names of nodes '
                                      + 'which depend on this node',
                            initial_value=[],
                            vals=vals.Lists(vals.Strings()),
