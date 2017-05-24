@@ -30,16 +30,24 @@ class CalibrationNode(Instrument):
 
         self.add_parameter('parents',
                            docstring='List of names of nodes '
-                                     + 'on which this node depends',
-                           initial_value=[],
-                           vals=vals.Lists(vals.Strings()),
-                           parameter_class=ManualParameter)
+                                     'on which this node depends. '
+                                     'Add nodes to parents using the '
+                                     'add_parent method.',
+                           set_cmd=self._set_parents,
+                           get_cmd=self._get_parents,
+                           vals=vals.Lists(vals.Strings()))
+        self._parents = []
         self.add_parameter('children',
                            docstring='List of names of nodes '
-                                     + 'which depend on this node',
-                           initial_value=[],
-                           vals=vals.Lists(vals.Strings()),
-                           parameter_class=ManualParameter)
+                                     'which depend on this node. '
+                                     'Not intended to be set directly. '
+                                     'Children are automatically added '
+                                     'whenever this node is added as a '
+                                     'parent to another node.',
+                           set_cmd=self._set_children,
+                           get_cmd=self._get_children,
+                           vals=vals.Lists(vals.Strings()))
+        self._children = []
 
         chk_docst = (
             'Name of the function used to perform the check, can be either a '
@@ -86,6 +94,24 @@ class CalibrationNode(Instrument):
             self._state = 'needs calibration'
         return self._state
 
+    def _set_parents(self, val):
+        '''
+        Sets the parents parameter by calling the add_parent method for every
+        item. This ensures that this node is also added to the children of
+        the other nodes.
+        '''
+        for i in val:
+            self.add_parent(i)
+
+    def _get_parents(self):
+        return self._parents
+
+    def _set_children(self, val):
+        logging.warning('Manually setting children not allowed!')
+
+    def _get_children(self):
+        return self._children
+
     def close(self):
         '''
         Removes reference to this node from its parents and close the
@@ -97,7 +123,7 @@ class CalibrationNode(Instrument):
             try:
                 node = self.find_instrument(node_name)
                 if self.name in node.children():
-                    node.children.remove(self.name)
+                    node.children().remove(self.name)
             except KeyError:
                 # if the other node is not found, the reference does not need
                 # to be removed anyway
@@ -105,40 +131,60 @@ class CalibrationNode(Instrument):
 
         super().close()
 
-    def add_parent(self, name):
+    def add_parent(self, node):
         '''
         Adds a parent to this node. Also adds this node to the children of
         the new parent node.
+        The argument node can be a string, or a node object, or a
+        list/numpy.array of these types.
         '''
-        parentNode = self.find_instrument(name)
-
-        if name not in self.parents():
-            self.parents().append(name)
+        if type(node) is list or type(node) is np.ndarray:
+            for i in node:
+                self.add_parent(i)
         else:
-            logging.warning('Node "{}" is already a parent of node "{}"'
-                            .format(name, self.name))
+            if isinstance(node, CalibrationNode):
+                name = node.name
+            else:
+                name = node
+                node = self.find_instrument(name)
 
-        if self.name not in parentNode.children():
-            parentNode.children().append(self.name)
+            if name not in self.parents():
+                self.parents().append(name)
+            else:
+                logging.warning('Node "{}" is already a parent of node "{}"'
+                                .format(name, self.name))
 
-    def remove_parent(self, name):
+            if self.name not in node.children():
+                node.children().append(self.name)
+
+    def remove_parent(self, node):
         '''
         Removes a parent node from this node. By default also removes this
         node from the child nodes of the removed parent.
+        node can be a string or a node object.
         '''
-        if name in self.parents():
-            self.parents().remove(name)
+        if type(node) is list or type(node) is np.ndarray:
+            for i in node:
+                self.remove_parent(i)
         else:
-            logging.warning('Could not remove parent "{}" from node "{}": '
-                            .format(name, self.name)
-                            + '"{}" not in self.parents()'.format(name))
+            if isinstance(node, CalibrationNode):
+                name = node.name
+            else:
+                name = node
 
-        try:
-            parentNode = self.find_instrument(name)
-            if self.name in parentNode.children():
-                parentNode.children().remove(self.name)
-        except KeyError:
-            logging.warning('Parent node "{}" not found.'.format(name))
+            if name in self.parents():
+                self.parents().remove(name)
+            else:
+                logging.warning('Could not remove parent "{}" from node "{}": '
+                                .format(name, self.name)
+                                + '"{}" not in self.parents()'.format(name))
+
+            try:
+                node = self.find_instrument(name)
+                if self.name in node.children():
+                    node.children().remove(self.name)
+            except KeyError:
+                logging.warning('Parent node "{}" not found.'.format(name))
 
     def propagate_error(self, state):
         '''

@@ -33,8 +33,10 @@ class Graph(Instrument):
                 # If the node does not exist, create a new node
                 node = CalibrationNode(node_snap['name'])
 
-            # children are not set because it is automatically set when
-            # parents are set.
+            # children is not in pars_to_update because the children are set
+            # whenever a node is added as a parent to another node. This means
+            # that loading and setting parents for all node automatically also
+            # sets the children for all nodes correctly.
             pars_to_update = ['parents', 'check_functions',
                               'calibrate_functions']
             if load_node_state:

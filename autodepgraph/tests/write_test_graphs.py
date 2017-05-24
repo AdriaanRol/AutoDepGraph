@@ -3,6 +3,11 @@ import autodepgraph.graph as g
 import autodepgraph.node as n
 import os
 
+############################################
+# This file generates and saves predefined
+# graphs used in the tests.
+############################################
+
 test_dir = os.path.join(adg.__path__[0], 'tests', 'test_data')
 
 # Write graph for test_graph

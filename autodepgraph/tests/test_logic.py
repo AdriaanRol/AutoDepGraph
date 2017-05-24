@@ -238,6 +238,20 @@ class Test_GraphLogic(TestCase):
         with self.assertRaises(AttributeError):
             node_d()
 
+    def test_error_propagation(self):
+        self.node_c.state('good')
+        self.node_b.propagate_error('bad')
+
+        self.assertEqual(self.node_a.state(), 'bad')
+        self.assertEqual(self.node_b.state(), 'bad')
+        self.assertEqual(self.node_c.state(), 'good')
+
+        self.node_c.propagate_error('unknown')
+
+        self.assertEqual(self.node_a.state(), 'unknown')
+        self.assertEqual(self.node_b.state(), 'unknown')
+        self.assertEqual(self.node_c.state(), 'unknown')
+
     @classmethod
     def tearDownClass(self):
         # finds and closes all qcodes instruments
