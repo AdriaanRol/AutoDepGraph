@@ -138,7 +138,7 @@ class CalibrationNode(Instrument):
         The argument node can be a string, or a node object, or a
         list/numpy.array of these types.
         '''
-        if type(node) is list or type(node) is np.ndarray:
+        if isinstance(node, list) or isinstance(node, np.ndarray):
             for i in node:
                 self.add_parent(i)
         else:
@@ -163,7 +163,7 @@ class CalibrationNode(Instrument):
         node from the child nodes of the removed parent.
         node can be a string or a node object.
         '''
-        if type(node) is list or type(node) is np.ndarray:
+        if isinstance(node, list) or isinstance(node, np.ndarray):
             for i in node:
                 self.remove_parent(i)
         else:
