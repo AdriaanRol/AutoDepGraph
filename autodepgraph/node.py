@@ -31,9 +31,9 @@ class CalibrationNode(Instrument):
         self.add_parameter('parents',
                            docstring='List of names of nodes '
                                      'on which this node depends. '
-                                     'Add nodes to parents using the '
-                                     'add_parent method.',
-                           set_cmd=self._set_parents,
+                                     'To add or remove nodes use the '
+                                     'add_parent and remove_parent '
+                                     'methods.',
                            get_cmd=self._get_parents,
                            vals=vals.Lists(vals.Strings()))
         self._parents = []
@@ -44,7 +44,6 @@ class CalibrationNode(Instrument):
                                      'Children are automatically added '
                                      'whenever this node is added as a '
                                      'parent to another node.',
-                           set_cmd=self._set_children,
                            get_cmd=self._get_children,
                            vals=vals.Lists(vals.Strings()))
         self._children = []
@@ -94,20 +93,8 @@ class CalibrationNode(Instrument):
             self._state = 'needs calibration'
         return self._state
 
-    def _set_parents(self, val):
-        '''
-        Sets the parents parameter by calling the add_parent method for every
-        item. This ensures that this node is also added to the children of
-        the other nodes.
-        '''
-        for i in val:
-            self.add_parent(i)
-
     def _get_parents(self):
         return self._parents
-
-    def _set_children(self, val):
-        logging.warning('Manually setting children not allowed!')
 
     def _get_children(self):
         return self._children
