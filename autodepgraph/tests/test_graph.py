@@ -44,7 +44,6 @@ class Test_Graph(TestCase):
         # reset all edges
         for i in [self.node_A, self.node_B, self.node_C, self.node_D]:
             i.parents([])
-            i.children([])
 
         self.node_A.add_parent('B')
         self.node_A.add_parent('D')
