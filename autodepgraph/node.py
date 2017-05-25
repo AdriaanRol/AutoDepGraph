@@ -34,6 +34,7 @@ class CalibrationNode(Instrument):
                                      'To add or remove nodes use the '
                                      'add_parent and remove_parent '
                                      'methods.',
+                           set_cmd=self._set_parents,
                            get_cmd=self._get_parents,
                            vals=vals.Lists(vals.Strings()))
         self._parents = []
@@ -92,6 +93,18 @@ class CalibrationNode(Instrument):
         if deltaT > self.calibration_timeout():
             self._state = 'needs calibration'
         return self._state
+
+    def _set_parents(self, val):
+        '''
+        Sets the parents to val by first removing all parents with
+        remove_parent and then calling add_parent for every item
+        in val.
+        '''
+        for i in self.parents():
+            self.remove_parent(i)
+
+        for i in val:
+            self.add_parent(i)
 
     def _get_parents(self):
         return self._parents
