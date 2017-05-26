@@ -1,90 +1,226 @@
 meta: {}
 nodes:
   A:
-    __class__: autodepgraph.graph.CalibrationNode
+    __class__: autodepgraph.node.CalibrationNode
     functions: {}
     name: A
     parameters:
-      IDN: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.graph.CalibrationNode,
+      IDN: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
         instrument_name: A, label: IDN, name: IDN, ts: null, unit: '', vals: <Anything>,
         value: null}
-      calibrate_functions: {__class__: qcodes.instrument.parameter.ManualParameter,
-        instrument: autodepgraph.graph.CalibrationNode, instrument_name: A, label: calibrate_functions,
-        name: calibrate_functions, ts: null, unit: '', vals: '<Lists : <Strings>>',
-        value: null}
-      check_functions: {__class__: qcodes.instrument.parameter.ManualParameter, instrument: autodepgraph.graph.CalibrationNode,
-        instrument_name: A, label: check_functions, name: check_functions, ts: null,
-        unit: '', vals: '<Lists : <Strings>>', value: null}
-      dependencies: {__class__: qcodes.instrument.parameter.ManualParameter, instrument: autodepgraph.graph.CalibrationNode,
-        instrument_name: A, label: dependencies, name: dependencies, ts: null, unit: '',
-        vals: '<Lists : <Strings>>', value: null}
-      state: {__class__: qcodes.instrument.parameter.ManualParameter, instrument: autodepgraph.graph.CalibrationNode,
-        instrument_name: A, label: state, name: state, ts: '2017-04-29 16:41:13',
-        unit: '', vals: '<Enum: {''good'', ''unknown'', ''active'', ''needs calibration'',
+      calibrate_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: A
+        label: calibrate_functions
+        name: calibrate_functions
+        ts: '2017-05-23 10:02:16'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: []
+      calibration_timeout: {__class__: qcodes.instrument.parameter.ManualParameter,
+        instrument: autodepgraph.node.CalibrationNode, instrument_name: A, label: calibration_timeout,
+        name: calibration_timeout, ts: '2017-05-23 10:02:16', unit: s, vals: <Numbers
+          v>=0>, value: .inf}
+      check_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: A
+        label: check_functions
+        name: check_functions
+        ts: '2017-05-23 10:02:16'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: []
+      children:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: A
+        label: children
+        name: children
+        ts: '2017-05-23 10:02:16'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: []
+      parents:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: A
+        label: parents
+        name: parents
+        ts: '2017-05-23 10:02:16'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: []
+      state: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
+        instrument_name: A, label: state, name: state, ts: '2017-05-23 10:02:16',
+        unit: '', vals: '<Enum: {''unknown'', ''needs calibration'', ''active'', ''good'',
           ''bad''}>', value: good}
   B:
-    __class__: autodepgraph.graph.CalibrationNode
+    __class__: autodepgraph.node.CalibrationNode
     functions: {}
     name: B
     parameters:
-      IDN: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.graph.CalibrationNode,
+      IDN: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
         instrument_name: B, label: IDN, name: IDN, ts: null, unit: '', vals: <Anything>,
         value: null}
-      calibrate_functions: {__class__: qcodes.instrument.parameter.ManualParameter,
-        instrument: autodepgraph.graph.CalibrationNode, instrument_name: B, label: calibrate_functions,
-        name: calibrate_functions, ts: null, unit: '', vals: '<Lists : <Strings>>',
-        value: null}
-      check_functions: {__class__: qcodes.instrument.parameter.ManualParameter, instrument: autodepgraph.graph.CalibrationNode,
-        instrument_name: B, label: check_functions, name: check_functions, ts: null,
-        unit: '', vals: '<Lists : <Strings>>', value: null}
-      dependencies: {__class__: qcodes.instrument.parameter.ManualParameter, instrument: autodepgraph.graph.CalibrationNode,
-        instrument_name: B, label: dependencies, name: dependencies, ts: null, unit: '',
-        vals: '<Lists : <Strings>>', value: [A]}
-      state: {__class__: qcodes.instrument.parameter.ManualParameter, instrument: autodepgraph.graph.CalibrationNode,
-        instrument_name: B, label: state, name: state, ts: '2017-04-29 16:41:13',
-        unit: '', vals: '<Enum: {''good'', ''unknown'', ''active'', ''needs calibration'',
+      calibrate_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: B
+        label: calibrate_functions
+        name: calibrate_functions
+        ts: '2017-05-23 10:02:16'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: []
+      calibration_timeout: {__class__: qcodes.instrument.parameter.ManualParameter,
+        instrument: autodepgraph.node.CalibrationNode, instrument_name: B, label: calibration_timeout,
+        name: calibration_timeout, ts: '2017-05-23 10:02:16', unit: s, vals: <Numbers
+          v>=0>, value: .inf}
+      check_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: B
+        label: check_functions
+        name: check_functions
+        ts: '2017-05-23 10:02:16'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: []
+      children:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: B
+        label: children
+        name: children
+        ts: '2017-05-23 10:02:16'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: []
+      parents:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: B
+        label: parents
+        name: parents
+        ts: '2017-05-23 10:02:16'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: []
+      state: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
+        instrument_name: B, label: state, name: state, ts: '2017-05-23 10:02:16',
+        unit: '', vals: '<Enum: {''unknown'', ''needs calibration'', ''active'', ''good'',
           ''bad''}>', value: bad}
   E:
-    __class__: autodepgraph.graph.CalibrationNode
+    __class__: autodepgraph.node.CalibrationNode
     functions: {}
     name: E
     parameters:
-      IDN: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.graph.CalibrationNode,
+      IDN: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
         instrument_name: E, label: IDN, name: IDN, ts: null, unit: '', vals: <Anything>,
         value: null}
-      calibrate_functions: {__class__: qcodes.instrument.parameter.ManualParameter,
-        instrument: autodepgraph.graph.CalibrationNode, instrument_name: E, label: calibrate_functions,
-        name: calibrate_functions, ts: null, unit: '', vals: '<Lists : <Strings>>',
-        value: null}
-      check_functions: {__class__: qcodes.instrument.parameter.ManualParameter, instrument: autodepgraph.graph.CalibrationNode,
-        instrument_name: E, label: check_functions, name: check_functions, ts: null,
-        unit: '', vals: '<Lists : <Strings>>', value: null}
-      dependencies: {__class__: qcodes.instrument.parameter.ManualParameter, instrument: autodepgraph.graph.CalibrationNode,
-        instrument_name: E, label: dependencies, name: dependencies, ts: null, unit: '',
-        vals: '<Lists : <Strings>>', value: ['A']}
-      state: {__class__: qcodes.instrument.parameter.ManualParameter, instrument: autodepgraph.graph.CalibrationNode,
-        instrument_name: E, label: state, name: state, ts: '2017-04-29 16:41:13',
-        unit: '', vals: '<Enum: {''good'', ''unknown'', ''active'', ''needs calibration'',
+      calibrate_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: E
+        label: calibrate_functions
+        name: calibrate_functions
+        ts: '2017-05-23 10:02:16'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: []
+      calibration_timeout: {__class__: qcodes.instrument.parameter.ManualParameter,
+        instrument: autodepgraph.node.CalibrationNode, instrument_name: E, label: calibration_timeout,
+        name: calibration_timeout, ts: '2017-05-23 10:02:16', unit: s, vals: <Numbers
+          v>=0>, value: .inf}
+      check_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: E
+        label: check_functions
+        name: check_functions
+        ts: '2017-05-23 10:02:16'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: []
+      children:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: E
+        label: children
+        name: children
+        ts: '2017-05-23 10:02:16'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: []
+      parents:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: E
+        label: parents
+        name: parents
+        ts: '2017-05-23 10:02:16'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: []
+      state: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
+        instrument_name: E, label: state, name: state, ts: '2017-05-23 10:02:16',
+        unit: '', vals: '<Enum: {''unknown'', ''needs calibration'', ''active'', ''good'',
           ''bad''}>', value: unknown}
   F:
-    __class__: autodepgraph.graph.CalibrationNode
+    __class__: autodepgraph.node.CalibrationNode
     functions: {}
     name: F
     parameters:
-      IDN: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.graph.CalibrationNode,
+      IDN: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
         instrument_name: F, label: IDN, name: IDN, ts: null, unit: '', vals: <Anything>,
         value: null}
-      calibrate_functions: {__class__: qcodes.instrument.parameter.ManualParameter,
-        instrument: autodepgraph.graph.CalibrationNode, instrument_name: F, label: calibrate_functions,
-        name: calibrate_functions, ts: null, unit: '', vals: '<Lists : <Strings>>',
-        value: null}
-      check_functions: {__class__: qcodes.instrument.parameter.ManualParameter, instrument: autodepgraph.graph.CalibrationNode,
-        instrument_name: F, label: check_functions, name: check_functions, ts: null,
-        unit: '', vals: '<Lists : <Strings>>', value: null}
-      dependencies: {__class__: qcodes.instrument.parameter.ManualParameter, instrument: autodepgraph.graph.CalibrationNode,
-        instrument_name: F, label: dependencies, name: dependencies, ts: null, unit: '',
-        vals: '<Lists : <Strings>>', value: null}
-      state: {__class__: qcodes.instrument.parameter.ManualParameter, instrument: autodepgraph.graph.CalibrationNode,
-        instrument_name: F, label: state, name: state, ts: '2017-04-29 16:41:13',
-        unit: '', vals: '<Enum: {''good'', ''unknown'', ''active'', ''needs calibration'',
+      calibrate_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: F
+        label: calibrate_functions
+        name: calibrate_functions
+        ts: '2017-05-23 10:02:16'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: []
+      calibration_timeout: {__class__: qcodes.instrument.parameter.ManualParameter,
+        instrument: autodepgraph.node.CalibrationNode, instrument_name: F, label: calibration_timeout,
+        name: calibration_timeout, ts: '2017-05-23 10:02:16', unit: s, vals: <Numbers
+          v>=0>, value: .inf}
+      check_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: F
+        label: check_functions
+        name: check_functions
+        ts: '2017-05-23 10:02:16'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: []
+      children:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: F
+        label: children
+        name: children
+        ts: '2017-05-23 10:02:16'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: []
+      parents:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: F
+        label: parents
+        name: parents
+        ts: '2017-05-23 10:02:16'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: []
+      state: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
+        instrument_name: F, label: state, name: state, ts: '2017-05-23 10:02:16',
+        unit: '', vals: '<Enum: {''unknown'', ''needs calibration'', ''active'', ''good'',
           ''bad''}>', value: unknown}
