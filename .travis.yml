@@ -27,7 +27,7 @@ install:
     - source activate test_env
     - conda install numpy scipy pyopengl pytest flake8 six coverage --yes
     - conda install numpy scipy pyopengl pytest flake8 six coverage --yes
-    - conda install -c marufr pygraphviz --yes
+    - conda install -c bioconda pygraphviz --yes
     - echo ${QT}
     - echo ${TEST}
     - echo ${PYTHON}
