@@ -35,6 +35,9 @@ class Test_visualization(TestCase):
         snap = self.test_graph.snapshot()
         vis.draw_graph_mpl(snap)
 
+        self.test_graph.plot_mode = 'mpl'
+        self.test_graph.update_monitor()
+
     def test_draw_graph_pyqt(self):
         # This test only tests if the plotting runs and does not check if
         # it is correct
@@ -42,6 +45,9 @@ class Test_visualization(TestCase):
         DiGraphWindow = vis.draw_graph_pyqt(snap)
         # Updating and reusing the same plot
         DiGraphWindow = vis.draw_graph_pyqt(snap, DiGraphWindow=DiGraphWindow)
+
+        self.test_graph.plot_mode = 'pg'
+        self.test_graph.update_monitor()
 
     @classmethod
     def tearDownClass(self):

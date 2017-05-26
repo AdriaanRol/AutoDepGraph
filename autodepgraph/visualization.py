@@ -129,6 +129,6 @@ def draw_graph_pyqt(snapshot, DiGraphWindow=None, pos=None, layout='spring'):
         DiGraphWindow = pg_DiGraph_window()
 
     DiGraphWindow.setData(pos=np.array(pos), adj=adj, size=20, symbol=symbols,
-                     labels=labels, pen=(60, 60, 60),
-                     symbolBrush=colors_list, pxMode=False)
+                          labels=labels, pen=(60, 60, 60),
+                          symbolBrush=colors_list, pxMode=False)
     return DiGraphWindow

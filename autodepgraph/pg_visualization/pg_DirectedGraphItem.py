@@ -32,6 +32,7 @@ class DirectedGraphItem(GraphicsObject):
         self.pos = None
         self.picture = None
         self.labels = None
+        self.old_labels = None
         self.pen = 'default'
         self.symbolSize = 5
         self.setData(**kwds)
@@ -99,12 +100,13 @@ class DirectedGraphItem(GraphicsObject):
 
         # Setting the labels
         v = self.getViewBox()
-        if self.labels is not None:
+        if (self.labels is not None) and (self.old_labels != self.labels):
             for label, pos in zip(self.labels, self.pos):
                 txt = TextItem(text=label, color=(60, 60, 60),
                                anchor=(0.5, 0.5))
                 v.addItem(txt)
                 txt.setPos(pos[0], pos[1])
+        self.old_labels = self.labels
 
         self.informViewBoundsChanged()
 
