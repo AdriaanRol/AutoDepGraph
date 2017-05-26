@@ -9,14 +9,34 @@ python:
 
 env:
     - TRAVISCI=true
+
+
+before_install:
+    - if [ ${TRAVIS_PYTHON_VERSION:0:1} == "2" ]; then wget http://repo.continuum.io/miniconda/Miniconda-3.5.5-Linux-x86_64.sh -O miniconda.sh; else wget http://repo.continuum.io/miniconda/Miniconda3-3.5.5-Linux-x86_64.sh -O miniconda.sh; fi
+    - chmod +x miniconda.sh
+    - ./miniconda.sh -b -p /home/travis/mc
+    - export PATH=/home/travis/mc/bin:$PATH
+
+
 # command to install dependencies
 install:
+    - export GIT_FULL_HASH=`git rev-parse HEAD`
+    - conda update conda --yes
+    - conda create -n test_env python=${PYTHON} --yes
+    - source activate test_env
+    - conda install numpy scipy pyopengl pytest flake8 six coverage --yes
+    - echo ${QT}
+    - echo ${TEST}
+    - echo ${PYTHON}
+    - conda install pyqt --yes;
+
     - pip install --upgrade pip
     - pip install -r requirements.txt
     - pip install git+git://github.com/DiCarloLab-Delft/Qcodes.git
     - pip install coverage pytest-cov pytest --upgrade
     - pip install codacy-coverage
     - pip install -e .
+
 before_script: # configure a headless display to test plot generation
 - "export DISPLAY=:99.0"
 - "sh -e /etc/init.d/xvfb start"
