@@ -1,7 +1,7 @@
 import os
 import qcodes as qc
 from autodepgraph.graph import Graph
-from autodepgraph.visualization import snapshot_to_nxGraph
+from autodepgraph import visualization as vis
 import unittest
 from unittest import TestCase
 import autodepgraph as adg
@@ -18,7 +18,7 @@ class Test_visualization(TestCase):
 
     def test_snapshot_to_nxGraph(self):
         snap = self.test_graph.snapshot()
-        nxG = snapshot_to_nxGraph(snap)
+        nxG = vis.snapshot_to_nxGraph(snap)
         self.assertEqual(set(nxG.nodes()),
                          set(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']))
         dep_edges = set([('D', 'C'), ('D', 'A'), ('E', 'D'), ('G', 'F'),
@@ -29,9 +29,19 @@ class Test_visualization(TestCase):
     def test_get_state_col_map(self):
         raise NotImplementedError()
 
-    @unittest.skip('Test not impemented')
     def test_draw_graph_mpl(self):
-        raise NotImplementedError()
+        # This test only tests if the plotting runs and does not check if
+        # it is correct
+        snap = self.test_graph.snapshot()
+        vis.draw_graph_mpl(snap)
+
+    def test_draw_graph_pyqt(self):
+        # This test only tests if the plotting runs and does not check if
+        # it is correct
+        snap = self.test_graph.snapshot()
+        DiGraphWindow = vis.draw_graph_pyqt(snap)
+        # Updating and reusing the same plot
+        DiGraphWindow = vis.draw_graph_pyqt(snap, DiGraphWindow=DiGraphWindow)
 
     @classmethod
     def tearDownClass(self):
