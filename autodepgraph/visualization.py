@@ -34,7 +34,7 @@ def snapshot_to_nxGraph(snapshot):
     nxG = nx.DiGraph()
     nxG.add_nodes_from(g_snap)
     for node_name, n_snap in g_snap.items():
-        for dependency in n_snap['parameters']['dependencies']['value']:
+        for dependency in n_snap['parameters']['parents']['value']:
             nxG.add_edge(node_name, dependency)
     return nxG
 

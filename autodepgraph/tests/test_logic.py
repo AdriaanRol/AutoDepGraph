@@ -23,9 +23,9 @@ class Test_GraphLogic(TestCase):
         self.dummy_graph.add_node(self.node_c)
 
         # Link the nodes
-        self.node_a.dependencies(['B', 'C'])
-        self.node_b.dependencies(['C'])
-        self.node_c.dependencies([])
+        self.node_a.parents(['B', 'C'])
+        self.node_b.parents(['C'])
+        self.node_c.parents([])
 
         # Populate nodes with checks and calibration functions
         self.node_a.check_functions()
@@ -237,6 +237,20 @@ class Test_GraphLogic(TestCase):
         node_d = CalibrationNode('D')
         with self.assertRaises(AttributeError):
             node_d()
+
+    def test_error_propagation(self):
+        self.node_c.state('good')
+        self.node_b.propagate_error('bad')
+
+        self.assertEqual(self.node_a.state(), 'bad')
+        self.assertEqual(self.node_b.state(), 'bad')
+        self.assertEqual(self.node_c.state(), 'good')
+
+        self.node_c.propagate_error('unknown')
+
+        self.assertEqual(self.node_a.state(), 'unknown')
+        self.assertEqual(self.node_b.state(), 'unknown')
+        self.assertEqual(self.node_c.state(), 'unknown')
 
     @classmethod
     def tearDownClass(self):

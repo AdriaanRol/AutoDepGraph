@@ -1,4 +1,5 @@
 import qcodes.utils.validators as vals
+import logging
 import numpy as np
 from datetime import datetime
 import autodepgraph.node_functions.calibration_functions as cal_f
@@ -27,11 +28,26 @@ class CalibrationNode(Instrument):
                            parameter_class=ManualParameter,
                            vals=vals.Numbers(min_value=0))
 
-        self.add_parameter('dependencies',
-                           docstring='a list of names of Calibration nodes',
-                           initial_value=[],
-                           vals=vals.Lists(vals.Strings()),
-                           parameter_class=ManualParameter)
+        self.add_parameter('parents',
+                           docstring='List of names of nodes '
+                                     'on which this node depends. '
+                                     'To add or remove nodes use the '
+                                     'add_parent and remove_parent '
+                                     'methods.',
+                           set_cmd=self._set_parents,
+                           get_cmd=self._get_parents,
+                           vals=vals.Lists(vals.Strings()))
+        self._parents = []
+        self.add_parameter('children',
+                           docstring='List of names of nodes '
+                                     'which depend on this node. '
+                                     'Not intended to be set directly. '
+                                     'Children are automatically added '
+                                     'whenever this node is added as a '
+                                     'parent to another node.',
+                           get_cmd=self._get_children,
+                           vals=vals.Lists(vals.Strings()))
+        self._children = []
 
         chk_docst = (
             'Name of the function used to perform the check, can be either a '
@@ -65,6 +81,9 @@ class CalibrationNode(Instrument):
         self._calib_cnt = 0
         self._check_cnt = 0
 
+    def __call__(self, verbose=False):
+        return self.execute_node(verbose=verbose)
+
     def _set_state(self, val):
         self.state._latest_set_ts = datetime.now()
         self._state = val
@@ -75,8 +94,111 @@ class CalibrationNode(Instrument):
             self._state = 'needs calibration'
         return self._state
 
-    def __call__(self, verbose=False):
-        return self.execute_node(verbose=verbose)
+    def _set_parents(self, val):
+        '''
+        Sets the parents to val by first removing all parents with
+        remove_parent and then calling add_parent for every item
+        in val.
+        '''
+        for i in self.parents():
+            self.remove_parent(i)
+
+        for i in val:
+            self.add_parent(i)
+
+    def _get_parents(self):
+        return self._parents
+
+    def _get_children(self):
+        return self._children
+
+    def close(self):
+        '''
+        Removes reference to this node from its parents and close the
+        instrument.
+        Note: References to this node from child nodes are not removed
+        because we want to know about it if removing this breaks a dependency.
+        '''
+        for node_name in self.parents():
+            try:
+                node = self.find_instrument(node_name)
+                if self.name in node.children():
+                    node.children().remove(self.name)
+            except KeyError:
+                # if the other node is not found, the reference does not need
+                # to be removed anyway
+                pass
+
+        super().close()
+
+    def add_parent(self, node):
+        '''
+        Adds a parent to this node. Also adds this node to the children of
+        the new parent node.
+        The argument node can be a string, or a node object, or a
+        list/numpy.array of these types.
+        '''
+        if isinstance(node, list) or isinstance(node, np.ndarray):
+            for i in node:
+                self.add_parent(i)
+        else:
+            if isinstance(node, CalibrationNode):
+                name = node.name
+            else:
+                name = node
+                node = self.find_instrument(name)
+
+            if name not in self.parents():
+                self.parents().append(name)
+            else:
+                logging.warning('Node "{}" is already a parent of node "{}"'
+                                .format(name, self.name))
+
+            if self.name not in node.children():
+                node.children().append(self.name)
+
+    def remove_parent(self, node):
+        '''
+        Removes a parent node from this node. By default also removes this
+        node from the child nodes of the removed parent.
+        node can be a string or a node object.
+        '''
+        if isinstance(node, list) or isinstance(node, np.ndarray):
+            for i in node:
+                self.remove_parent(i)
+        else:
+            if isinstance(node, CalibrationNode):
+                name = node.name
+            else:
+                name = node
+
+            if name in self.parents():
+                self.parents().remove(name)
+            else:
+                logging.warning('Could not remove parent "{}" from node "{}": '
+                                .format(name, self.name)
+                                + '"{}" not in self.parents()'.format(name))
+
+            try:
+                node = self.find_instrument(name)
+                if self.name in node.children():
+                    node.children().remove(self.name)
+            except KeyError:
+                logging.warning('Parent node "{}" not found.'.format(name))
+
+    def propagate_error(self, state):
+        '''
+        Sets the state of this node to 'state' and calls this method for all
+        child nodes (nodes that depend on this node). Used for recursively
+        propagate errors.
+        '''
+        self.state(state)
+        for child_name in self.children():
+            # This will result in a depth-first search through the graph
+            # that is quite inefficient and can visit many nodes multiple
+            # times. We don't really care though, since the graph shouldn't
+            # larger than ~100 nodes.
+            self.find_instrument(child_name).propagate_error(state)
 
     def execute_node(self, verbose=False):
         """
@@ -103,7 +225,7 @@ class CalibrationNode(Instrument):
         # 1. Going over the states of the dependencies
         # get the last known states of all dependencies
         dep_states = []
-        for dep_name in self.dependencies():
+        for dep_name in self.parents():
             dep_state = self.find_instrument(dep_name).state()
             dep_states += [dep_state]
             if dep_state in ['good', 'unknown']:
@@ -136,7 +258,7 @@ class CalibrationNode(Instrument):
         if state == 'bad':
             # if the state is bad it will execute *all* dependencies. Even
             # the ones that were updated before.
-            for dep_name in self.dependencies():
+            for dep_name in self.parents():
                 dep = self.find_instrument(dep_name)
                 dep.execute_node(verbose=verbose)
             self.calibrate()
