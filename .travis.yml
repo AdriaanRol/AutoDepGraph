@@ -8,8 +8,7 @@ python:
   - "3.6"
 
 env:
-    - TRAVISCI=true
-    - PYTHON=3.6
+    - TRAVISCI=true PYTHON=3.6
 
 
 before_install:

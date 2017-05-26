@@ -1,7 +1,5 @@
 import networkx as nx
 import numpy as np
-import pyqtgraph as pg
-from autodepgraph.pg_visualization import pg_DirectedGraphItem as pgG
 from autodepgraph.pg_visualization.pg_remotegraph import pg_DiGraph_window
 
 # Colormap used to map states to node colors
