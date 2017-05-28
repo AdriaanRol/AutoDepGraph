@@ -24,6 +24,6 @@ def test_calibration_False():
     return False
 
 
-def NotImplementedError():
-    raise NotImplementedError
+def NotImplementedCalibration():
+    raise NotImplementedError()
 

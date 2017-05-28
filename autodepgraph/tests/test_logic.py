@@ -272,6 +272,16 @@ class Test_Node(TestCase):
         node_a = CalibrationNode('A')
         self.assertEqual(node_a.name, 'A')
 
+    def test_default_functions(self):
+        node_d = CalibrationNode('D')
+        self.assertEqual(node_d.check_function(), 'always_needs_calibration')
+        self.assertEqual(node_d.check(), 'needs calibration')
+
+        self.assertEqual(node_d.calibrate_function(),
+                         'NotImplementedCalibration')
+        with self.assertRaises(NotImplementedError):
+            node_d.calibrate()
+
     def test_timeout(self):
         node_b = CalibrationNode('B')
         node_b.state('good')

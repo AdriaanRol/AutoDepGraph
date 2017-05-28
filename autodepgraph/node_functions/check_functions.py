@@ -14,6 +14,7 @@ def test_check_bad():
     '''
     return 'bad'
 
+
 def always_needs_calibration():
     '''
     A dummy test function for test cases. Always returns 'needs_calibration'.

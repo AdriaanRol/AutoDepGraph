@@ -63,7 +63,7 @@ class CalibrationNode(Instrument):
 
         self.add_parameter('check_function',
                            docstring=chk_docst,
-                           initial_value='state',
+                           initial_value='always_needs_calibration',
                            vals=vals.Strings(),
                            parameter_class=ManualParameter)
         cal_docst = (
@@ -75,7 +75,7 @@ class CalibrationNode(Instrument):
             'calibration.')
         self.add_parameter('calibrate_function',
                            docstring=cal_docst,
-                           initial_value='NotImplementedError',
+                           initial_value='NotImplementedCalibration',
                            vals=vals.Strings(),
                            parameter_class=ManualParameter)
 
