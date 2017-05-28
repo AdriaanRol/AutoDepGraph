@@ -29,6 +29,8 @@ class Graph(Instrument):
         Loads a graph.
         """
         graph_snap = yaml.safe_load(open(filename, 'r'))
+
+        # First all nodes are added
         for node_snap in graph_snap['nodes'].values():
             try:
                 # Look for an existing node
@@ -39,7 +41,13 @@ class Graph(Instrument):
             except KeyError:
                 # If the node does not exist, create a new node
                 node = CalibrationNode(node_snap['name'])
+            self.add_node(node)
 
+        # ## Only after all nodes are added, the parameters are set. ##
+        # it is important the nodes are created first as setting a parent
+        # for a node requires it to exist so that children can be added.
+        for node_snap in graph_snap['nodes'].values():
+            node = self.nodes[node_snap['name']]
             # children is not in pars_to_update because the children are set
             # whenever a node is added as a parent to another node. This means
             # that loading and setting parents for all node automatically also
@@ -54,7 +62,6 @@ class Graph(Instrument):
                 val = pars[parname]['value']
                 if val is not None:
                     node.set(parname, val)
-            self.add_node(node)
 
     def save_graph(self, filename):
         """

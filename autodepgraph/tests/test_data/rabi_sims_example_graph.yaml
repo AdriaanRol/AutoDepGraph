@@ -1,0 +1,843 @@
+meta: {}
+nodes:
+  Amplitude_coarse:
+    __class__: autodepgraph.node.CalibrationNode
+    functions: {}
+    name: Amplitude_coarse
+    parameters:
+      IDN: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
+        instrument_name: Amplitude_coarse, label: IDN, name: IDN, ts: null, unit: '',
+        vals: <Anything>, value: null}
+      calibrate_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: Amplitude_coarse
+        label: calibrate_functions
+        name: calibrate_functions
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [test_calibration_True]
+      calibration_timeout: {__class__: qcodes.instrument.parameter.ManualParameter,
+        instrument: autodepgraph.node.CalibrationNode, instrument_name: Amplitude_coarse,
+        label: calibration_timeout, name: calibration_timeout, ts: '2017-05-28 14:22:45',
+        unit: s, vals: <Numbers v>=0>, value: .inf}
+      check_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: Amplitude_coarse
+        label: check_functions
+        name: check_functions
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [test_check_needs_calibration]
+      children:
+        __class__: qcodes.instrument.parameter.StandardParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: Amplitude_coarse
+        label: children
+        name: children
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [SSRO, frequency_ramsey, Motzoi]
+      parents:
+        __class__: qcodes.instrument.parameter.StandardParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: Amplitude_coarse
+        label: parents
+        name: parents
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [frequency_spec, mixer_offset, mixer_skewness]
+      state: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
+        instrument_name: Amplitude_coarse, label: state, name: state, ts: '2017-05-28
+          14:22:45', unit: '', vals: '<Enum: {''good'', ''unknown'', ''bad'', ''needs
+          calibration'', ''active''}>', value: unknown}
+  Amplitude_fine:
+    __class__: autodepgraph.node.CalibrationNode
+    functions: {}
+    name: Amplitude_fine
+    parameters:
+      IDN: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
+        instrument_name: Amplitude_fine, label: IDN, name: IDN, ts: null, unit: '',
+        vals: <Anything>, value: null}
+      calibrate_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: Amplitude_fine
+        label: calibrate_functions
+        name: calibrate_functions
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [test_calibration_True]
+      calibration_timeout: {__class__: qcodes.instrument.parameter.ManualParameter,
+        instrument: autodepgraph.node.CalibrationNode, instrument_name: Amplitude_fine,
+        label: calibration_timeout, name: calibration_timeout, ts: '2017-05-28 14:22:45',
+        unit: s, vals: <Numbers v>=0>, value: .inf}
+      check_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: Amplitude_fine
+        label: check_functions
+        name: check_functions
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [test_check_needs_calibration]
+      children:
+        __class__: qcodes.instrument.parameter.StandardParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: Amplitude_fine
+        label: children
+        name: children
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [High_fidelity_single_qubit_gates]
+      parents:
+        __class__: qcodes.instrument.parameter.StandardParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: Amplitude_fine
+        label: parents
+        name: parents
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [Motzoi]
+      state: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
+        instrument_name: Amplitude_fine, label: state, name: state, ts: '2017-05-28
+          14:22:45', unit: '', vals: '<Enum: {''good'', ''unknown'', ''bad'', ''needs
+          calibration'', ''active''}>', value: unknown}
+  Chevron_amp:
+    __class__: autodepgraph.node.CalibrationNode
+    functions: {}
+    name: Chevron_amp
+    parameters:
+      IDN: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
+        instrument_name: Chevron_amp, label: IDN, name: IDN, ts: null, unit: '', vals: <Anything>,
+        value: null}
+      calibrate_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: Chevron_amp
+        label: calibrate_functions
+        name: calibrate_functions
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [test_calibration_True]
+      calibration_timeout: {__class__: qcodes.instrument.parameter.ManualParameter,
+        instrument: autodepgraph.node.CalibrationNode, instrument_name: Chevron_amp,
+        label: calibration_timeout, name: calibration_timeout, ts: '2017-05-28 14:22:45',
+        unit: s, vals: <Numbers v>=0>, value: .inf}
+      check_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: Chevron_amp
+        label: check_functions
+        name: check_functions
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [test_check_needs_calibration]
+      children:
+        __class__: qcodes.instrument.parameter.StandardParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: Chevron_amp
+        label: children
+        name: children
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [Trotter_chevron]
+      parents:
+        __class__: qcodes.instrument.parameter.StandardParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: Chevron_amp
+        label: parents
+        name: parents
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [High_fidelity_single_qubit_gates, High_readout_fidelity]
+      state: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
+        instrument_name: Chevron_amp, label: state, name: state, ts: '2017-05-28 14:22:45',
+        unit: '', vals: '<Enum: {''good'', ''unknown'', ''bad'', ''needs calibration'',
+          ''active''}>', value: unknown}
+  High_fidelity_single_qubit_gates:
+    __class__: autodepgraph.node.CalibrationNode
+    functions: {}
+    name: High_fidelity_single_qubit_gates
+    parameters:
+      IDN: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
+        instrument_name: High_fidelity_single_qubit_gates, label: IDN, name: IDN,
+        ts: null, unit: '', vals: <Anything>, value: null}
+      calibrate_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: High_fidelity_single_qubit_gates
+        label: calibrate_functions
+        name: calibrate_functions
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [test_calibration_True]
+      calibration_timeout: {__class__: qcodes.instrument.parameter.ManualParameter,
+        instrument: autodepgraph.node.CalibrationNode, instrument_name: High_fidelity_single_qubit_gates,
+        label: calibration_timeout, name: calibration_timeout, ts: '2017-05-28 14:22:45',
+        unit: s, vals: <Numbers v>=0>, value: .inf}
+      check_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: High_fidelity_single_qubit_gates
+        label: check_functions
+        name: check_functions
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [test_check_needs_calibration]
+      children:
+        __class__: qcodes.instrument.parameter.StandardParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: High_fidelity_single_qubit_gates
+        label: children
+        name: children
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [High_readout_fidelity, Chevron_amp, Rabi_simulation]
+      parents:
+        __class__: qcodes.instrument.parameter.StandardParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: High_fidelity_single_qubit_gates
+        label: parents
+        name: parents
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [Amplitude_fine, Motzoi, frequency_ramsey]
+      state: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
+        instrument_name: High_fidelity_single_qubit_gates, label: state, name: state,
+        ts: '2017-05-28 14:22:45', unit: '', vals: '<Enum: {''good'', ''unknown'',
+          ''bad'', ''needs calibration'', ''active''}>', value: unknown}
+  High_readout_fidelity:
+    __class__: autodepgraph.node.CalibrationNode
+    functions: {}
+    name: High_readout_fidelity
+    parameters:
+      IDN: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
+        instrument_name: High_readout_fidelity, label: IDN, name: IDN, ts: null, unit: '',
+        vals: <Anything>, value: null}
+      calibrate_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: High_readout_fidelity
+        label: calibrate_functions
+        name: calibrate_functions
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [test_calibration_True]
+      calibration_timeout: {__class__: qcodes.instrument.parameter.ManualParameter,
+        instrument: autodepgraph.node.CalibrationNode, instrument_name: High_readout_fidelity,
+        label: calibration_timeout, name: calibration_timeout, ts: '2017-05-28 14:22:45',
+        unit: s, vals: <Numbers v>=0>, value: .inf}
+      check_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: High_readout_fidelity
+        label: check_functions
+        name: check_functions
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [test_check_needs_calibration]
+      children:
+        __class__: qcodes.instrument.parameter.StandardParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: High_readout_fidelity
+        label: children
+        name: children
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [Chevron_amp, Rabi_simulation]
+      parents:
+        __class__: qcodes.instrument.parameter.StandardParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: High_readout_fidelity
+        label: parents
+        name: parents
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [High_fidelity_single_qubit_gates, SSRO]
+      state: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
+        instrument_name: High_readout_fidelity, label: state, name: state, ts: '2017-05-28
+          14:22:45', unit: '', vals: '<Enum: {''good'', ''unknown'', ''bad'', ''needs
+          calibration'', ''active''}>', value: unknown}
+  Motzoi:
+    __class__: autodepgraph.node.CalibrationNode
+    functions: {}
+    name: Motzoi
+    parameters:
+      IDN: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
+        instrument_name: Motzoi, label: IDN, name: IDN, ts: null, unit: '', vals: <Anything>,
+        value: null}
+      calibrate_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: Motzoi
+        label: calibrate_functions
+        name: calibrate_functions
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [test_calibration_True]
+      calibration_timeout: {__class__: qcodes.instrument.parameter.ManualParameter,
+        instrument: autodepgraph.node.CalibrationNode, instrument_name: Motzoi, label: calibration_timeout,
+        name: calibration_timeout, ts: '2017-05-28 14:22:45', unit: s, vals: <Numbers
+          v>=0>, value: .inf}
+      check_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: Motzoi
+        label: check_functions
+        name: check_functions
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [test_check_needs_calibration]
+      children:
+        __class__: qcodes.instrument.parameter.StandardParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: Motzoi
+        label: children
+        name: children
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [Amplitude_fine, High_fidelity_single_qubit_gates]
+      parents:
+        __class__: qcodes.instrument.parameter.StandardParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: Motzoi
+        label: parents
+        name: parents
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [Amplitude_coarse, frequency_ramsey]
+      state: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
+        instrument_name: Motzoi, label: state, name: state, ts: '2017-05-28 14:22:45',
+        unit: '', vals: '<Enum: {''good'', ''unknown'', ''bad'', ''needs calibration'',
+          ''active''}>', value: unknown}
+  Photon_meter:
+    __class__: autodepgraph.node.CalibrationNode
+    functions: {}
+    name: Photon_meter
+    parameters:
+      IDN: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
+        instrument_name: Photon_meter, label: IDN, name: IDN, ts: null, unit: '',
+        vals: <Anything>, value: null}
+      calibrate_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: Photon_meter
+        label: calibrate_functions
+        name: calibrate_functions
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [test_calibration_True]
+      calibration_timeout: {__class__: qcodes.instrument.parameter.ManualParameter,
+        instrument: autodepgraph.node.CalibrationNode, instrument_name: Photon_meter,
+        label: calibration_timeout, name: calibration_timeout, ts: '2017-05-28 14:22:45',
+        unit: s, vals: <Numbers v>=0>, value: .inf}
+      check_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: Photon_meter
+        label: check_functions
+        name: check_functions
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [test_check_needs_calibration]
+      children:
+        __class__: qcodes.instrument.parameter.StandardParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: Photon_meter
+        label: children
+        name: children
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [Wigner_tomography, Rabi_simulation]
+      parents:
+        __class__: qcodes.instrument.parameter.StandardParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: Photon_meter
+        label: parents
+        name: parents
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [Trotter_chevron]
+      state: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
+        instrument_name: Photon_meter, label: state, name: state, ts: '2017-05-28
+          14:22:45', unit: '', vals: '<Enum: {''good'', ''unknown'', ''bad'', ''needs
+          calibration'', ''active''}>', value: unknown}
+  Rabi_simulation:
+    __class__: autodepgraph.node.CalibrationNode
+    functions: {}
+    name: Rabi_simulation
+    parameters:
+      IDN: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
+        instrument_name: Rabi_simulation, label: IDN, name: IDN, ts: null, unit: '',
+        vals: <Anything>, value: null}
+      calibrate_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: Rabi_simulation
+        label: calibrate_functions
+        name: calibrate_functions
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [test_calibration_True]
+      calibration_timeout: {__class__: qcodes.instrument.parameter.ManualParameter,
+        instrument: autodepgraph.node.CalibrationNode, instrument_name: Rabi_simulation,
+        label: calibration_timeout, name: calibration_timeout, ts: '2017-05-28 14:22:45',
+        unit: s, vals: <Numbers v>=0>, value: .inf}
+      check_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: Rabi_simulation
+        label: check_functions
+        name: check_functions
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [test_check_needs_calibration]
+      children:
+        __class__: qcodes.instrument.parameter.StandardParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: Rabi_simulation
+        label: children
+        name: children
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: []
+      parents:
+        __class__: qcodes.instrument.parameter.StandardParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: Rabi_simulation
+        label: parents
+        name: parents
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [Wigner_tomography, Photon_meter, High_fidelity_single_qubit_gates,
+          High_readout_fidelity]
+      state: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
+        instrument_name: Rabi_simulation, label: state, name: state, ts: '2017-05-28
+          14:22:45', unit: '', vals: '<Enum: {''good'', ''unknown'', ''bad'', ''needs
+          calibration'', ''active''}>', value: unknown}
+  SSRO:
+    __class__: autodepgraph.node.CalibrationNode
+    functions: {}
+    name: SSRO
+    parameters:
+      IDN: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
+        instrument_name: SSRO, label: IDN, name: IDN, ts: null, unit: '', vals: <Anything>,
+        value: null}
+      calibrate_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: SSRO
+        label: calibrate_functions
+        name: calibrate_functions
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [test_calibration_True]
+      calibration_timeout: {__class__: qcodes.instrument.parameter.ManualParameter,
+        instrument: autodepgraph.node.CalibrationNode, instrument_name: SSRO, label: calibration_timeout,
+        name: calibration_timeout, ts: '2017-05-28 14:22:45', unit: s, vals: <Numbers
+          v>=0>, value: .inf}
+      check_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: SSRO
+        label: check_functions
+        name: check_functions
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [test_check_needs_calibration]
+      children:
+        __class__: qcodes.instrument.parameter.StandardParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: SSRO
+        label: children
+        name: children
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [frequency_ramsey, High_readout_fidelity]
+      parents:
+        __class__: qcodes.instrument.parameter.StandardParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: SSRO
+        label: parents
+        name: parents
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [Amplitude_coarse]
+      state: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
+        instrument_name: SSRO, label: state, name: state, ts: '2017-05-28 14:22:45',
+        unit: '', vals: '<Enum: {''good'', ''unknown'', ''bad'', ''needs calibration'',
+          ''active''}>', value: unknown}
+  Trotter_chevron:
+    __class__: autodepgraph.node.CalibrationNode
+    functions: {}
+    name: Trotter_chevron
+    parameters:
+      IDN: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
+        instrument_name: Trotter_chevron, label: IDN, name: IDN, ts: null, unit: '',
+        vals: <Anything>, value: null}
+      calibrate_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: Trotter_chevron
+        label: calibrate_functions
+        name: calibrate_functions
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [test_calibration_True]
+      calibration_timeout: {__class__: qcodes.instrument.parameter.ManualParameter,
+        instrument: autodepgraph.node.CalibrationNode, instrument_name: Trotter_chevron,
+        label: calibration_timeout, name: calibration_timeout, ts: '2017-05-28 14:22:45',
+        unit: s, vals: <Numbers v>=0>, value: .inf}
+      check_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: Trotter_chevron
+        label: check_functions
+        name: check_functions
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [test_check_needs_calibration]
+      children:
+        __class__: qcodes.instrument.parameter.StandardParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: Trotter_chevron
+        label: children
+        name: children
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [Photon_meter]
+      parents:
+        __class__: qcodes.instrument.parameter.StandardParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: Trotter_chevron
+        label: parents
+        name: parents
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [Chevron_amp]
+      state: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
+        instrument_name: Trotter_chevron, label: state, name: state, ts: '2017-05-28
+          14:22:45', unit: '', vals: '<Enum: {''good'', ''unknown'', ''bad'', ''needs
+          calibration'', ''active''}>', value: unknown}
+  Wigner_tomography:
+    __class__: autodepgraph.node.CalibrationNode
+    functions: {}
+    name: Wigner_tomography
+    parameters:
+      IDN: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
+        instrument_name: Wigner_tomography, label: IDN, name: IDN, ts: null, unit: '',
+        vals: <Anything>, value: null}
+      calibrate_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: Wigner_tomography
+        label: calibrate_functions
+        name: calibrate_functions
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [test_calibration_True]
+      calibration_timeout: {__class__: qcodes.instrument.parameter.ManualParameter,
+        instrument: autodepgraph.node.CalibrationNode, instrument_name: Wigner_tomography,
+        label: calibration_timeout, name: calibration_timeout, ts: '2017-05-28 14:22:45',
+        unit: s, vals: <Numbers v>=0>, value: .inf}
+      check_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: Wigner_tomography
+        label: check_functions
+        name: check_functions
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [test_check_needs_calibration]
+      children:
+        __class__: qcodes.instrument.parameter.StandardParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: Wigner_tomography
+        label: children
+        name: children
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [Rabi_simulation]
+      parents:
+        __class__: qcodes.instrument.parameter.StandardParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: Wigner_tomography
+        label: parents
+        name: parents
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [Photon_meter]
+      state: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
+        instrument_name: Wigner_tomography, label: state, name: state, ts: '2017-05-28
+          14:22:45', unit: '', vals: '<Enum: {''good'', ''unknown'', ''bad'', ''needs
+          calibration'', ''active''}>', value: unknown}
+  frequency_ramsey:
+    __class__: autodepgraph.node.CalibrationNode
+    functions: {}
+    name: frequency_ramsey
+    parameters:
+      IDN: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
+        instrument_name: frequency_ramsey, label: IDN, name: IDN, ts: null, unit: '',
+        vals: <Anything>, value: null}
+      calibrate_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: frequency_ramsey
+        label: calibrate_functions
+        name: calibrate_functions
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [test_calibration_True]
+      calibration_timeout: {__class__: qcodes.instrument.parameter.ManualParameter,
+        instrument: autodepgraph.node.CalibrationNode, instrument_name: frequency_ramsey,
+        label: calibration_timeout, name: calibration_timeout, ts: '2017-05-28 14:22:45',
+        unit: s, vals: <Numbers v>=0>, value: .inf}
+      check_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: frequency_ramsey
+        label: check_functions
+        name: check_functions
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [test_check_needs_calibration]
+      children:
+        __class__: qcodes.instrument.parameter.StandardParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: frequency_ramsey
+        label: children
+        name: children
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [Motzoi, High_fidelity_single_qubit_gates]
+      parents:
+        __class__: qcodes.instrument.parameter.StandardParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: frequency_ramsey
+        label: parents
+        name: parents
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [Amplitude_coarse, SSRO, frequency_spec]
+      state: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
+        instrument_name: frequency_ramsey, label: state, name: state, ts: '2017-05-28
+          14:22:45', unit: '', vals: '<Enum: {''good'', ''unknown'', ''bad'', ''needs
+          calibration'', ''active''}>', value: unknown}
+  frequency_spec:
+    __class__: autodepgraph.node.CalibrationNode
+    functions: {}
+    name: frequency_spec
+    parameters:
+      IDN: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
+        instrument_name: frequency_spec, label: IDN, name: IDN, ts: null, unit: '',
+        vals: <Anything>, value: null}
+      calibrate_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: frequency_spec
+        label: calibrate_functions
+        name: calibrate_functions
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [test_calibration_True]
+      calibration_timeout: {__class__: qcodes.instrument.parameter.ManualParameter,
+        instrument: autodepgraph.node.CalibrationNode, instrument_name: frequency_spec,
+        label: calibration_timeout, name: calibration_timeout, ts: '2017-05-28 14:22:45',
+        unit: s, vals: <Numbers v>=0>, value: .inf}
+      check_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: frequency_spec
+        label: check_functions
+        name: check_functions
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [test_check_needs_calibration]
+      children:
+        __class__: qcodes.instrument.parameter.StandardParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: frequency_spec
+        label: children
+        name: children
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [Amplitude_coarse, frequency_ramsey]
+      parents:
+        __class__: qcodes.instrument.parameter.StandardParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: frequency_spec
+        label: parents
+        name: parents
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: []
+      state: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
+        instrument_name: frequency_spec, label: state, name: state, ts: '2017-05-28
+          14:22:45', unit: '', vals: '<Enum: {''good'', ''unknown'', ''bad'', ''needs
+          calibration'', ''active''}>', value: unknown}
+  mixer_offset:
+    __class__: autodepgraph.node.CalibrationNode
+    functions: {}
+    name: mixer_offset
+    parameters:
+      IDN: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
+        instrument_name: mixer_offset, label: IDN, name: IDN, ts: null, unit: '',
+        vals: <Anything>, value: null}
+      calibrate_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: mixer_offset
+        label: calibrate_functions
+        name: calibrate_functions
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [test_calibration_True]
+      calibration_timeout: {__class__: qcodes.instrument.parameter.ManualParameter,
+        instrument: autodepgraph.node.CalibrationNode, instrument_name: mixer_offset,
+        label: calibration_timeout, name: calibration_timeout, ts: '2017-05-28 14:22:45',
+        unit: s, vals: <Numbers v>=0>, value: .inf}
+      check_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: mixer_offset
+        label: check_functions
+        name: check_functions
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [test_check_needs_calibration]
+      children:
+        __class__: qcodes.instrument.parameter.StandardParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: mixer_offset
+        label: children
+        name: children
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [mixer_skewness, Amplitude_coarse]
+      parents:
+        __class__: qcodes.instrument.parameter.StandardParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: mixer_offset
+        label: parents
+        name: parents
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: []
+      state: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
+        instrument_name: mixer_offset, label: state, name: state, ts: '2017-05-28
+          14:22:45', unit: '', vals: '<Enum: {''good'', ''unknown'', ''bad'', ''needs
+          calibration'', ''active''}>', value: unknown}
+  mixer_skewness:
+    __class__: autodepgraph.node.CalibrationNode
+    functions: {}
+    name: mixer_skewness
+    parameters:
+      IDN: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
+        instrument_name: mixer_skewness, label: IDN, name: IDN, ts: null, unit: '',
+        vals: <Anything>, value: null}
+      calibrate_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: mixer_skewness
+        label: calibrate_functions
+        name: calibrate_functions
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [test_calibration_True]
+      calibration_timeout: {__class__: qcodes.instrument.parameter.ManualParameter,
+        instrument: autodepgraph.node.CalibrationNode, instrument_name: mixer_skewness,
+        label: calibration_timeout, name: calibration_timeout, ts: '2017-05-28 14:22:45',
+        unit: s, vals: <Numbers v>=0>, value: .inf}
+      check_functions:
+        __class__: qcodes.instrument.parameter.ManualParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: mixer_skewness
+        label: check_functions
+        name: check_functions
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [test_check_needs_calibration]
+      children:
+        __class__: qcodes.instrument.parameter.StandardParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: mixer_skewness
+        label: children
+        name: children
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [Amplitude_coarse]
+      parents:
+        __class__: qcodes.instrument.parameter.StandardParameter
+        instrument: autodepgraph.node.CalibrationNode
+        instrument_name: mixer_skewness
+        label: parents
+        name: parents
+        ts: '2017-05-28 14:22:45'
+        unit: ''
+        vals: '<Lists : <Strings>>'
+        value: [mixer_offset]
+      state: {__class__: qcodes.instrument.parameter.StandardParameter, instrument: autodepgraph.node.CalibrationNode,
+        instrument_name: mixer_skewness, label: state, name: state, ts: '2017-05-28
+          14:22:45', unit: '', vals: '<Enum: {''good'', ''unknown'', ''bad'', ''needs
+          calibration'', ''active''}>', value: unknown}

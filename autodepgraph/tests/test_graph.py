@@ -119,6 +119,15 @@ class Test_Graph(TestCase):
 
         # TODO: add a test for also loading functions
 
+    def test_loading_graph_from_file_rabi_sims(self):
+        """
+        Same as test above but a more complex example where more can go wrong
+        """
+        fn = os.path.join(test_dir, 'rabi_sims_example_graph.yaml')
+        rmg = Graph('rabi_sims_example_graph')
+        rmg.load_graph(fn)
+
+
     @classmethod
     def tearDownClass(self):
         # finds and closes all qcodes instruments
