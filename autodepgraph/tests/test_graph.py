@@ -127,7 +127,6 @@ class Test_Graph(TestCase):
         rmg = Graph('rabi_sims_example_graph')
         rmg.load_graph(fn)
 
-
     @classmethod
     def tearDownClass(self):
         # finds and closes all qcodes instruments

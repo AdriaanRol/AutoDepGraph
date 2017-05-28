@@ -52,8 +52,8 @@ class Graph(Instrument):
             # whenever a node is added as a parent to another node. This means
             # that loading and setting parents for all node automatically also
             # sets the children for all nodes correctly.
-            pars_to_update = ['parents', 'check_functions',
-                              'calibrate_functions']
+            pars_to_update = ['parents', 'check_function',
+                              'calibrate_function']
             if load_node_state:
                 pars_to_update += ['state']
 
