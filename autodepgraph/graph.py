@@ -5,6 +5,12 @@ import logging
 from autodepgraph.node import CalibrationNode
 import autodepgraph.visualization as vis
 import matplotlib.pyplot as plt
+try:
+    # Serves as a test to see if pyqtgraph is available
+    import pyqtgraph as pg
+    plot_mode = 'pg'
+except ImportError:
+    plot_mode = 'mpl'
 
 
 class Graph(Instrument):
@@ -15,6 +21,7 @@ class Graph(Instrument):
 
     def __init__(self, name):
         super().__init__(name)
+        self.plot_mode = plot_mode
         self.nodes = {}
 
     def load_graph(self, filename, load_node_state=False):
@@ -22,6 +29,8 @@ class Graph(Instrument):
         Loads a graph.
         """
         graph_snap = yaml.safe_load(open(filename, 'r'))
+
+        # First all nodes are added
         for node_snap in graph_snap['nodes'].values():
             try:
                 # Look for an existing node
@@ -32,7 +41,13 @@ class Graph(Instrument):
             except KeyError:
                 # If the node does not exist, create a new node
                 node = CalibrationNode(node_snap['name'])
+            self.add_node(node)
 
+        # ## Only after all nodes are added, the parameters are set. ##
+        # it is important the nodes are created first as setting a parent
+        # for a node requires it to exist so that children can be added.
+        for node_snap in graph_snap['nodes'].values():
+            node = self.nodes[node_snap['name']]
             # children is not in pars_to_update because the children are set
             # whenever a node is added as a parent to another node. This means
             # that loading and setting parents for all node automatically also
@@ -47,7 +62,6 @@ class Graph(Instrument):
                 val = pars[parname]['value']
                 if val is not None:
                     node.set(parname, val)
-            self.add_node(node)
 
     def save_graph(self, filename):
         """
@@ -90,6 +104,12 @@ class Graph(Instrument):
             node.state('unknown')
 
     def update_monitor(self):
+        if self.plot_mode == 'mpl':
+            self.update_monitor_mpl()
+        else:
+            self.update_monitor_pg()
+
+    def update_monitor_mpl(self):
         """
         Updates a plot using the draw_graph_mpl function from the
         visualization module.
@@ -103,3 +123,12 @@ class Graph(Instrument):
             self.snapshot(), pos=self._node_pos, layout='spring')
         plt.draw()
         plt.pause(.05)
+
+    def update_monitor_pg(self):
+        if not hasattr(self, 'DiGraphWindow'):
+            self.DiGraphWindow = None
+        for node in self.nodes.values():
+            # ensures states are updated before taking snapshot
+            node.state()
+        self.DiGraphWindow = vis.draw_graph_pyqt(
+            self.snapshot(), DiGraphWindow=self.DiGraphWindow)

@@ -2,3 +2,5 @@ numpy
 PyYAML
 networkx
 matplotlib
+pygraphviz
+pyqtgraph

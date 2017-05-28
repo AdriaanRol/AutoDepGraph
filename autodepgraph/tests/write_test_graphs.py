@@ -60,3 +60,43 @@ for node in a.nodes.values():
     node.close()
 
 a.close()
+
+
+def create_rabi_sims_example_graph():
+    rmg = g.Graph('Rabi_sims_example_graph')
+
+    nodenames = ['mixer_offset', 'mixer_skewness', 'frequency_spec',
+                 'Amplitude_coarse', 'SSRO', 'frequency_ramsey', 'Motzoi',
+                 'Amplitude_fine', 'High_fidelity_single_qubit_gates',
+                 'High_readout_fidelity', 'Chevron_amp', 'Trotter_chevron',
+                 'Photon_meter', 'Wigner_tomography', 'Rabi_simulation']
+    for nodename in nodenames:
+        rmg.add_node(nodename)
+        rmg.nodes[nodename].calibrate_functions(['test_calibration_True'])
+        rmg.nodes[nodename].check_functions(['test_check_needs_calibration'])
+
+    rmg.mixer_skewness.parents(['mixer_offset'])
+    rmg.Amplitude_coarse.parents(['frequency_spec',
+                                  'mixer_offset', 'mixer_skewness'])
+    rmg.SSRO.parents(['Amplitude_coarse'])
+    rmg.frequency_ramsey.parents(['Amplitude_coarse', 'SSRO',
+                                  'frequency_spec'])
+
+    rmg.Motzoi.parents(['Amplitude_coarse', 'frequency_ramsey'])
+    rmg.Amplitude_fine.parents(['Motzoi'])
+    rmg.High_fidelity_single_qubit_gates.parents(
+        ['Amplitude_fine', 'Motzoi', 'frequency_ramsey'])
+    rmg.High_readout_fidelity.parents(
+        ['High_fidelity_single_qubit_gates', 'SSRO'])
+    rmg.Chevron_amp.parents(
+        ['High_fidelity_single_qubit_gates', 'High_readout_fidelity'])
+    rmg.Trotter_chevron.parents(['Chevron_amp'])
+    rmg.Photon_meter.parents(['Trotter_chevron'])
+    rmg.Wigner_tomography.parents(['Photon_meter'])
+    rmg.Rabi_simulation.parents(
+        ['Wigner_tomography', 'Photon_meter',
+         'High_fidelity_single_qubit_gates', 'High_readout_fidelity'])
+    rmg.save_graph(os.path.join(test_dir, 'rabi_sims_example_graph.yaml'))
+
+
+create_rabi_sims_example_graph()

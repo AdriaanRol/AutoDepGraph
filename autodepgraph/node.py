@@ -38,6 +38,8 @@ class CalibrationNode(Instrument):
                            get_cmd=self._get_parents,
                            vals=vals.Lists(vals.Strings()))
         self._parents = []
+        # ensures the snapshot has the correct initial value
+        self.parents()
         self.add_parameter('children',
                            docstring='List of names of nodes '
                                      'which depend on this node. '
@@ -48,6 +50,8 @@ class CalibrationNode(Instrument):
                            get_cmd=self._get_children,
                            vals=vals.Lists(vals.Strings()))
         self._children = []
+        # ensures the snapshot has the correct initial value
+        self.children()
 
         chk_docst = (
             'Name of the function used to perform the check, can be either a '
