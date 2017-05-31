@@ -1,6 +1,26 @@
 # AutoDepGraph [![Build Status](https://travis-ci.org/AdriaanRol/AutoDepGraph.svg?branch=master)](https://travis-ci.org/AdriaanRol/AutoDepGraph) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/ae46c58617ff45df9ac98446b3dc34ac)](https://www.codacy.com/app/adriaan-rol/AutoDepGraph?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=AdriaanRol/AutoDepGraph&amp;utm_campaign=Badge_Grade) [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/ae46c58617ff45df9ac98446b3dc34ac)](https://www.codacy.com/app/adriaan-rol/AutoDepGraph?utm_source=github.com&utm_medium=referral&utm_content=AdriaanRol/AutoDepGraph&utm_campaign=Badge_Coverage)
 
-A very nondescript name for a WIP on dependency graph based tuning
+## Installation
+- Clone the repository
+- navigate to the repository and run `pip install -e .`
+
+
+### N.B. windows is a bitch.
+Before installing you will need to properly install pygraphviz + graphviz.
+
+Follow these steps:
+
+- get the 64 bit version of graphviz for (windows)[https://github.com/mahkoCosmo/GraphViz_x64/blob/master/], copy it to e.g., program files and add the bin folder to the system path.
+- the 64 bit version lacks the libxml2.dll, you most likely have this from some other program. Just copy paste it to the bin folder.
+- get pygraphviz by downloading the master from github.
+- Now you will need to edit pygraphviz/graphviz.i and pygraphviz/graphviz_wrap.c according to the changes at https://github.com/Kagami/pygraphviz/tree/py3-windows-iobase. A reference can be found in the _install folder
+- Next install using
+```
+python setup.py install --include-path="C:\Program Files\graphviz-2.38_x64\include" --library-path="C:\Program Files\graphviz-2.38_x64\lib"
+```
+
+- then install autodepgraph and test the installation using `py.test`
+
 
 ## Requirements
 Calibration is done by calling a node that we want to execute.
