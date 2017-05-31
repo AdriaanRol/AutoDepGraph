@@ -296,7 +296,11 @@ class CalibrationNode(Instrument):
         else:
             f = getattr(cal_f, funcStr)
         # If any of the calibrations returns False, result will be False
-        result = (f() and result)
+        try:
+            result = (f() and result)
+        except Exception as e:
+            self.state('bad')
+            raise e
 
         if verbose:
             print('\tCalibration of node {} successful: {}'
