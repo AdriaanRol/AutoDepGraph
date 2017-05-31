@@ -55,28 +55,28 @@ class CalibrationNode(Instrument):
 
         chk_docst = (
             'Name of the function used to perform the check, can be either a '
-            'function in the check_functions module or a method of an '
+            'function in the check_function module or a method of an '
             'instrument. If it is a method of an instrument it can be '
             'specified as "instr_name.method_name".\nA check function must '
             'return one of the possible states of a node, see also the state'
             'docstring.')
 
-        self.add_parameter('check_functions',
+        self.add_parameter('check_function',
                            docstring=chk_docst,
-                           initial_value=[],
-                           vals=vals.Lists(vals.Strings()),
+                           initial_value='always_needs_calibration',
+                           vals=vals.Strings(),
                            parameter_class=ManualParameter)
         cal_docst = (
             'Name of the function used to calibrate a node, can be either a '
-            'function in the calibrate_functions module or a method of an '
+            'function in the calibrate_function module or a method of an '
             'instrument. If it is a method of an instrument it can be '
             'specified as "instr_name.method_name".\nA calibrate function '
             'must return True or False indicating the success of the '
             'calibration.')
-        self.add_parameter('calibrate_functions',
+        self.add_parameter('calibrate_function',
                            docstring=cal_docst,
-                           initial_value=[],
-                           vals=vals.Lists(vals.Strings()),
+                           initial_value='NotImplementedCalibration',
+                           vals=vals.Strings(),
                            parameter_class=ManualParameter)
 
         # counters to count how often functions get called for debugging
@@ -288,15 +288,15 @@ class CalibrationNode(Instrument):
         self.state('active')
         self.update_graph_monitor()
         result = True
-        for funcStr in self.calibrate_functions():
-            if '.' in funcStr:
-                instr_name, method = funcStr.split('.')
-                instr = self.find_instrument(instr_name)
-                f = getattr(instr, method)
-            else:
-                f = getattr(cal_f, funcStr)
-            # If any of the calibrations returns False, result will be False
-            result = (f() and result)
+        funcStr = self.calibrate_function()
+        if '.' in funcStr:
+            instr_name, method = funcStr.split('.')
+            instr = self.find_instrument(instr_name)
+            f = getattr(instr, method)
+        else:
+            f = getattr(cal_f, funcStr)
+        # If any of the calibrations returns False, result will be False
+        result = (f() and result)
 
         if verbose:
             print('\tCalibration of node {} successful: {}'
@@ -326,19 +326,20 @@ class CalibrationNode(Instrument):
         self.update_graph_monitor()
         needsCalib = False  # Set to True if a check finds 'needs calibration'
         broken = False  # Set to True if a check fails.
-        for funcStr in self.check_functions():
-            if '.' in funcStr:
-                instr_name, method = funcStr.split('.')
-                instr = self.find_instrument(instr_name)
-                f = getattr(instr, method)
-            else:
-                f = getattr(check_f, funcStr)
 
-            result = f()
-            if result == 'needs calibration':
-                needsCalib = True
-            if result == 'bad':
-                broken = True
+        funcStr = self.check_function()
+        if '.' in funcStr:
+            instr_name, method = funcStr.split('.')
+            instr = self.find_instrument(instr_name)
+            f = getattr(instr, method)
+        else:
+            f = getattr(check_f, funcStr)
+
+        result = f()
+        if result == 'needs calibration':
+            needsCalib = True
+        if result == 'bad':
+            broken = True
 
         if verbose:
             print('\tNeeds {} calibration: {}'.format(self.name, needsCalib))

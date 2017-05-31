@@ -28,13 +28,13 @@ class Test_GraphLogic(TestCase):
         self.node_c.parents([])
 
         # Populate nodes with checks and calibration functions
-        self.node_a.check_functions()
-        self.node_b.check_functions()
-        self.node_c.check_functions()
+        self.node_a.check_function()
+        self.node_b.check_function()
+        self.node_c.check_function()
 
-        self.node_a.calibrate_functions()
-        self.node_b.calibrate_functions()
-        self.node_c.calibrate_functions()
+        self.node_a.calibrate_function()
+        self.node_b.calibrate_function()
+        self.node_c.calibrate_function()
 
     def test_all_good(self):
         # All checks and calibrations pass.
@@ -45,13 +45,13 @@ class Test_GraphLogic(TestCase):
         self.node_c.state('unknown')
 
         # Populate nodes with checks and calibration functions
-        self.node_a.check_functions(['test_check_good'])
-        self.node_b.check_functions(['test_check_good'])
-        self.node_c.check_functions(['test_check_good'])
+        self.node_a.check_function('test_check_good')
+        self.node_b.check_function('test_check_good')
+        self.node_c.check_function('test_check_good')
 
-        self.node_a.calibrate_functions(['test_calibration_True'])
-        self.node_b.calibrate_functions(['test_calibration_True'])
-        self.node_c.calibrate_functions(['test_calibration_True'])
+        self.node_a.calibrate_function('test_calibration_True')
+        self.node_b.calibrate_function('test_calibration_True')
+        self.node_c.calibrate_function('test_calibration_True')
 
         # Execute node a. Nodes B and C should be asked for their state but
         # not executed
@@ -95,13 +95,13 @@ class Test_GraphLogic(TestCase):
         self.node_c.state('unknown')
 
         # Populate nodes with checks and calibration functions
-        self.node_a.check_functions(['test_check_needs_calibration'])
-        self.node_b.check_functions(['test_check_needs_calibration'])
-        self.node_c.check_functions(['test_check_needs_calibration'])
+        self.node_a.check_function('always_needs_calibration')
+        self.node_b.check_function('always_needs_calibration')
+        self.node_c.check_function('always_needs_calibration')
 
-        self.node_a.calibrate_functions(['test_calibration_True'])
-        self.node_b.calibrate_functions(['test_calibration_True'])
-        self.node_c.calibrate_functions(['test_calibration_True'])
+        self.node_a.calibrate_function('test_calibration_True')
+        self.node_b.calibrate_function('test_calibration_True')
+        self.node_c.calibrate_function('test_calibration_True')
 
         self.node_a._exec_cnt = 0
         self.node_b._exec_cnt = 0
@@ -142,13 +142,13 @@ class Test_GraphLogic(TestCase):
         self.node_c.state('unknown')
 
         # Populate nodes with checks and calibration functions
-        self.node_a.check_functions(['test_check_bad'])
-        self.node_b.check_functions(['test_check_needs_calibration'])
-        self.node_c.check_functions(['test_check_good'])
+        self.node_a.check_function('test_check_bad')
+        self.node_b.check_function('always_needs_calibration')
+        self.node_c.check_function('test_check_good')
 
-        self.node_a.calibrate_functions(['test_calibration_True'])
-        self.node_b.calibrate_functions(['test_calibration_True'])
-        self.node_c.calibrate_functions(['test_calibration_True'])
+        self.node_a.calibrate_function('test_calibration_True')
+        self.node_b.calibrate_function('test_calibration_True')
+        self.node_c.calibrate_function('test_calibration_True')
 
         # Execute node a. Since check returns bad, all nodes should be called
         self.node_a._exec_cnt = 0
@@ -190,13 +190,13 @@ class Test_GraphLogic(TestCase):
         self.node_c.state('unknown')
 
         # Populate nodes with checks and calibration functions
-        self.node_a.check_functions(['test_check_bad'])
-        self.node_b.check_functions(['test_check_needs_calibration'])
-        self.node_c.check_functions(['test_check_good'])
+        self.node_a.check_function('test_check_bad')
+        self.node_b.check_function('always_needs_calibration')
+        self.node_c.check_function('test_check_good')
 
-        self.node_a.calibrate_functions(['test_calibration_True'])
-        self.node_b.calibrate_functions(['test_calibration_False'])
-        self.node_c.calibrate_functions(['test_calibration_True'])
+        self.node_a.calibrate_function('test_calibration_True')
+        self.node_b.calibrate_function('test_calibration_False')
+        self.node_c.calibrate_function('test_calibration_True')
 
         self.node_a._exec_cnt = 0
         self.node_b._exec_cnt = 0
@@ -272,6 +272,16 @@ class Test_Node(TestCase):
         node_a = CalibrationNode('A')
         self.assertEqual(node_a.name, 'A')
 
+    def test_default_functions(self):
+        node_d = CalibrationNode('D')
+        self.assertEqual(node_d.check_function(), 'always_needs_calibration')
+        self.assertEqual(node_d.check(), 'needs calibration')
+
+        self.assertEqual(node_d.calibrate_function(),
+                         'NotImplementedCalibration')
+        with self.assertRaises(NotImplementedError):
+            node_d.calibrate()
+
     def test_timeout(self):
         node_b = CalibrationNode('B')
         node_b.state('good')
@@ -290,8 +300,8 @@ class Test_Node(TestCase):
         node_c = CalibrationNode('C')
         mock_instr = MockInstrument('mock_instr')
 
-        node_c.calibrate_functions(['mock_instr.calibrate'])
-        node_c.check_functions(['mock_instr.check_state'])
+        node_c.calibrate_function('mock_instr.calibrate')
+        node_c.check_function('mock_instr.check_state')
 
         self.assertEqual(mock_instr.check_cnt, 0)
         node_c.check()

@@ -22,3 +22,8 @@ def test_calibration_False():
     Dummy calibration function for test cases. Always returns False.
     '''
     return False
+
+
+def NotImplementedCalibration():
+    raise NotImplementedError()
+

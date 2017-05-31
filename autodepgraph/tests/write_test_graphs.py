@@ -72,8 +72,8 @@ def create_rabi_sims_example_graph():
                  'Photon_meter', 'Wigner_tomography', 'Rabi_simulation']
     for nodename in nodenames:
         rmg.add_node(nodename)
-        rmg.nodes[nodename].calibrate_functions(['test_calibration_True'])
-        rmg.nodes[nodename].check_functions(['test_check_needs_calibration'])
+        rmg.nodes[nodename].calibrate_function('test_calibration_True')
+        rmg.nodes[nodename].check_function('always_needs_calibration')
 
     rmg.mixer_skewness.parents(['mixer_offset'])
     rmg.Amplitude_coarse.parents(['frequency_spec',
