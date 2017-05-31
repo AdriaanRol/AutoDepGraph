@@ -20,7 +20,8 @@ class Test_Graph(TestCase):
         test_graph = Graph('test_graph_adding_node')
         nodes_before = test_graph.nodes
         self.assertEqual(len(nodes_before.keys()), 0)
-        test_graph.add_node(self.node_A)
+        returned_node = test_graph.add_node(self.node_A)
+        self.assertEqual(returned_node, self.node_A)
         nodes_after = test_graph.nodes
         self.assertEqual(nodes_after, {self.node_A.name: self.node_A})
 
@@ -31,7 +32,8 @@ class Test_Graph(TestCase):
         self.assertEqual(nodes_after, {self.node_A.name: self.node_A})
 
         # Adding a node as a string that exists
-        test_graph.add_node('B')
+        B = test_graph.add_node('B')
+        self.assertEqual('B', B.name)
         nodes_after = test_graph.nodes.keys()
         self.assertEqual(nodes_after, set(['A', 'B']))
 
