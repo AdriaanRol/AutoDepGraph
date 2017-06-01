@@ -98,6 +98,8 @@ class Graph(Instrument):
 
         # Clears the node positions used for plotting when a new node is added
         self._node_pos = None
+        # convenient for when adding nodes using name only
+        return node
 
     def clear_node_state(self):
         for node in self.nodes.values():
