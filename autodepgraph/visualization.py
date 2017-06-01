@@ -82,7 +82,9 @@ def adjaceny_to_integers(nxG, pos_dict):
     edges (adjacency) as an array of integers.
 
     Args:
-        nxG : networkx graph object
+        nxG : networkx graph object, contains the defined edges
+        pos_dict : dictionary from the layout, contains the relevant order
+            of the nodes
     returns:
         adj : array of integers specifying the edges
     """
