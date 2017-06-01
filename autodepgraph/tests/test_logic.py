@@ -281,6 +281,7 @@ class Test_Node(TestCase):
                          'NotImplementedCalibration')
         with self.assertRaises(NotImplementedError):
             node_d.calibrate()
+        self.assertEqual(node_d.state(), 'bad')
 
     def test_timeout(self):
         node_b = CalibrationNode('B')
