@@ -76,20 +76,24 @@ def draw_graph_mpl(snapshot, pos=None, layout='spring'):
     return pos
 
 
-def adjaceny_to_integers(nxG):
+def adjaceny_to_integers(nxG, pos_dict):
     """
     Helper function that takes a networkx graph object and returns the
     edges (adjacency) as an array of integers.
 
     Args:
-        nxG : networkx graph object
+        nxG : networkx graph object, contains the defined edges
+        pos_dict : dictionary from the layout, contains the relevant order
+            of the nodes
     returns:
         adj : array of integers specifying the edges
     """
+
+    node_name_list = list(pos_dict.keys())
     adj = []
     for child, parent in nxG.edges():
-        child_idx = nxG.nodes().index(child)
-        parent_idx = nxG.nodes().index(parent)
+        child_idx = node_name_list.index(child)
+        parent_idx = node_name_list.index(parent)
         adj.append([child_idx, parent_idx])
     adj = np.array(adj)
     return adj
@@ -112,16 +116,16 @@ def draw_graph_pyqt(snapshot, DiGraphWindow=None, pos=None, layout='spring'):
     nxG = snapshot_to_nxGraph(snapshot)
 
     # Converts it to an array to work with pyqtgraph plotting class
-    pos = nx.nx_agraph.graphviz_layout(nxG, prog='dot')
-    pos = np.array(list(pos.values()))
-    adj = adjaceny_to_integers(nxG)
+    pos_dict = nx.nx_agraph.graphviz_layout(nxG, prog='dot')
+    pos = np.array(list(pos_dict.values()))
+    adj = adjaceny_to_integers(nxG, pos_dict)
 
     # Edge colors need to be set using a value mapping and a cmap
     cm = get_state_col_map(snapshot)
-    colors_list = [(cm[node]) for node in nxG.nodes()]
+    colors_list = [(cm[node]) for node in pos_dict.keys()]
 
     symbols = ['o']*len(pos)
-    labels = list(nxG.nodes())
+    labels = list(pos_dict.keys())
 
     if DiGraphWindow is None:
         DiGraphWindow = pg_DiGraph_window()
