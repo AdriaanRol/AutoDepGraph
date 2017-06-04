@@ -64,14 +64,13 @@ def snapshot_to_nxGraph(snapshot):
     return nxG
 
 
-def draw_graph_mpl(snapshot, pos=None, layout='spring'):
+def draw_graph_mpl(snapshot, pos=None):
     """
     Function to create a quick plot of a graph using matplotlib.
     Intended mostly for for debugging purposes
     Args:
-        snapshot
-        layout (str) : layout to position the nodes options are:
-            spring, shell, spectral and circular.
+        snapshot    snapshot snapshot of the graph
+        pos         positions of the nodes
     returns:
         pos
 
@@ -115,14 +114,15 @@ def adjaceny_to_integers(nxG, pos_dict):
     return adj
 
 
-def draw_graph_pyqt(snapshot, DiGraphWindow=None):
+def draw_graph_pyqt(snapshot, DiGraphWindow=None, window_title=None):
     """
     Function to create a quick plot of a graph using matplotlib.
     Intended mostly for for debugging purposes
     Args:
-        snapshot : snapshot of the graph
-        DiGraphWindow     : pyqtgraph remote graph window to be updated
+        snapshot        : snapshot of the graph
+        DiGraphWindow   : pyqtgraph remote graph window to be updated
             if None it will create a new plotting window to update
+        window_title    : title of the plotting window
     returns:
         DiGraphWindow
 
@@ -144,7 +144,7 @@ def draw_graph_pyqt(snapshot, DiGraphWindow=None):
     labels = list(pos_dict.keys())
 
     if DiGraphWindow is None:
-        DiGraphWindow = pg_DiGraph_window()
+        DiGraphWindow = pg_DiGraph_window(window_title=window_title)
 
     DiGraphWindow.setData(pos=np.array(pos), adj=adj, size=20, symbol=symbols,
                           labels=labels, pen=(60, 60, 60),

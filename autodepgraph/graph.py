@@ -138,5 +138,6 @@ class Graph(Instrument):
         if self._graph_changed_since_plot and self.DiGraphWindow is not None:
             self.DiGraphWindow.clear()
         self.DiGraphWindow = vis.draw_graph_pyqt(
-            self.snapshot(), DiGraphWindow=self.DiGraphWindow)
+            self.snapshot(), DiGraphWindow=self.DiGraphWindow,
+            window_title=self.name)
         self._graph_changed_since_plot = False
