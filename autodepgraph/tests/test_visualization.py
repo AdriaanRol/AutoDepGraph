@@ -2,7 +2,6 @@ import os
 import qcodes as qc
 from autodepgraph.graph import Graph
 from autodepgraph import visualization as vis
-import unittest
 from unittest import TestCase
 import autodepgraph as adg
 test_dir = os.path.join(adg.__path__[0], 'tests', 'test_data')
