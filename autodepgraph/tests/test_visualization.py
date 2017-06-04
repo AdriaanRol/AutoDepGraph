@@ -16,6 +16,24 @@ class Test_visualization(TestCase):
         self.test_graph = Graph('test_graph')
         self.test_graph.load_graph(fn, load_node_state=True)
 
+    @unittest.skip('Test not implemented')
+    def test_get_node_symbols(self):
+        snap = self.test_graph.snapshot()
+
+        raise NotImplementedError()
+
+    def test_get_state_col_map(self):
+        vis.state_cmap
+        snap = self.test_graph.snapshot()
+        cm = vis.get_state_col_map(snap)
+
+        # the check checks for certain known states in the test graph
+        self.assertEqual(cm['A'], vis.state_cmap['good'])
+        self.assertEqual(cm['B'], vis.state_cmap['needs calibration'])
+        self.assertEqual(cm['C'], vis.state_cmap['active'])
+        self.assertEqual(cm['D'], vis.state_cmap['bad'])
+        self.assertEqual(cm['E'], vis.state_cmap['unknown'])
+
     def test_snapshot_to_nxGraph(self):
         snap = self.test_graph.snapshot()
         nxG = vis.snapshot_to_nxGraph(snap)
@@ -24,10 +42,6 @@ class Test_visualization(TestCase):
         dep_edges = set([('D', 'C'), ('D', 'A'), ('E', 'D'), ('G', 'F'),
                         ('C', 'B'), ('B', 'A'), ('G', 'D'), ('H', 'G')])
         self.assertEqual(set(nxG.edges()), dep_edges)
-
-    @unittest.skip('Test not impemented')
-    def test_get_state_col_map(self):
-        raise NotImplementedError()
 
     def test_draw_graph_mpl(self):
         # This test only tests if the plotting runs and does not check if
