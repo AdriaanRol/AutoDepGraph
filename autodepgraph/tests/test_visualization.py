@@ -23,7 +23,6 @@ class Test_visualization(TestCase):
         self.assertEqual(sm['C'], vis.type_symbol_map['manual_cal'])
 
     def test_get_state_col_map(self):
-        vis.state_cmap
         snap = self.test_graph.snapshot()
         cm = vis.get_state_col_map(snap)
 
