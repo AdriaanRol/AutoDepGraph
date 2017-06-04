@@ -23,6 +23,7 @@ class Graph(Instrument):
         super().__init__(name)
         self.plot_mode = plot_mode
         self.nodes = {}
+        self._graph_changed_since_plot = False
 
     def load_graph(self, filename, load_node_state=False):
         """
@@ -96,9 +97,11 @@ class Graph(Instrument):
         node._parenth_graph = self.name
         self.nodes[node.name] = node
 
-        # Clears the node positions used for plotting when a new node is added
+        # Clears the node positions used for mpl plotting when a new node
+        # is added
         self._node_pos = None
-        # convenient for when adding nodes using name only
+        self._graph_changed_since_plot = True
+
         return node
 
     def clear_node_state(self):
@@ -132,5 +135,8 @@ class Graph(Instrument):
         for node in self.nodes.values():
             # ensures states are updated before taking snapshot
             node.state()
+        if self._graph_changed_since_plot and self.DiGraphWindow is not None:
+            self.DiGraphWindow.clear()
         self.DiGraphWindow = vis.draw_graph_pyqt(
             self.snapshot(), DiGraphWindow=self.DiGraphWindow)
+        self._graph_changed_since_plot = False

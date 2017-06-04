@@ -115,7 +115,7 @@ def adjaceny_to_integers(nxG, pos_dict):
     return adj
 
 
-def draw_graph_pyqt(snapshot, DiGraphWindow=None, pos=None, layout='spring'):
+def draw_graph_pyqt(snapshot, DiGraphWindow=None):
     """
     Function to create a quick plot of a graph using matplotlib.
     Intended mostly for for debugging purposes
@@ -123,10 +123,8 @@ def draw_graph_pyqt(snapshot, DiGraphWindow=None, pos=None, layout='spring'):
         snapshot : snapshot of the graph
         DiGraphWindow     : pyqtgraph remote graph window to be updated
             if None it will create a new plotting window to update
-        layout (str) : layout to position the nodes options are:
-            spring, shell, spectral and circular.
     returns:
-        pos
+        DiGraphWindow
 
     """
     nxG = snapshot_to_nxGraph(snapshot)
@@ -143,7 +141,6 @@ def draw_graph_pyqt(snapshot, DiGraphWindow=None, pos=None, layout='spring'):
     sm = get_type_symbol_map(snapshot)
     symbols = [(sm[node]) for node in pos_dict.keys()]
 
-    # symbols = ['o']*len(pos)
     labels = list(pos_dict.keys())
 
     if DiGraphWindow is None:
