@@ -57,6 +57,12 @@ nodeB.add_parent('A')
 nodeG.add_parent('D')
 nodeH.add_parent('G')
 
+for node in a.nodes.values():
+    node.calibrate_function('test_calibration_True')
+nodeC.calibrate_function('NotImplementedCalibration')
+nodeF.calibrate_function('NotImplementedCalibration')
+
+
 a.save_graph(os.path.join(test_dir, 'test_graph_states.yaml'))
 
 for node in a.nodes.values():

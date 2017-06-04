@@ -10,11 +10,14 @@ state_cmap = {'unknown': '#7f7f7f',            # middle gray
               'bad': '#d62728',                # brick red
               }
 
+type_symbol_map = {'normal': 'o',              # a circle
+                   'manual_cal': 'h', }        # a hexagon
+
 
 def get_state_col_map(snapshot):
     """
     Creates a dictionary with node names as keys and their state dependent
-    color as item.
+    color as value.
     """
     col_map = {}
     for node in snapshot['nodes'].values():
@@ -22,6 +25,28 @@ def get_state_col_map(snapshot):
             state_cmap[node['parameters']['state']['value']]
 
     return col_map
+
+
+def get_type_symbol_map(snapshot):
+    """
+    Returns a dictionary with node names as keys and a type dependent symbol
+    as value.
+
+    Currently there is only a distinction between "normal" nodes and
+    "manual_cal" nodes. "manual_cal" nodes are those nodes that do not have
+    a calibrate function specified and as such need to be set by hand.
+    Normal nodes are all other nodes.
+    """
+    symb_map = {}
+    for node in snapshot['nodes'].values():
+        if (node['parameters']['calibrate_function']['value']
+                == 'NotImplementedCalibration'):
+            state = 'manual_cal'
+        else:
+            state = 'normal'
+        symb_map[node['name']] = \
+            type_symbol_map[state]
+    return symb_map
 
 
 def snapshot_to_nxGraph(snapshot):
@@ -124,7 +149,10 @@ def draw_graph_pyqt(snapshot, DiGraphWindow=None, pos=None, layout='spring'):
     cm = get_state_col_map(snapshot)
     colors_list = [(cm[node]) for node in pos_dict.keys()]
 
-    symbols = ['o']*len(pos)
+    sm = get_type_symbol_map(snapshot)
+    symbols = [(sm[node]) for node in pos_dict.keys()]
+
+    # symbols = ['o']*len(pos)
     labels = list(pos_dict.keys())
 
     if DiGraphWindow is None:

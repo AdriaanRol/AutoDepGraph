@@ -16,11 +16,12 @@ class Test_visualization(TestCase):
         self.test_graph = Graph('test_graph')
         self.test_graph.load_graph(fn, load_node_state=True)
 
-    @unittest.skip('Test not implemented')
     def test_get_node_symbols(self):
         snap = self.test_graph.snapshot()
+        sm = vis.get_type_symbol_map(snap)
 
-        raise NotImplementedError()
+        self.assertEqual(sm['A'], vis.type_symbol_map['normal'])
+        self.assertEqual(sm['C'], vis.type_symbol_map['manual_cal'])
 
     def test_get_state_col_map(self):
         vis.state_cmap
