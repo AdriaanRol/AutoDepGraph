@@ -78,16 +78,7 @@ def draw_graph_mpl(snapshot, pos=None, layout='spring'):
     """
     nxG = snapshot_to_nxGraph(snapshot)
     if pos is None:
-        if layout == 'spring':
-            pos = nx.spring_layout(nxG, iterations=5000)
-        elif layout == 'shell':
-            pos = nx.shell_layout(nxG)
-        elif layout == 'spectral':
-            pos = nx.spectral_layout(nxG)
-        elif layout == 'circular':
-            pos = nx.circular_layout(nxG)
-        else:
-            raise ValueError('layout not recognized')
+        pos = nx.spring_layout(nxG, iterations=5000)
 
     # Edge colors need to be set using a value mapping and a cmap
 

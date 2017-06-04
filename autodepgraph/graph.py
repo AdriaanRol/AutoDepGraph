@@ -122,7 +122,7 @@ class Graph(Instrument):
             # ensures states are updated before taking snapshot
             node.state()
         self._node_pos = vis.draw_graph_mpl(
-            self.snapshot(), pos=self._node_pos, layout='spring')
+            self.snapshot(), pos=self._node_pos)
         plt.draw()
         plt.pause(.05)
 
