@@ -204,7 +204,7 @@ class CalibrationNode(Instrument):
             # larger than ~100 nodes.
             self.find_instrument(child_name).propagate_error(state)
 
-    def execute_node(self, verbose=False):
+    def execute_node(self, verbose=True):
         """
         Executing a node attempts to go from any state to a good state.
             any_state -> good
