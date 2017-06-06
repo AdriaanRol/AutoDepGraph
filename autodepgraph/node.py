@@ -300,6 +300,7 @@ class CalibrationNode(Instrument):
             result = (f() and result)
         except Exception as e:
             self.state('bad')
+            self.update_graph_monitor()
             raise e
 
         if verbose:

@@ -27,6 +27,7 @@ nodeA.state('good')
 nodeB.state('bad')
 nodeE.state('unknown')
 
+
 a.save_graph(os.path.join(test_dir, 'test_graph_new_nodes.yaml'))
 
 # Write graph for test_visualization
@@ -41,10 +42,12 @@ a.add_node('D')
 a.add_node('G')
 a.add_node('H')
 
-nodeA.state('unknown')
-nodeB.state('unknown')
+nodeA.state('good')
+nodeB.state('needs calibration')
+nodeD.state('bad')
 nodeE.state('unknown')
-
+nodeF.state('good')
+nodeC.state('active')
 nodeD.add_parent('C')
 nodeD.add_parent('A')
 nodeE.add_parent('D')
@@ -53,6 +56,12 @@ nodeC.add_parent('B')
 nodeB.add_parent('A')
 nodeG.add_parent('D')
 nodeH.add_parent('G')
+
+for node in a.nodes.values():
+    node.calibrate_function('test_calibration_True')
+nodeC.calibrate_function('NotImplementedCalibration')
+nodeF.calibrate_function('NotImplementedCalibration')
+
 
 a.save_graph(os.path.join(test_dir, 'test_graph_states.yaml'))
 
