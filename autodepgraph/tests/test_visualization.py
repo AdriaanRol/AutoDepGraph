@@ -2,7 +2,6 @@ import os
 import qcodes as qc
 from autodepgraph.graph import Graph
 from autodepgraph import visualization as vis
-import unittest
 from unittest import TestCase
 import autodepgraph as adg
 test_dir = os.path.join(adg.__path__[0], 'tests', 'test_data')
@@ -12,11 +11,31 @@ class Test_visualization(TestCase):
 
     @classmethod
     def setUpClass(self):
-        fn = os.path.join(test_dir, 'test_graph_states.yaml')
+        self.fn = os.path.join(test_dir, 'test_graph_states.yaml')
         self.test_graph = Graph('test_graph')
-        self.test_graph.load_graph(fn, load_node_state=True)
+        self.test_graph.load_graph(self.fn, load_node_state=True)
+
+    def test_get_node_symbols(self):
+        snap = self.test_graph.snapshot()
+        sm = vis.get_type_symbol_map(snap)
+
+        self.assertEqual(sm['A'], vis.type_symbol_map['normal'])
+        self.assertEqual(sm['C'], vis.type_symbol_map['manual_cal'])
+
+    def test_get_state_col_map(self):
+        snap = self.test_graph.snapshot()
+        cm = vis.get_state_col_map(snap)
+
+        # the check checks for certain known states in the test graph
+        self.assertEqual(cm['A'], vis.state_cmap['good'])
+        self.assertEqual(cm['B'], vis.state_cmap['needs calibration'])
+        self.assertEqual(cm['C'], vis.state_cmap['active'])
+        self.assertEqual(cm['D'], vis.state_cmap['bad'])
+        self.assertEqual(cm['E'], vis.state_cmap['unknown'])
 
     def test_snapshot_to_nxGraph(self):
+        # ensures that the graph is returned to the state from before this
+        # test.
         snap = self.test_graph.snapshot()
         nxG = vis.snapshot_to_nxGraph(snap)
         self.assertEqual(set(nxG.nodes()),
@@ -24,10 +43,6 @@ class Test_visualization(TestCase):
         dep_edges = set([('D', 'C'), ('D', 'A'), ('E', 'D'), ('G', 'F'),
                         ('C', 'B'), ('B', 'A'), ('G', 'D'), ('H', 'G')])
         self.assertEqual(set(nxG.edges()), dep_edges)
-
-    @unittest.skip('Test not impemented')
-    def test_get_state_col_map(self):
-        raise NotImplementedError()
 
     def test_draw_graph_mpl(self):
         # This test only tests if the plotting runs and does not check if
@@ -38,14 +53,28 @@ class Test_visualization(TestCase):
         self.test_graph.plot_mode = 'mpl'
         self.test_graph.update_monitor()
 
-    def test_draw_graph_pyqt(self):
+    def test_graph_changed_correct_plotting(self):
         # This test only tests if the plotting runs and does not check if
         # it is correct
-        snap = self.test_graph.snapshot()
+        self.test_graph_2 = Graph('test_graph_2')
+        self.test_graph_2.load_graph(self.fn, load_node_state=True)
+        snap = self.test_graph_2.snapshot()
         DiGraphWindow = vis.draw_graph_pyqt(snap)
         # Updating and reusing the same plot
         DiGraphWindow = vis.draw_graph_pyqt(snap, DiGraphWindow=DiGraphWindow)
 
+        self.test_graph_2.plot_mode = 'pg'
+        self.test_graph_2.update_monitor()
+        self.assertEqual(self.test_graph_2._graph_changed_since_plot, False)
+        nodeJ = self.test_graph_2.add_node('J')
+        nodeJ.parents(['G'])
+        self.assertEqual(self.test_graph_2._graph_changed_since_plot, True)
+        self.test_graph_2.update_monitor()
+        nodeJ.remove_parent('G')
+
+    def test_draw_graph_pyqt(self):
+        # This test only tests if the plotting runs and does not check if
+        # it is correct
         self.test_graph.plot_mode = 'pg'
         self.test_graph.update_monitor()
 
