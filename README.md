@@ -17,9 +17,9 @@ A CalibrationNode contains:
         + active (blue): calibration or check in progress
     - parents: the nodes it depends on 
     - children: nodes that depend on this node
-    - check_function : name of function to be executed when check is called.
+    - check_function : name of function to be executed when check is called. This can be a method of another instrument.
     - calibrate_function : name of function to be executed when calibrate is called. This can be a method of another instrument.
-    - calibration_timeout: time in (s) after which a calibration times out. This can be a method of another instrument.
+    - calibration_timeout: time in (s) after which a calibration times out. 
 
 - function
     - execute or call
