@@ -1,4 +1,5 @@
 import qcodes.utils.validators as vals
+import types
 import logging
 import numpy as np
 from datetime import datetime
@@ -64,20 +65,20 @@ class CalibrationNode(Instrument):
         self.add_parameter('check_function',
                            docstring=chk_docst,
                            initial_value='always_needs_calibration',
-                           vals=vals.Strings(),
-                           parameter_class=ManualParameter)
+                           vals=vals.MultiType(vals.Strings(), Funcs()),
+                           parameter_class=FunctionParameter)
         cal_docst = (
             'Name of the function used to calibrate a node, can be either a '
             'function in the calibrate_function module or a method of an '
             'instrument. If it is a method of an instrument it can be '
             'specified as "instr_name.method_name".\nA calibrate function '
-            'must return True or False indicating the success of the '
+            'must return "True" or "False" indicating the success of the '
             'calibration.')
         self.add_parameter('calibrate_function',
                            docstring=cal_docst,
                            initial_value='NotImplementedCalibration',
-                           vals=vals.Strings(),
-                           parameter_class=ManualParameter)
+                           vals=vals.MultiType(vals.Strings(), Funcs()),
+                           parameter_class=FunctionParameter)
 
         # counters to count how often functions get called for debugging
         # purposes
@@ -288,13 +289,7 @@ class CalibrationNode(Instrument):
         self.state('active')
         self.update_graph_monitor()
         result = True
-        funcStr = self.calibrate_function()
-        if '.' in funcStr:
-            instr_name, method = funcStr.split('.')
-            instr = self.find_instrument(instr_name)
-            f = getattr(instr, method)
-        else:
-            f = getattr(cal_f, funcStr)
+        f = self.calibrate_function.get_function()
         # If any of the calibrations returns False, result will be False
         try:
             result = (f() and result)
@@ -332,14 +327,7 @@ class CalibrationNode(Instrument):
         needsCalib = False  # Set to True if a check finds 'needs calibration'
         broken = False  # Set to True if a check fails.
 
-        funcStr = self.check_function()
-        if '.' in funcStr:
-            instr_name, method = funcStr.split('.')
-            instr = self.find_instrument(instr_name)
-            f = getattr(instr, method)
-        else:
-            f = getattr(check_f, funcStr)
-
+        f = self.check_function.get_function()
         result = f()
         if result == 'needs calibration':
             needsCalib = True
@@ -366,3 +354,44 @@ class CalibrationNode(Instrument):
         """
         if hasattr(self, '_parenth_graph'):
             self.find_instrument(self._parenth_graph).update_monitor()
+
+
+class FunctionParameter(ManualParameter):
+
+    def get_function(self):
+        """
+        Returns a callable method or function based on variable defined.
+        """
+        funcStr = self.get()
+        if isinstance(funcStr, types.FunctionType):
+            f = funcStr
+        elif '.' in funcStr:
+            instr_name, method = funcStr.split('.')
+            par_instr = self._instrument
+            instr = par_instr.find_instrument(instr_name)
+            f = getattr(instr, method)
+        else:
+            try:
+                # Look in the check_functions file
+                f = getattr(check_f, funcStr)
+            except AttributeError:
+                # Look in the calibration_functions file
+                f = getattr(cal_f, funcStr)
+        return f
+
+
+class Funcs(vals.Validator):
+    """
+    requires a function
+    """
+    def __init__(self):
+        # exists only to overwrite parent class
+        pass
+
+    def validate(self, value, context=''):
+        if not isinstance(value, types.FunctionType):
+            raise TypeError(
+                '{} is not a function; {}'.format(repr(value), context))
+
+    def __repr__(self):
+        return '<Funcs>'
