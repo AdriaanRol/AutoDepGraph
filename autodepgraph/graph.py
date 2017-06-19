@@ -12,6 +12,12 @@ try:
 except ImportError:
     plot_mode = 'mpl'
 
+try:
+    import pygraphviz
+except ImportError:
+    logging.warning('pygraphviz is not installed, plotting will be disabled')
+    plot_mode = 'none'
+
 
 class Graph(Instrument):
     """
@@ -111,6 +117,8 @@ class Graph(Instrument):
     def update_monitor(self):
         if self.plot_mode == 'mpl':
             self.update_monitor_mpl()
+        elif self.plot_mode == 'none':
+            return
         else:
             self.update_monitor_pg()
 
