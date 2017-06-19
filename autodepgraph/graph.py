@@ -5,12 +5,19 @@ import logging
 from autodepgraph.node import CalibrationNode
 import autodepgraph.visualization as vis
 import matplotlib.pyplot as plt
+import sys
 try:
     # Serves as a test to see if pyqtgraph is available
     import pyqtgraph as pg
     plot_mode = 'pg'
 except ImportError:
     plot_mode = 'mpl'
+
+try:
+    import pygraphviz
+except ImportError:
+    print('pygraphviz is not installed, plotting will be disabled', file=sys.stderr)
+    plot_mode = 'none'
 
 
 class Graph(Instrument):
@@ -111,6 +118,8 @@ class Graph(Instrument):
     def update_monitor(self):
         if self.plot_mode == 'mpl':
             self.update_monitor_mpl()
+        elif self.plot_mode == 'none':
+            return
         else:
             self.update_monitor_pg()
 
