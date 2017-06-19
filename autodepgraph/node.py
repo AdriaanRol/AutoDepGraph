@@ -65,7 +65,7 @@ class CalibrationNode(Instrument):
         self.add_parameter('check_function',
                            docstring=chk_docst,
                            initial_value='always_needs_calibration',
-                           vals=vals.MultiType(vals.Strings(), Funcs()),
+                           vals=vals.MultiType(vals.Strings(), Callable()),
                            parameter_class=FunctionParameter)
         cal_docst = (
             'Name of the function used to calibrate a node, can be either a '
@@ -77,7 +77,7 @@ class CalibrationNode(Instrument):
         self.add_parameter('calibrate_function',
                            docstring=cal_docst,
                            initial_value='NotImplementedCalibration',
-                           vals=vals.MultiType(vals.Strings(), Funcs()),
+                           vals=vals.MultiType(vals.Strings(), Callable()),
                            parameter_class=FunctionParameter)
 
         # counters to count how often functions get called for debugging
@@ -380,7 +380,7 @@ class FunctionParameter(ManualParameter):
         return f
 
 
-class Funcs(vals.Validator):
+class Callable(vals.Validator):
     """
     requires a function
     """
@@ -389,9 +389,9 @@ class Funcs(vals.Validator):
         pass
 
     def validate(self, value, context=''):
-        if not isinstance(value, types.FunctionType):
+        if not hasattr(value, '__call__'):
             raise TypeError(
-                '{} is not a function; {}'.format(repr(value), context))
+                '{} is not a callable; {}'.format(repr(value), context))
 
     def __repr__(self):
-        return '<Funcs>'
+        return '<Callable>'
