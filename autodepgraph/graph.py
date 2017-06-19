@@ -5,7 +5,6 @@ import logging
 from autodepgraph.node import CalibrationNode
 import autodepgraph.visualization as vis
 import matplotlib.pyplot as plt
-import sys
 try:
     # Serves as a test to see if pyqtgraph is available
     import pyqtgraph as pg
@@ -16,7 +15,7 @@ except ImportError:
 try:
     import pygraphviz
 except ImportError:
-    print('pygraphviz is not installed, plotting will be disabled', file=sys.stderr)
+    logging.warning('pygraphviz is not installed, plotting will be disabled')
     plot_mode = 'none'
 
 
