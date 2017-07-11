@@ -60,7 +60,7 @@ class Graph(Instrument):
             # that loading and setting parents for all node automatically also
             # sets the children for all nodes correctly.
             pars_to_update = ['parents', 'check_function',
-                              'calibrate_function']
+                              'calibrate_function', 'calibration_timeout']
             if load_node_state:
                 pars_to_update += ['state']
 
