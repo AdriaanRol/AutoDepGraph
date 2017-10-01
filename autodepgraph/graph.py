@@ -84,7 +84,7 @@ class Graph(Instrument):
             snap['nodes'][node.name] = node.snapshot(update=update)
         return snap
 
-    def add_node(self, node):
+    def add_node(self, node,  parents=None):
         """
         Adds a node to the graph.
         Args:
@@ -107,6 +107,9 @@ class Graph(Instrument):
         # is added
         self._node_pos = None
         self._graph_changed_since_plot = True
+
+        if parents is not None:
+            node.parents(parents)
 
         return node
 
