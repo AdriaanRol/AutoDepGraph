@@ -1,4 +1,5 @@
 numpy
+qcodes
 PyYAML
 networkx
 matplotlib
