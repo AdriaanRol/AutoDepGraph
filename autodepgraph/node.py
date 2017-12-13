@@ -1,6 +1,7 @@
 import qcodes.utils.validators as vals
 import types
 import logging
+import copy
 import numpy as np
 from datetime import datetime
 import autodepgraph.node_functions.calibration_functions as cal_f
@@ -105,7 +106,7 @@ class CalibrationNode(Instrument):
         remove_parent and then calling add_parent for every item
         in val.
         '''
-        for i in self.parents():
+        for i in copy.copy(self.parents()):
             self.remove_parent(i)
 
         for i in val:
@@ -158,7 +159,7 @@ class CalibrationNode(Instrument):
             else:
                 logging.warning('Node "{}" is already a parent of node "{}"'
                                 .format(name, self.name))
-
+                
             if self.name not in node.children():
                 node.children().append(self.name)
 
