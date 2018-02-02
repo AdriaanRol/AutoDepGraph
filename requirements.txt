@@ -5,3 +5,4 @@ networkx
 matplotlib
 pygraphviz
 pyqtgraph
+pytest
