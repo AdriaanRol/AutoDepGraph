@@ -5,3 +5,5 @@ networkx
 matplotlib
 pygraphviz
 pyqtgraph
+jsonschema
+pyqt5
