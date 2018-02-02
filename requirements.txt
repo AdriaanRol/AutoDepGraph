@@ -6,3 +6,5 @@ matplotlib
 pygraphviz
 pyqtgraph
 pytest
+jsonschema
+pyqt5
