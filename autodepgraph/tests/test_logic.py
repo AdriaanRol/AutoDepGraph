@@ -312,6 +312,19 @@ class Test_Node(TestCase):
         node_c.calibrate()
         self.assertEqual(mock_instr.cal_cnt, 1)
 
+    def test_function_as_check(self):
+        node_e = CalibrationNode('E')
+
+        def test_func():
+            print('hello')
+
+        node_e.check_function(test_func)
+
+        self.assertEqual(node_e.check_function(), test_func)
+
+        node_e.check()
+
+
     @classmethod
     def tearDownClass(self):
         # finds and closes all qcodes instruments

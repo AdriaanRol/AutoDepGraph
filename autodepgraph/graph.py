@@ -12,6 +12,12 @@ try:
 except ImportError:
     plot_mode = 'mpl'
 
+try:
+    import pygraphviz
+except ImportError:
+    logging.warning('pygraphviz is not installed, plotting will be disabled')
+    plot_mode = 'none'
+
 
 class Graph(Instrument):
     """
@@ -54,7 +60,7 @@ class Graph(Instrument):
             # that loading and setting parents for all node automatically also
             # sets the children for all nodes correctly.
             pars_to_update = ['parents', 'check_function',
-                              'calibrate_function']
+                              'calibrate_function', 'calibration_timeout']
             if load_node_state:
                 pars_to_update += ['state']
 
@@ -78,7 +84,7 @@ class Graph(Instrument):
             snap['nodes'][node.name] = node.snapshot(update=update)
         return snap
 
-    def add_node(self, node):
+    def add_node(self, node,  parents=None):
         """
         Adds a node to the graph.
         Args:
@@ -102,6 +108,9 @@ class Graph(Instrument):
         self._node_pos = None
         self._graph_changed_since_plot = True
 
+        if parents is not None:
+            node.parents(parents)
+
         return node
 
     def clear_node_state(self):
@@ -111,6 +120,8 @@ class Graph(Instrument):
     def update_monitor(self):
         if self.plot_mode == 'mpl':
             self.update_monitor_mpl()
+        elif self.plot_mode == 'none':
+            return
         else:
             self.update_monitor_pg()
 

@@ -1,5 +1,5 @@
 
-from distutils.core import setup
+from setuptools import setup
 
 
 setup(name='autodepgraph',
@@ -9,5 +9,5 @@ setup(name='autodepgraph',
       author_email='adriaan.rol@gmail.com',
       packages=['autodepgraph'],
       ext_package='autodepgraph',
-      requires=["pytools", "numpy(>=1.12)", "pytest", "pytest.cov", "matplotlib"]
+      requires=["qcodes", "pytools", "numpy(>=1.12)", "pytest", "pytest.cov", "matplotlib"]
       )

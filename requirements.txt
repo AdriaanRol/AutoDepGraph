@@ -1,6 +1,9 @@
 numpy
+qcodes
 PyYAML
 networkx
 matplotlib
 pygraphviz
 pyqtgraph
+jsonschema
+pyqt5

@@ -1,14 +1,54 @@
 # AutoDepGraph [![Build Status](https://travis-ci.org/AdriaanRol/AutoDepGraph.svg?branch=master)](https://travis-ci.org/AdriaanRol/AutoDepGraph) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/ae46c58617ff45df9ac98446b3dc34ac)](https://www.codacy.com/app/adriaan-rol/AutoDepGraph?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=AdriaanRol/AutoDepGraph&amp;utm_campaign=Badge_Grade) [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/ae46c58617ff45df9ac98446b3dc34ac)](https://www.codacy.com/app/adriaan-rol/AutoDepGraph?utm_source=github.com&utm_medium=referral&utm_content=AdriaanRol/AutoDepGraph&utm_campaign=Badge_Coverage)
 
+
+
+## Overview
+AutoDepGraph consists of two main classes, the CalibrationNode and the Graph.
+Calibration is done by calling a node that one wants to execute, the node contains the logic required to satisfy the nodes it depends on (parents).
+
+A CalibrationNode contains:
+
+- parameters
+    - state
+        + Good (green): check passes
+        + needs calibration (yellow): calibration is not up to date anymore and needs to be updated
+        + Bad (red): calibration or check has failed
+        + unknown (grayed): checks of the node should be run
+        + active (blue): calibration or check in progress
+    - parents: the nodes it depends on 
+    - children: nodes that depend on this node
+    - check_function : name of function to be executed when check is called. This can be a method of another instrument.
+    - calibrate_function : name of function to be executed when calibrate is called. This can be a method of another instrument.
+    - calibration_timeout: time in (s) after which a calibration times out. 
+
+- function
+    - execute or call
+        + Performs the logic of a node (check state, satisfy requirements) with the goal of moving to a "good" state
+    - check
+        + Performs checks to determine and the state of a node
+    - calibrate
+        + Executes the calibration routines of the node
+
+A Graph is a container of nodes, it is used for: 
+- new graphs can be created by instantiating a graph and then using the add_node method to define new nodes. 
+- loading and saving the graph
+- real-time visualization using pyqtgraph
+    - state of the node determines color of a node
+    - if a node has no calibrate function defined it is a manual node and has a hexagonal instead of a circle as symbol
+    - mouseover information lists more properties (planned)
+
+
+## Examples 
+For an introductory example see the example notebook. If you want to see how to use a specific function, see the tests located in the autodepgraph/tests folder.
+
 ## Installation
 - Clone the repository
+- install the [requirements](requirements.txt)
 - navigate to the repository and run `pip install -e .`
+- verify success of installation by running `py.test`
 
-
-### N.B. windows is a bitch.
-Before installing you will need to properly install pygraphviz + graphviz.
-
-Follow these steps:
+#### N.B. windows can be "problematic" 
+Installation on windows is a bit more difficult, this relates mostly to the installation of pygraphviz. To install graphviz and pygraphviz on windows follow tthese steps: 
 
 - get the 64 bit version of graphviz for (windows)[https://github.com/mahkoCosmo/GraphViz_x64/blob/master/], copy it to e.g., program files and add the bin folder to the system path.
 - the 64 bit version lacks the libxml2.dll, you most likely have this from some other program. Just copy paste it to the bin folder.
@@ -21,37 +61,5 @@ python setup.py install --include-path="C:\Program Files\graphviz-2.38_x64\inclu
 
 - then install autodepgraph and test the installation using `py.test`
 
-
-## Requirements
-Calibration is done by calling a node that we want to execute.
-A node contains
-- attributes
-    - state
-        + Good (green): all checks passed
-        + needs calibration (yellow): calibration is not up to date anymore and needs to be updated
-        + Bad/broken (red): calibration or check has failed
-        + Requires check (grayed out color of last known state): checks of the node should be run
-        + active (blue): calibration or check in progress
-
-- function
-    - execute
-        + Performs the logic of a node (check state, satisfy requirements)
-    - check status
-        + Performs checks to determine and set the state
-    - calibrate
-        + Executes the calibration routines of the node
-
-A calibration graph
-- loading and saving the graph
-- real-time visualization of the graph
-    + state of the node determines color
-    + mouseover information listing more properties
-
-## Test example
-The example will use a dummy qcodes instrument that emulates a heterodyne experiment (using the model function + noise) and uses the analysis on this dummy data.
-
-## Dependence on existing packages
-- [QCoDeS](https://github.com/DiCarloLab-Delft/Qcodes), we use the QCoDeS instrument and parameter classes for the graph, nodes and their attributes.
-<!-- - [graph-tool](https://graph-tool.skewed.de/), this package seems ideal but requires C-compilation (which can be painful on windows systems). Given the lightweight nature of this application I do not want to have such a heavy dependence.
-- [doit](http://pydoit.org/) a python based
- -->
+## Acknowledgements
+I would like to thank Julian Kelly for the idea of using a dependency graph for calibrations. I would like to thank Joe Weston for discussions and help in working out the initial design. I would like to acknowledge Livio Ciorciaro for disucssions and as a coauthor of this project. 
