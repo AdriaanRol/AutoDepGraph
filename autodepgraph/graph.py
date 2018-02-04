@@ -4,9 +4,10 @@ import yaml
 import logging
 from autodepgraph.node import CalibrationNode
 import autodepgraph.visualization as vis
+from os.path import join, split
 import matplotlib.pyplot as plt
 from qcodes.instrument.parameter import ManualParameter
-from qcodes.utils.validators import Enum
+from qcodes.utils.validators import Enum, Strings
 
 
 try:
@@ -23,6 +24,9 @@ except ImportError:
     plot_mode = 'None'
 
 
+_path_name = split(__file__)[:-1][0]
+print(_path_name)
+
 class Graph(Instrument):
     """
     A class containing nodes
@@ -37,7 +41,20 @@ class Graph(Instrument):
         self.add_parameter('cfg_plot_mode',
                            initial_value=plot_mode,
                            parameter_class=ManualParameter,
-                           vals=Enum('pyqtgraph', 'matplotlib', 'None'))
+                           vals=Enum('html', 'pyqtgraph', 'matplotlib',
+                                     'dotfile',
+                                     'None'))
+
+        self.add_parameter(
+            'cfg_dot_filename',
+            initial_value=join(_path_name,'svg_viewer', 'adg_graph.dot'),
+            parameter_class=ManualParameter,
+            vals=Strings())
+        self.add_parameter(
+            'cfg_svg_filename',
+            initial_value=join(_path_name,'svg_viewer', 'adg_graph.svg'),
+            parameter_class=ManualParameter,
+            vals=Strings())
 
     def load_graph(self, filename, load_node_state=False):
         """
@@ -130,8 +147,24 @@ class Graph(Instrument):
             self.update_monitor_mpl()
         elif self.cfg_plot_mode() == 'pyqtgraph':
             self.update_monitor_pg()
+        elif self.cfg_plot_mode() == 'html':
+            self.update_monitor_html()
+        elif self.cfg_plot_mode() == 'dotfile':
+            self.write_to_dotfile()
         elif self.cfg_plot_mode() == 'None':
             return
+
+    def write_to_dotfile(self, filename: str=None):
+        if filename is None:
+            filename = self.cfg_dot_filename()
+        vis.draw_graph_svg(self.snapshot(), filename=filename)
+
+    def update_monitor_html(self):
+        """
+        Generates an svg using networkx and pygraphviz. The file location
+        is the default location used by the autodepgraph svg viewer
+        """
+        vis.draw_graph_svg(self.snapshot(), filename=self.cfg_svg_filename())
 
     def update_monitor_mpl(self):
         """
