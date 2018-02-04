@@ -5,31 +5,39 @@ import logging
 from autodepgraph.node import CalibrationNode
 import autodepgraph.visualization as vis
 import matplotlib.pyplot as plt
+from qcodes.instrument.parameter import ManualParameter
+from qcodes.utils.validators import Enum
+
+
 try:
     # Serves as a test to see if pyqtgraph is available
     import pyqtgraph as pg
-    plot_mode = 'pg'
+    plot_mode = 'pyqtgraph'
 except ImportError:
-    plot_mode = 'mpl'
+    plot_mode = 'matplotlib'
 
 try:
     import pygraphviz
 except ImportError:
     logging.warning('pygraphviz is not installed, plotting will be disabled')
-    plot_mode = 'none'
+    plot_mode = 'None'
 
 
 class Graph(Instrument):
     """
     A class containing nodes
     """
-    delegate_attr_dicts = ['nodes']
+    delegate_attr_dicts = ['nodes', 'parameters']
 
     def __init__(self, name):
         super().__init__(name)
         self.plot_mode = plot_mode
         self.nodes = {}
         self._graph_changed_since_plot = False
+        self.add_parameter('cfg_plot_mode',
+                           initial_value=plot_mode,
+                           parameter_class=ManualParameter,
+                           vals=Enum('pyqtgraph', 'matplotlib', 'None'))
 
     def load_graph(self, filename, load_node_state=False):
         """
@@ -100,7 +108,7 @@ class Graph(Instrument):
             logging.warning(
                 'Node "{}" already exists in graph'.format(node.name))
         # gives the node a reference to the parent graph
-        node._parenth_graph = self.name
+        node._parent_graph = self.name
         self.nodes[node.name] = node
 
         # Clears the node positions used for mpl plotting when a new node
@@ -118,12 +126,12 @@ class Graph(Instrument):
             node.state('unknown')
 
     def update_monitor(self):
-        if self.plot_mode == 'mpl':
+        if self.cfg_plot_mode() == 'matplotlib':
             self.update_monitor_mpl()
-        elif self.plot_mode == 'none':
-            return
-        else:
+        elif self.cfg_plot_mode() == 'pyqtgraph':
             self.update_monitor_pg()
+        elif self.cfg_plot_mode() == 'None':
+            return
 
     def update_monitor_mpl(self):
         """
