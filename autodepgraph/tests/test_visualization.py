@@ -19,8 +19,8 @@ class Test_visualization(TestCase):
         snap = self.test_graph.snapshot()
         sm = vis.get_type_symbol_map(snap)
 
-        self.assertEqual(sm['A'], vis.type_symbol_map['normal'])
-        self.assertEqual(sm['C'], vis.type_symbol_map['manual_cal'])
+        self.assertEqual(sm['A'], vis.pyqtgraph_symbol_map['normal'])
+        self.assertEqual(sm['C'], vis.pyqtgraph_symbol_map['manual_cal'])
 
     def test_get_state_col_map(self):
         snap = self.test_graph.snapshot()

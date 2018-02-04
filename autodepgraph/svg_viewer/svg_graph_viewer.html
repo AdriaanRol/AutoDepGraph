@@ -1,0 +1,51 @@
+<html>
+
+
+<head>
+
+<script type="text/JavaScript">
+var url = "adg_graph.svg"; //url to load image from
+var refreshInterval = 100; //in ms
+var drawDate = true; //draw date string
+var img;
+// TODO: Add some way of making this SVG zoomable and panable
+function init() {
+    var canvas = document.getElementById("canvas");
+    var context = canvas.getContext("2d");
+    img = new Image();
+    img.onload = function() {
+        canvas.setAttribute("width", img.width)
+        canvas.setAttribute("height", img.height+10)
+
+        context.drawImage(this, 0, 0);
+        if(drawDate) {
+            var now = new Date();
+            var text = now.toLocaleDateString() + " " + now.toLocaleTimeString();
+            var maxWidth = 100;
+            var x = img.width-10-maxWidth;
+            var y = img.height+5;
+            context.strokeStyle = 'black';
+            context.strokeText(text, x, y, maxWidth);
+        }
+    };
+    refresh();
+}
+function refresh()
+{
+    img.src = url + "?t=" + new Date().getTime();
+    setTimeout("refresh()",refreshInterval);
+}
+</script>
+<title> Realtime SVG viewer </title>
+</head>
+<h1>AutoDepGraph SVG viewer</h1>
+
+
+<body onload="JavaScript:init();">
+<div id="canvas-container", align="center">
+    <canvas id="canvas"></canvas>
+</div>
+
+</body>
+
+</html>
