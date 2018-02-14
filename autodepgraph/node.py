@@ -12,7 +12,7 @@ from qcodes.instrument.parameter import ManualParameter
 
 class CalibrationNode(Instrument):
 
-    def __init__(self, name, verbose=False):
+    def __init__(self, name):
         super().__init__(name)
         self.add_parameter(
             'state',
@@ -87,7 +87,7 @@ class CalibrationNode(Instrument):
         self._calib_cnt = 0
         self._check_cnt = 0
 
-    def __call__(self, verbose=False):
+    def __call__(self, verbose=True):
         return self.execute_node(verbose=verbose)
 
     def _set_state(self, val):
@@ -111,6 +111,9 @@ class CalibrationNode(Instrument):
 
         for i in val:
             self.add_parent(i)
+        if hasattr(self, '_parent_graph'):
+            self.find_instrument(self._parent_graph)\
+                ._graph_changed_since_plot = True
 
     def _get_parents(self):
         return self._parents
@@ -159,7 +162,7 @@ class CalibrationNode(Instrument):
             else:
                 logging.warning('Node "{}" is already a parent of node "{}"'
                                 .format(name, self.name))
-                
+
             if self.name not in node.children():
                 node.children().append(self.name)
 
@@ -206,7 +209,7 @@ class CalibrationNode(Instrument):
             # larger than ~100 nodes.
             self.find_instrument(child_name).propagate_error(state)
 
-    def execute_node(self, verbose=False):
+    def execute_node(self, verbose=True):
         """
         Executing a node attempts to go from any state to a good state.
             any_state -> good
@@ -222,7 +225,7 @@ class CalibrationNode(Instrument):
 
         """
         self._exec_cnt += 1
-        if not hasattr(self, '_parenth_graph'):
+        if not hasattr(self, '_parent_graph'):
             raise AttributeError(
                 'Node "{}" must be attached to a graph'.format(self.name))
         if verbose:
@@ -275,7 +278,7 @@ class CalibrationNode(Instrument):
         self.update_graph_monitor()
         return self.state()
 
-    def calibrate(self, verbose=False):
+    def calibrate(self, verbose=True):
         '''
         Performs the calibrations of a node, ideally moving the state to good
             needs calibration -> good
@@ -310,7 +313,7 @@ class CalibrationNode(Instrument):
             self.state('bad')
             return False
 
-    def check(self, verbose=False):
+    def check(self, verbose=True):
         '''
         Runs checks of the node. The state is set according to the following
         logic:
@@ -351,10 +354,10 @@ class CalibrationNode(Instrument):
     def update_graph_monitor(self):
         """
         if the node is part of a graph it will update the monitor using
-        the update_monitor method of the parenth_graph
+        the update_monitor method of the parent_graph
         """
-        if hasattr(self, '_parenth_graph'):
-            self.find_instrument(self._parenth_graph).update_monitor()
+        if hasattr(self, '_parent_graph'):
+            self.find_instrument(self._parent_graph).update_monitor()
 
 
 class FunctionParameter(ManualParameter):
