@@ -32,9 +32,9 @@ install:
     - conda install pyqt --yes;
 
     - pip install --upgrade pip
-    - pip install qcodes, PyYAML, networkx, matplotlib, pyqtgraph, jsonschema
     # Have to be selective about how packages get installed due to strange error on Travis
     # - pip install -r requirements.txt
+    - pip install qcodes PyYAML networkx matplotlib pyqtgraph jsonschema
     - pip install coverage pytest-cov pytest --upgrade
     - pip install codacy-coverage
     - pip install -e .
