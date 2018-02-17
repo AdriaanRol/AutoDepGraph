@@ -25,7 +25,6 @@ install:
     - conda create -n test_env python=${PYTHON} --yes
     - source activate test_env
     - conda install numpy scipy pyopengl pytest flake8 six coverage --yes
-    - conda install numpy scipy pyopengl pytest flake8 six coverage --yes
     - conda install -c bioconda pygraphviz --yes
     - echo ${QT}
     - echo ${TEST}
@@ -33,8 +32,9 @@ install:
     - conda install pyqt --yes;
 
     - pip install --upgrade pip
-    - pip install -r requirements.txt
-    - pip install jsonschema # missing dependency in qcodes
+    - pip install qcodes, PyYAML, networkx, matplotlib, pyqtgraph, jsonschema
+    # Have to be selective about how packages get installed due to strange error on Travis
+    # - pip install -r requirements.txt
     - pip install coverage pytest-cov pytest --upgrade
     - pip install codacy-coverage
     - pip install -e .
