@@ -1,7 +1,7 @@
 numpy
 qcodes
 PyYAML
-networkx
+networkx>=2.1
 matplotlib
 pygraphviz
 pyqtgraph

@@ -98,7 +98,7 @@ def snapshot_to_nxGraph(snapshot, add_attributes:bool =True):
         # when a .dot renderer
         for node_name, node_snap in g_snap.items():
             attr_dict = get_attr_dict_from_node_snaphshot(node_snap)
-            nxG.add_node(node_name, attr_dict)
+            nxG.add_node(node_name, **attr_dict)
     else:
         nxG.add_nodes_from(g_snap)
     for node_name, n_snap in g_snap.items():
