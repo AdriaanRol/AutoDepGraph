@@ -4,6 +4,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 from autodepgraph.visualization import state_cmap
 
+
 # Used to find functions in modules
 from importlib import import_module
 # Only used for finding instrument methods.
@@ -34,11 +35,10 @@ class AutoDepGraph_DAG(nx.DiGraph):
     def add_node(self, node_for_adding, **attr):
         """
         """
-
         # there are set here to ensure these node attributes exist.
         # setting in this way will most likely interfere with joining multiple graphs
-        attr['state'] = attr.get('calibration_timeout', 'unknown')
-        attr['calibration_timeout'] = attr.get('calibration_timeout',
+        attr['state'] = attr.get('state', 'unknown')
+        attr['timeout'] = attr.get('timeout',
                                                np.inf)
         attr['calibrate_function'] = attr.get('calibrate_function',
             'autodepgraph.node_functions.calibration_functions'+
