@@ -44,10 +44,12 @@ class AutoDepGraph_DAG(nx.DiGraph):
             'autodepgraph.node_functions.calibration_functions'+
             '.NotImplementedCalibration')
 
-        attr['check_function']= attr.get('check_function', 'autodepgraph.node_functions.check_functions'+
-            '.always_needs_calibration')
+        attr['check_function']= attr.get('check_function',
+            'autodepgraph.node_functions.check_functions'+
+            '.return_fixed_value')
 
-        attr['tolerance']= attr.get('tolerance', None)
+        # zero default tolerance -> always recalibrate
+        attr['tolerance']= attr.get('tolerance', 0)
         super().add_node(node_for_adding, **attr)
 
     def add_edge(self, u_of_edge, v_of_edge, **attr):
@@ -126,7 +128,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
             cal_succes = self.calibrate_node(node, verbose=verbose)
             if not cal_succes:
                 raise ValueError(
-                    'Calibration of "{}" failed.'.format(self.name))
+                    'Calibration of "{}" failed.'.format(node))
 
         state = self.nodes[node]['state']
         return state
@@ -135,22 +137,28 @@ class AutoDepGraph_DAG(nx.DiGraph):
     def check_node(self, node, verbose=False):
         if verbose:
             print('\tChecking node {}.'.format(node))
-
         self.nodes[node]['state'] = 'active'
         self.update_monitor()
         func = _get_function(self.nodes[node]['check_function'])
         result = func()
-        if result == False:
-            # if the function returns False it means the check is broken
-            self.nodes[node]['state'] = 'bad'
-        elif self.nodes[node]['tolerance'] != None:
+        if isinstance(result, float):
             if result <self.nodes[node]['tolerance']:
                 self.nodes[node]['state'] = 'good'
+                if verbose:
+                    print('\tNode {} is within tolerance.'.format(node))
             else:
                 self.nodes[node]['state'] = 'needs calibration'
+                if verbose:
+                    print('\tNode {} needs calibration.'.format(node))
+        elif result == False:
+            if verbose:
+                print('\tNode {} is in a "bad" state.'.format(node))
+            # if the function returns False it means the check is broken
+            self.nodes[node]['state'] = 'bad'
         else:
-            pass
-            # FIXME: does not include old style check functions
+            raise ValueError('Expected float or "False", '
+                             'result is: {}'.format(result))
+
         return self.nodes[node]['state']
 
 
@@ -164,13 +172,11 @@ class AutoDepGraph_DAG(nx.DiGraph):
         if result:
             self.nodes[node]['state'] = 'good'
             if verbose:
-                print('\tCalibration of node {} successful: {}'
-                      .format(self.name, result))
+                print('\tCalibration of node {} successful.'.format(node))
         else:
             self.nodes[node]['state'] = 'bad'
             if verbose:
-                print('\tCalibration of node {} failed: {}'
-                      .format(self.name, result))
+                print('\tCalibration of node {} failed.'.format(node))
         self.update_monitor()
         return self.nodes[node]['state']
 
