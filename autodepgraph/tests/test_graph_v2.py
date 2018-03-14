@@ -1,5 +1,6 @@
 from unittest import TestCase
 import autodepgraph as adg
+import networkx as nx
 from autodepgraph.graph_v2 import AutoDepGraph_DAG
 import yaml
 import os
@@ -31,17 +32,17 @@ class Test_Graph(TestCase):
     def test_tolerance_check(self):
         pass
 
-    def test_execute_node_assume_unkown_is_good(self):
+    def test_maintain_node_assume_unkown_is_good(self):
         self.test_graph.set_all_node_states(
             'unknown')
-        self.test_graph.execute_node('C')
+        self.test_graph.maintain_node('C')
         self.assertEqual(self.test_graph.nodes()['C']['state'], 'good')
         self.assertEqual(self.test_graph.nodes()['B']['state'], 'unknown')
 
-    def test_execute_node_require_cal(self):
+    def test_maintain_node_require_cal(self):
         self.test_graph.set_all_node_states(
             'needs calibration')
-        self.test_graph.execute_node('C')
+        self.test_graph.maintain_node('C')
         self.assertEqual(self.test_graph.nodes()['C']['state'], 'good')
         self.assertEqual(self.test_graph.nodes()['B']['state'], 'good')
         self.assertEqual(self.test_graph.nodes()['D']['state'],
@@ -71,4 +72,20 @@ class Test_Graph(TestCase):
         # call twice to have both creation and update of plot
         self.test_graph.update_monitor()
 
+
+    def test_write_read_yaml(self):
+        """
+        Mostly an example on how to read and write, but also test for
+        weird objects being present.
+        """
+
+        self.test_graph.nodes()['C']['state'] = 'good'
+        self.test_graph.nodes()['B']['state'] = 'unknown'
+        fn = os.path.join(test_dir, 'nx_test_graph.yaml')
+        nx.readwrite.write_yaml(self.test_graph, fn)
+        read_testgraph = nx.readwrite.read_yaml(fn)
+        self.assertTrue(isinstance(read_testgraph, AutoDepGraph_DAG))
+
+        self.assertEqual(read_testgraph.nodes()['C']['state'], 'good')
+        self.assertEqual(read_testgraph.nodes()['B']['state'], 'unknown')
 

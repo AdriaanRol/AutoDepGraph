@@ -71,12 +71,12 @@ class AutoDepGraph_DAG(nx.DiGraph):
         assert v_of_edge in self.nodes()
         super().add_edge(u_of_edge, v_of_edge, **attr)
 
-    def execute_node(self, node, verbose=True):
+    def maintain_node(self, node, verbose=True):
         """
-        Executing a node attempts to go from any state to a good state.
+        Maintaining a node attempts to go from any state to a good state.
             any_state -> good
 
-        Executing a node performs the following steps:
+        Maintain a node performs the following steps:
             1. get the state of the dependency nodes. If all are OK or unknown,
                perform a check on the node itself.
                If a node is any other state, execute it to move it to a
@@ -96,7 +96,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
             if req_node_state in ['good', 'unknown']:
                 continue  # assume req_node is in a good state
             else:  # executing the node to ensure it is in a good state
-                req_node_state = self.execute_node(req_node_name,
+                req_node_state = self.maintain_node(req_node_name,
                                                    verbose=verbose)
                 if req_node_state == 'bad':
                     raise ValueError('Could not calibrate "{}"'.format(
@@ -130,7 +130,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
                 print('State of node "{}" is bad, executing all required'
                       ' nodes.'.format(node))
             for req_node_name in self.adj[node]:
-                req_node_state = self.execute_node(req_node_name,
+                req_node_state = self.maintain_node(req_node_name,
                                                    verbose=verbose)
             cal_succes = self.calibrate_node(node, verbose=verbose)
             if not cal_succes:
