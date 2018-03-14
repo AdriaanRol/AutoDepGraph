@@ -172,23 +172,27 @@ def draw_graph_pyqt(snapshot, DiGraphWindow=None, window_title=None):
     """
     if isinstance(snapshot, nx.DiGraph):
         nxG = snapshot
+
+        # Converts it to an array to work with pyqtgraph plotting class
+        pos_dict = nx.nx_agraph.graphviz_layout(nxG, prog='dot')
+
         colors_list = [state_cmap[node_dat['state']] for node_dat in
                    nxG.nodes.values()]
         symbols=['o']*len(colors_list)
+
     else:
+        nxG = snapshot_to_nxGraph(snapshot, add_attributes=True)
+
+        # Converts it to an array to work with pyqtgraph plotting class
+        pos_dict = nx.nx_agraph.graphviz_layout(nxG, prog='dot')
         cm = get_state_col_map(snapshot)
+
         colors_list = [(cm[node]) for node in pos_dict.keys()]
         sm = get_type_symbol_map(snapshot)
         symbols = [(sm[node]) for node in pos_dict.keys()]
 
-        nxG = snapshot_to_nxGraph(snapshot, add_attributes=True)
-
-    # Converts it to an array to work with pyqtgraph plotting class
-    pos_dict = nx.nx_agraph.graphviz_layout(nxG, prog='dot')
     pos = np.array(list(pos_dict.values()))
     adj = adjaceny_to_integers(nxG, pos_dict)
-
-
     labels = list(pos_dict.keys())
 
     if DiGraphWindow is None:
