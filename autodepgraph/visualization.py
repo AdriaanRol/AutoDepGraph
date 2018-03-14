@@ -159,8 +159,8 @@ def adjaceny_to_integers(nxG, pos_dict):
 
 def draw_graph_pyqt(snapshot, DiGraphWindow=None, window_title=None):
     """
-    Function to create a quick plot of a graph using matplotlib.
-    Intended mostly for for debugging purposes
+
+
     Args:
         snapshot        : snapshot of the graph
         DiGraphWindow   : pyqtgraph remote graph window to be updated
@@ -170,19 +170,24 @@ def draw_graph_pyqt(snapshot, DiGraphWindow=None, window_title=None):
         DiGraphWindow
 
     """
-    nxG = snapshot_to_nxGraph(snapshot, add_attributes=False)
+    if isinstance(snapshot, nx.DiGraph):
+        nxG = snapshot
+        colors_list = [state_cmap[node_dat['state']] for node_dat in
+                   nxG.nodes.values()]
+        symbols=['o']*len(colors_list)
+    else:
+        cm = get_state_col_map(snapshot)
+        colors_list = [(cm[node]) for node in pos_dict.keys()]
+        sm = get_type_symbol_map(snapshot)
+        symbols = [(sm[node]) for node in pos_dict.keys()]
+
+        nxG = snapshot_to_nxGraph(snapshot, add_attributes=True)
 
     # Converts it to an array to work with pyqtgraph plotting class
     pos_dict = nx.nx_agraph.graphviz_layout(nxG, prog='dot')
     pos = np.array(list(pos_dict.values()))
     adj = adjaceny_to_integers(nxG, pos_dict)
 
-    # Edge colors need to be set using a value mapping and a cmap
-    cm = get_state_col_map(snapshot)
-    colors_list = [(cm[node]) for node in pos_dict.keys()]
-
-    sm = get_type_symbol_map(snapshot)
-    symbols = [(sm[node]) for node in pos_dict.keys()]
 
     labels = list(pos_dict.keys())
 
@@ -203,7 +208,10 @@ def draw_graph_svg(snapshot, filename: str):
     If the file is saved to "autodepgraph/svg_viewer/adg_graph.svg" the
     realtime svg viewer can render it.
     """
-    nxG = snapshot_to_nxGraph(snapshot, add_attributes=True)
+    if isinstance(snapshot, nx.DiGraph):
+        nxG = snapshot
+    else:
+        nxG = snapshot_to_nxGraph(snapshot, add_attributes=True)
     gvG = nx.nx_agraph.to_agraph(nxG)
     gvG.layout(prog='dot')
     gvG.draw(filename)

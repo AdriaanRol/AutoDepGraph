@@ -3,8 +3,8 @@ import types
 import networkx as nx
 import matplotlib.pyplot as plt
 from autodepgraph.visualization import state_cmap
-
-
+from autodepgraph import visualization as vis
+from os.path import join, split
 # Used to find functions in modules
 from importlib import import_module
 # Only used for finding instrument methods.
@@ -19,12 +19,20 @@ class AutoDepGraph_DAG(nx.DiGraph):
         Inherits from a networkx DiGraph.
 
         The AutoDepGraph provides several constraints to nodes and edges
-        as well as add the functionality to walk over the graph and visualize this.
+        as well as add the functionality to walk over the graph in order to
+        calibrate a node and visualize the graph in real-time.
         """
         attr['name'] = name
         self.cfg_plot_mode = cfg_plot_mode
 
+        _path_name = split(__file__)[:-1][0]
+        self.cfg_svg_filename = join(_path_name, 'svg_viewer', 'adg_graph.svg')
+
         super().__init__(incoming_graph_data, **attr)
+
+        # internal attributes
+        self._DiGraphWindow = None  # used for pyqtgraph plotting
+        self._graph_changed_since_plot = True  # used for pyqtgraph plotting
 
         # counters to count how often functions get called for debugging
         # purposes
@@ -39,17 +47,17 @@ class AutoDepGraph_DAG(nx.DiGraph):
         # setting in this way will most likely interfere with joining multiple graphs
         attr['state'] = attr.get('state', 'unknown')
         attr['timeout'] = attr.get('timeout',
-                                               np.inf)
+                                   np.inf)
         attr['calibrate_function'] = attr.get('calibrate_function',
-            'autodepgraph.node_functions.calibration_functions'+
-            '.NotImplementedCalibration')
+                                              'autodepgraph.node_functions.calibration_functions' +
+                                              '.NotImplementedCalibration')
 
-        attr['check_function']= attr.get('check_function',
-            'autodepgraph.node_functions.check_functions'+
-            '.return_fixed_value')
+        attr['check_function'] = attr.get('check_function',
+                                          'autodepgraph.node_functions.check_functions' +
+                                          '.return_fixed_value')
 
         # zero default tolerance -> always recalibrate
-        attr['tolerance']= attr.get('tolerance', 0)
+        attr['tolerance'] = attr.get('tolerance', 0)
         super().add_node(node_for_adding, **attr)
 
     def add_edge(self, u_of_edge, v_of_edge, **attr):
@@ -61,8 +69,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
         # Nodes must already exist to ensure they have the right properties
         assert u_of_edge in self.nodes()
         assert v_of_edge in self.nodes()
-        super().add_edge( u_of_edge, v_of_edge, **attr)
-
+        super().add_edge(u_of_edge, v_of_edge, **attr)
 
     def execute_node(self, node, verbose=True):
         """
@@ -88,7 +95,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
             req_node_state = self.nodes[req_node_name]['state']
             if req_node_state in ['good', 'unknown']:
                 continue  # assume req_node is in a good state
-            else: # executing the node to ensure it is in a good state
+            else:  # executing the node to ensure it is in a good state
                 req_node_state = self.execute_node(req_node_name,
                                                    verbose=verbose)
                 if req_node_state == 'bad':
@@ -133,7 +140,6 @@ class AutoDepGraph_DAG(nx.DiGraph):
         state = self.nodes[node]['state']
         return state
 
-
     def check_node(self, node, verbose=False):
         if verbose:
             print('\tChecking node {}.'.format(node))
@@ -142,7 +148,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
         func = _get_function(self.nodes[node]['check_function'])
         result = func()
         if isinstance(result, float):
-            if result <self.nodes[node]['tolerance']:
+            if result < self.nodes[node]['tolerance']:
                 self.nodes[node]['state'] = 'good'
                 if verbose:
                     print('\tNode {} is within tolerance.'.format(node))
@@ -160,7 +166,6 @@ class AutoDepGraph_DAG(nx.DiGraph):
                              'result is: {}'.format(result))
 
         return self.nodes[node]['state']
-
 
     def calibrate_node(self, node, verbose=False):
         if verbose:
@@ -188,13 +193,14 @@ class AutoDepGraph_DAG(nx.DiGraph):
         if self.cfg_plot_mode == 'matplotlib':
             self.update_monitor_mpl()
         elif self.cfg_plot_mode == 'pyqtgraph':
-            self.update_monitor_pg()
-        elif self.cfg_plot_mode == 'html':
-            self.update_monitor_html()
-        elif self.cfg_plot_mode == 'dotfile':
-            self.write_to_dotfile()
-        elif self.cfg_plot_mode == 'None':
+            self.draw_pg()
+        elif self.cfg_plot_mode == 'svg':
+            self.draw_svg()
+        elif self.cfg_plot_mode is None or self.cfg_plot_mode == 'None':
             return
+        else:
+            raise ValueError('cfg_plot_mode should be in ["matplotlib",'
+                             ' "pyqtgraph", "svg", "None" ]')
 
     def update_monitor_mpl(self):
         """
@@ -211,11 +217,29 @@ class AutoDepGraph_DAG(nx.DiGraph):
             ax.axis('off')
         ax.set_title(self.name)
         colors_list = [state_cmap[node_dat['state']] for node_dat in
-            self.nodes.values()]
+                       self.nodes.values()]
         pos = nx.nx_agraph.graphviz_layout(self, prog='dot')
         nx.draw_networkx_nodes(self, pos, ax=ax, node_color=colors_list)
         nx.draw_networkx_edges(self, pos, ax=ax, arrows=True)
         nx.draw_networkx_labels(self, pos, ax=ax)
+
+    def draw_pg(self, DiGraphWindow=None):
+        """
+        draws the graph using an interactive pyqtgraph window
+        """
+        if DiGraphWindow is None:
+            DiGraphWindow = self._DiGraphWindow
+        self._DiGraphWindow = vis.draw_graph_pyqt(
+            self, DiGraphWindow=DiGraphWindow,
+            window_title=self.name)
+        return self._DiGraphWindow
+
+    def draw_svg(self, filename: str=None):
+        """
+        """
+        if filename is None:
+            filename = self.cfg_svg_filename
+        vis.draw_graph_svg(self, filename)
 
 
 def _get_function(funcStr):
@@ -231,6 +255,7 @@ def _get_function(funcStr):
             f = get_function_from_module(funcStr)
     return f
 
+
 def get_function_from_module(funcStr):
     """
     """
@@ -239,4 +264,3 @@ def get_function_from_module(funcStr):
     mod = import_module(module_name)
     f = getattr(mod, funcStr[(split_idx+1):])
     return f
-

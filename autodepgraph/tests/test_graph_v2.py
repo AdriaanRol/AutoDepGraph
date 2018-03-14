@@ -47,9 +47,28 @@ class Test_Graph(TestCase):
         self.assertEqual(self.test_graph.nodes()['D']['state'],
                          'needs calibration')
 
-
-
     def test_plotting_mpl(self):
         self.test_graph.draw_mpl()
+
+        self.test_graph.cfg_plot_mode = 'matplotlib'
+        self.test_graph.update_monitor()
+        # call twice to have both creation and update of plot
+        self.test_graph.update_monitor()
+
+    def test_plotting_pg(self):
+        self.test_graph.draw_pg()
+
+        self.test_graph.cfg_plot_mode = 'pyqtgraph'
+        self.test_graph.update_monitor()
+        # call twice to have both creation and update of plot
+        self.test_graph.update_monitor()
+
+    def test_plotting_svg(self):
+        self.test_graph.draw_svg()
+
+        self.test_graph.cfg_plot_mode = 'svg'
+        self.test_graph.update_monitor()
+        # call twice to have both creation and update of plot
+        self.test_graph.update_monitor()
 
 

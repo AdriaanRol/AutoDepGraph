@@ -25,7 +25,7 @@ except ImportError:
 
 
 _path_name = split(__file__)[:-1][0]
-print(_path_name)
+
 
 class Graph(Instrument):
     """
