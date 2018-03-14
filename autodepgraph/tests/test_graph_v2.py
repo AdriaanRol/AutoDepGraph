@@ -23,14 +23,14 @@ class Test_Graph(TestCase):
         test_graph.add_edge('E', 'D')
         self.test_graph= test_graph
 
-    def test_save_graph(self):
-        pass
-
-    def test_load_graph(self):
-        pass
-
     def test_tolerance_check(self):
-        pass
+        # The default check returns 1.0
+        self.test_graph.nodes['A']['tolerance'] = 0
+        self.assertEqual(self.test_graph.check_node('A'), 'needs calibration')
+        self.test_graph.nodes['A']['tolerance'] = 2
+        self.assertEqual(self.test_graph.check_node('A'), 'good')
+        self.test_graph.nodes['A']['tolerance'] = 0
+        self.assertEqual(self.test_graph.check_node('A'), 'needs calibration')
 
     def test_maintain_node_assume_unkown_is_good(self):
         self.test_graph.set_all_node_states(

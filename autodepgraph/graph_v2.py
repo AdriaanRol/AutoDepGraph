@@ -1,6 +1,7 @@
 import numpy as np
 import types
 import networkx as nx
+from datetime import datetime
 import matplotlib.pyplot as plt
 from autodepgraph.visualization import state_cmap
 from autodepgraph import visualization as vis
@@ -44,8 +45,8 @@ class AutoDepGraph_DAG(nx.DiGraph):
         """
         """
         # there are set here to ensure these node attributes exist.
-        # setting in this way will most likely interfere with joining multiple graphs
-        attr['state'] = attr.get('state', 'unknown')
+        # setting in this way will most likely interfere
+        # with joining multiple graphs
         attr['timeout'] = attr.get('timeout',
                                    np.inf)
         attr['calibrate_function'] = attr.get('calibrate_function',
@@ -60,6 +61,9 @@ class AutoDepGraph_DAG(nx.DiGraph):
         attr['tolerance'] = attr.get('tolerance', 0)
         super().add_node(node_for_adding, **attr)
 
+        self.set_node_state(node_for_adding,
+                            state=attr.get('state', 'unknown'))
+
     def add_edge(self, u_of_edge, v_of_edge, **attr):
         """
         Adds an edge that denotes a dependency in the calibration graph.
@@ -70,6 +74,12 @@ class AutoDepGraph_DAG(nx.DiGraph):
         assert u_of_edge in self.nodes()
         assert v_of_edge in self.nodes()
         super().add_edge(u_of_edge, v_of_edge, **attr)
+
+    def set_node_state(self, node_name, state):
+        assert state in ['good', 'needs calibration',
+                           'bad', 'unknown', 'active']
+        self.nodes[node_name]['state'] = state
+        self.nodes[node_name]['last_update']  = datetime.now()
 
     def maintain_node(self, node, verbose=True):
         """
@@ -143,24 +153,24 @@ class AutoDepGraph_DAG(nx.DiGraph):
     def check_node(self, node, verbose=False):
         if verbose:
             print('\tChecking node {}.'.format(node))
-        self.nodes[node]['state'] = 'active'
+        self.set_node_state(node, 'active')
         self.update_monitor()
         func = _get_function(self.nodes[node]['check_function'])
         result = func()
         if isinstance(result, float):
             if result < self.nodes[node]['tolerance']:
-                self.nodes[node]['state'] = 'good'
+                self.set_node_state(node, 'good')
                 if verbose:
                     print('\tNode {} is within tolerance.'.format(node))
             else:
-                self.nodes[node]['state'] = 'needs calibration'
+                self.set_node_state(node, 'needs calibration')
                 if verbose:
                     print('\tNode {} needs calibration.'.format(node))
         elif result == False:
             if verbose:
                 print('\tNode {} is in a "bad" state.'.format(node))
             # if the function returns False it means the check is broken
-            self.nodes[node]['state'] = 'bad'
+            self.set_node_state(node, 'bad')
         else:
             raise ValueError('Expected float or "False", '
                              'result is: {}'.format(result))
@@ -170,16 +180,16 @@ class AutoDepGraph_DAG(nx.DiGraph):
     def calibrate_node(self, node, verbose=False):
         if verbose:
             print('\tCalibrating node {}.'.format(node))
-        self.nodes[node]['state'] = 'active'
+        self.set_node_state(node, 'active')
         self.update_monitor()
         func = _get_function(self.nodes[node]['calibrate_function'])
         result = func()
         if result:
-            self.nodes[node]['state'] = 'good'
+            self.set_node_state(node, 'good')
             if verbose:
                 print('\tCalibration of node {} successful.'.format(node))
         else:
-            self.nodes[node]['state'] = 'bad'
+            self.set_node_state(node, 'bad')
             if verbose:
                 print('\tCalibration of node {} failed.'.format(node))
         self.update_monitor()
