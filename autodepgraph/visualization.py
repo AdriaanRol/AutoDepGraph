@@ -3,7 +3,8 @@ import numpy as np
 from autodepgraph.pg_visualization.pg_remotegraph import pg_DiGraph_window
 
 # Colormap used to map states to node colors
-state_cmap = {'unknown': '#7f7f7f',            # middle gray
+state_cmap = {#'unknown': '#7f7f7f',            # middle gray
+              'unknown': '#D3D3D3',            # light gray
               'active': '#1f77b4',             # muted blue
               'good': '#2ca02c',               # cooked asparagus green
               'needs calibration': '#ff7f0e',  # safety orange

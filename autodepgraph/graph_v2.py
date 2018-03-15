@@ -41,6 +41,10 @@ class AutoDepGraph_DAG(nx.DiGraph):
         self._calib_cnt = 0
         self._check_cnt = 0
 
+    def fresh_copy(self):
+        return AutoDepGraph_DAG(name=self.name,
+                                cfg_plot_mode=self.cfg_plot_mode)
+
     def add_node(self, node_for_adding, **attr):
         """
         """
@@ -75,11 +79,26 @@ class AutoDepGraph_DAG(nx.DiGraph):
         assert v_of_edge in self.nodes()
         super().add_edge(u_of_edge, v_of_edge, **attr)
 
+    def get_node_state(self, node_name):
+        Delta_T=(datetime.now() -
+                 self.nodes[node_name]['last_update']).total_seconds()
+        if ( Delta_T> self.nodes[node_name]['timeout']):
+            self.nodes[node_name]['state'] = 'unknown'
+        return self.nodes[node_name]['state']
+
     def set_node_state(self, node_name, state):
         assert state in ['good', 'needs calibration',
                            'bad', 'unknown', 'active']
         self.nodes[node_name]['state'] = state
         self.nodes[node_name]['last_update']  = datetime.now()
+
+    def is_manual_node(self, node_name):
+        if 'manual' in self.nodes[node_name]['calibrate_function']:
+            return True
+        elif 'NotImplemented' in self.nodes[node_name]['calibrate_function']:
+            return True
+        else:
+            return False
 
     def maintain_node(self, node, verbose=True):
         """
@@ -93,11 +112,11 @@ class AutoDepGraph_DAG(nx.DiGraph):
                good state
             2. perform the "check" experiment on the node itself. This quick
                check
-            3. Perform calibration and second round of executing dependencies
+            3. Perform calibration and second round of maintaining dependencies
         """
         self._exec_cnt += 1
         if verbose:
-            print('Executing node "{}".'.format(node))
+            print('Maintaining node "{}".'.format(node))
 
         # 1. Going over the states of all the required nodes and ensure
         # these are all in a 'Good' state.
@@ -105,7 +124,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
             req_node_state = self.nodes[req_node_name]['state']
             if req_node_state in ['good', 'unknown']:
                 continue  # assume req_node is in a good state
-            else:  # executing the node to ensure it is in a good state
+            else:  # maintaining the node to ensure it is in a good state
                 req_node_state = self.maintain_node(req_node_name,
                                                    verbose=verbose)
                 if req_node_state == 'bad':
@@ -137,7 +156,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
             # if the state is bad it will execute *all* dependencies. Even
             # the ones that were updated before.
             if verbose:
-                print('State of node "{}" is bad, executing all required'
+                print('State of node "{}" is bad, maintaining all required'
                       ' nodes.'.format(node))
             for req_node_name in self.adj[node]:
                 req_node_state = self.maintain_node(req_node_name,
@@ -249,7 +268,23 @@ class AutoDepGraph_DAG(nx.DiGraph):
         """
         if filename is None:
             filename = self.cfg_svg_filename
+        self._update_drawing_attrs()
         vis.draw_graph_svg(self, filename)
+
+    def _update_drawing_attrs(self):
+        for node_name, node_attrs in self.nodes(True):
+
+            state = self.get_node_state(node_name)
+            color = vis.state_cmap[state]
+            shape = 'hexagon' if self.is_manual_node(node_name) else 'ellipse'
+            attr_dict = {'shape': shape,
+                          'style': 'filled',
+                          'color': color,
+                          # 'fixedsize':'shape',
+                          # 'fixedsize' : b"true",
+                          'fixedsize' : "false",
+                          'fillcolor': color}
+            node_attrs.update(attr_dict)
 
 
 def _get_function(funcStr):
@@ -261,7 +296,7 @@ def _get_function(funcStr):
             instr_name, method = funcStr.split('.')
             instr = Instrument.find_instrument(instr_name)
             f = getattr(instr, method)
-        except Exception:
+        except Exception as e:
             f = get_function_from_module(funcStr)
     return f
 
@@ -274,3 +309,5 @@ def get_function_from_module(funcStr):
     mod = import_module(module_name)
     f = getattr(mod, funcStr[(split_idx+1):])
     return f
+
+
