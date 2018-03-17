@@ -48,6 +48,42 @@ class Test_Graph(TestCase):
         self.assertEqual(self.test_graph.nodes()['D']['state'],
                          'needs calibration')
 
+    def test_bad_node(self):
+        cal_True_delayed= ('autodepgraph.node_functions.calibration_functions'
+            '.test_calibration_True_delayed')
+        test_graph = AutoDepGraph_DAG('test graph')
+        for node in ['A', 'B', 'C', 'D', 'E']:
+            test_graph.add_node(node, calibrate_function=cal_True_delayed)
+        test_graph.add_edge('C', 'A')
+        test_graph.add_edge('C', 'B')
+        test_graph.add_edge('B', 'A')
+        test_graph.add_edge('D', 'A')
+        test_graph.add_edge('E', 'D')
+
+        test_graph.set_all_node_states('unknown')
+
+        self.assertEqual(test_graph.nodes()['C']['state'], 'unknown')
+        self.assertEqual(test_graph.nodes()['B']['state'], 'unknown')
+        self.assertEqual(test_graph.nodes()['A']['state'], 'unknown')
+
+        cal_False= ('autodepgraph.node_functions.calibration_functions'
+            '.test_calibration_False')
+        test_graph.node['C']['calibrate_function'] = cal_False
+
+        # Failure to calibrate should raise an error
+        with self.assertRaises(ValueError):
+            test_graph.maintain_node('C')
+        # In the process of trying to fix node C it should try to
+        # calibrate it's requirements
+        self.assertEqual(test_graph.nodes()['C']['state'], 'bad')
+        self.assertEqual(test_graph.nodes()['B']['state'], 'good')
+        self.assertEqual(test_graph.nodes()['A']['state'], 'good')
+        cal_True_delayed= ('autodepgraph.node_functions.calibration_functions'
+            '.test_calibration_True_delayed')
+
+
+
+
     def test_plotting_mpl(self):
         self.test_graph.draw_mpl()
 

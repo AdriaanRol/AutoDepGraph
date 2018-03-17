@@ -207,12 +207,14 @@ class AutoDepGraph_DAG(nx.DiGraph):
             self.set_node_state(node, 'good')
             if verbose:
                 print('\tCalibration of node {} successful.'.format(node))
+            self.update_monitor()
+            return True
         else:
             self.set_node_state(node, 'bad')
             if verbose:
                 print('\tCalibration of node {} failed.'.format(node))
-        self.update_monitor()
-        return self.nodes[node]['state']
+            self.update_monitor()
+            return False
 
     def set_all_node_states(self, state):
         for node_dat in self.nodes.values():
