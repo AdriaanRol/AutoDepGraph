@@ -13,7 +13,7 @@ from qcodes.instrument.base import Instrument
 
 
 class AutoDepGraph_DAG(nx.DiGraph):
-    def __init__(self, name, cfg_plot_mode=None,
+    def __init__(self, name, cfg_plot_mode='svg',
                  incoming_graph_data=None, **attr):
         """
         Directed Acyclic Graph used for calibrations.

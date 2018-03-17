@@ -73,6 +73,14 @@ class Test_Graph(TestCase):
         self.test_graph.update_monitor()
 
 
+    def test_dummy_cal_three_qubit_graph(self):
+        fn = os.path.join(test_dir, 'three_qubit_graph.yaml')
+        DAG = nx.readwrite.read_yaml(fn)
+        DAG.set_all_node_states('needs calibration')
+        DAG.maintain_node('Chevron q0-q1')
+        self.assertEqual(DAG.get_node_state('Chevron q0-q1'), 'good')
+        self.assertEqual(DAG.get_node_state('CZ q0-q1'), 'needs calibration')
+
     def test_write_read_yaml(self):
         """
         Mostly an example on how to read and write, but also test for

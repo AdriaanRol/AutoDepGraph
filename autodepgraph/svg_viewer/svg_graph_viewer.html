@@ -12,7 +12,6 @@
         var refreshInterval = 500; //in ms
         var drawDate = true; //draw date string
         var img;
-        // TODO: Add some way of making this SVG zoomable and panable
         function init() {
             var rel_canvas = document.getElementById("rel_canvas");
             var context = rel_canvas.getContext("2d");
@@ -45,20 +44,14 @@
 <body onload="JavaScript:init();">
 <h1>AutoDepGraph DAG</h1>
 
-
-<h2>Zoomable DAG</h2>
 <body onload="JavaScript:init();">
 <canvas id="canvas", width="800" height="600"></canvas>
 </body>
-<!-- <div id="canvas-container", align="center">
-    <canvas id="rel_canvas">
-    </canvas>
-</div> -->
 
 
 <script type="text/javascript" charset="utf-8">
 var canvas = document.getElementById("canvas");
-canvas.width = 1600; canvas.height = 800;
+canvas.width = 1200; canvas.height = 800;
 var img = new Image;
 img.src = 'adg_graph.svg';
 var drawDate = true;
@@ -206,6 +199,5 @@ function trackTransforms(ctx){
 }
 
 </script>
-
 </body>
 </html>
