@@ -113,7 +113,9 @@ class Test_Graph(TestCase):
         fn = os.path.join(test_dir, 'three_qubit_graph.yaml')
         DAG = nx.readwrite.read_yaml(fn)
         DAG.set_all_node_states('needs calibration')
+        DAG.cfg_plot_mode = None
         DAG.maintain_node('Chevron q0-q1')
+
         self.assertEqual(DAG.get_node_state('Chevron q0-q1'), 'good')
         self.assertEqual(DAG.get_node_state('CZ q0-q1'), 'needs calibration')
 
@@ -128,6 +130,7 @@ class Test_Graph(TestCase):
         fn = os.path.join(test_dir, 'nx_test_graph.yaml')
         nx.readwrite.write_yaml(self.test_graph, fn)
         read_testgraph = nx.readwrite.read_yaml(fn)
+
         self.assertTrue(isinstance(read_testgraph, AutoDepGraph_DAG))
 
         self.assertEqual(read_testgraph.nodes()['C']['state'], 'good')
