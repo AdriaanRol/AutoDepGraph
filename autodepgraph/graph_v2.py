@@ -53,13 +53,15 @@ class AutoDepGraph_DAG(nx.DiGraph):
         # with joining multiple graphs
         attr['timeout'] = attr.get('timeout',
                                    np.inf)
-        attr['calibrate_function'] = attr.get('calibrate_function',
-                                              'autodepgraph.node_functions.calibration_functions' +
-                                              '.NotImplementedCalibration')
+        attr['calibrate_function'] = attr.get(
+            'calibrate_function',
+            'autodepgraph.node_functions.calibration_functions' +
+            '.NotImplementedCalibration')
 
-        attr['check_function'] = attr.get('check_function',
-                                          'autodepgraph.node_functions.check_functions' +
-                                          '.return_fixed_value')
+        attr['check_function'] = attr.get(
+            'check_function',
+            'autodepgraph.node_functions.check_functions' +
+            '.return_fixed_value')
 
         # zero default tolerance -> always recalibrate
         attr['tolerance'] = attr.get('tolerance', 0)
@@ -67,6 +69,23 @@ class AutoDepGraph_DAG(nx.DiGraph):
 
         self.set_node_state(node_for_adding,
                             state=attr.get('state', 'unknown'))
+        # this adds a helper method to the attributes for quick access
+        self._construct_maintenance_methods(nodes=[node_for_adding])
+
+    def _construct_maintenance_methods(self, nodes):
+        for n in nodes:
+            self._construct_maintenance_method(node_name=n)
+
+    def _construct_maintenance_method(self, node_name):
+            node_name_no_space = node_name.replace(' ', '_').replace('-', '_')
+
+            # This name exists so that text based storing falls back
+            # on the right placeholder function
+            def _construct_maintenance_method():
+                self.maintain_node(node_name)
+
+            self.__setattr__('maintain_{}'.format(node_name_no_space),
+                             _construct_maintenance_method)
 
     def add_edge(self, u_of_edge, v_of_edge, **attr):
         """
@@ -80,17 +99,17 @@ class AutoDepGraph_DAG(nx.DiGraph):
         super().add_edge(u_of_edge, v_of_edge, **attr)
 
     def get_node_state(self, node_name):
-        Delta_T=(datetime.now() -
-                 self.nodes[node_name]['last_update']).total_seconds()
-        if ( Delta_T> self.nodes[node_name]['timeout']):
+        Delta_T = (datetime.now() -
+                   self.nodes[node_name]['last_update']).total_seconds()
+        if (Delta_T > self.nodes[node_name]['timeout']):
             self.nodes[node_name]['state'] = 'unknown'
         return self.nodes[node_name]['state']
 
     def set_node_state(self, node_name, state):
         assert state in ['good', 'needs calibration',
-                           'bad', 'unknown', 'active']
+                         'bad', 'unknown', 'active']
         self.nodes[node_name]['state'] = state
-        self.nodes[node_name]['last_update']  = datetime.now()
+        self.nodes[node_name]['last_update'] = datetime.now()
 
     def is_manual_node(self, node_name):
         if 'manual' in self.nodes[node_name]['calibrate_function']:
@@ -126,7 +145,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
                 continue  # assume req_node is in a good state
             else:  # maintaining the node to ensure it is in a good state
                 req_node_state = self.maintain_node(req_node_name,
-                                                   verbose=verbose)
+                                                    verbose=verbose)
                 if req_node_state == 'bad':
                     raise ValueError('Could not calibrate "{}"'.format(
                         req_node_name))
@@ -160,7 +179,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
                       ' nodes.'.format(node))
             for req_node_name in self.adj[node]:
                 req_node_state = self.maintain_node(req_node_name,
-                                                   verbose=verbose)
+                                                    verbose=verbose)
             cal_succes = self.calibrate_node(node, verbose=verbose)
             if not cal_succes:
                 raise ValueError(
@@ -280,13 +299,20 @@ class AutoDepGraph_DAG(nx.DiGraph):
             color = vis.state_cmap[state]
             shape = 'hexagon' if self.is_manual_node(node_name) else 'ellipse'
             attr_dict = {'shape': shape,
-                          'style': 'filled',
-                          'color': color,
-                          # 'fixedsize':'shape',
-                          # 'fixedsize' : b"true",
-                          'fixedsize' : "false",
-                          'fillcolor': color}
+                         'style': 'filled',
+                         'color': color,
+                         # 'fixedsize':'shape',
+                         # 'fixedsize' : b"true",
+                         'fixedsize': "false",
+                         'fillcolor': color}
             node_attrs.update(attr_dict)
+
+
+def _construct_maintenance_method():
+    # This placeholder exists to allow reading and writing graphs in a graph
+    # based format.
+    print('Placeholder function.')
+    print('Call DAG._construct_maintenance_methods() to update methods.')
 
 
 def _get_function(funcStr):
@@ -311,5 +337,3 @@ def get_function_from_module(funcStr):
     mod = import_module(module_name)
     f = getattr(mod, funcStr[(split_idx+1):])
     return f
-
-
