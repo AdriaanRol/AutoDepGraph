@@ -218,8 +218,8 @@ def draw_graph_svg(snapshot, filename: str):
     else:
         nxG = snapshot_to_nxGraph(snapshot, add_attributes=True)
     gvG = nx.nx_agraph.to_agraph(nxG)
-    gvG.layout(prog='dot')
-    gvG.draw(filename)
+    # gvG.layout(prog='dot')
+    gvG.draw(filename, prog='dot')
 
 
 def write_graph_to_dotfile(snapshot, filename: str):

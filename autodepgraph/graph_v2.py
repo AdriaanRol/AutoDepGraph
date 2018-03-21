@@ -105,11 +105,13 @@ class AutoDepGraph_DAG(nx.DiGraph):
             self.nodes[node_name]['state'] = 'unknown'
         return self.nodes[node_name]['state']
 
-    def set_node_state(self, node_name, state):
+    def set_node_state(self, node_name, state, update_monitor=True):
         assert state in ['good', 'needs calibration',
                          'bad', 'unknown', 'active']
         self.nodes[node_name]['state'] = state
         self.nodes[node_name]['last_update'] = datetime.now()
+        if update_monitor:
+            self.update_monitor()
 
     def is_manual_node(self, node_name):
         if 'manual' in self.nodes[node_name]['calibrate_function']:
@@ -158,7 +160,6 @@ class AutoDepGraph_DAG(nx.DiGraph):
         else:
             # determine latest status of node
             state = self.check_node(node, verbose=verbose)
-        self.update_monitor()
 
         # 3. Take action based on the stae of the node
         if state == 'needs calibration':
@@ -192,7 +193,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
         if verbose:
             print('\tChecking node {}.'.format(node))
         self.set_node_state(node, 'active')
-        self.update_monitor()
+
         func = _get_function(self.nodes[node]['check_function'])
         result = func()
         if isinstance(result, float):
@@ -204,6 +205,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
                 self.set_node_state(node, 'needs calibration')
                 if verbose:
                     print('\tNode {} needs calibration.'.format(node))
+
         elif result == False:
             if verbose:
                 print('\tNode {} is in a "bad" state.'.format(node))
@@ -219,20 +221,20 @@ class AutoDepGraph_DAG(nx.DiGraph):
         if verbose:
             print('\tCalibrating node {}.'.format(node))
         self.set_node_state(node, 'active')
-        self.update_monitor()
+
         func = _get_function(self.nodes[node]['calibrate_function'])
         result = func()
         if result:
             self.set_node_state(node, 'good')
             if verbose:
                 print('\tCalibration of node {} successful.'.format(node))
-            self.update_monitor()
+
             return True
         else:
             self.set_node_state(node, 'bad')
             if verbose:
                 print('\tCalibration of node {} failed.'.format(node))
-            self.update_monitor()
+
             return False
 
     def set_all_node_states(self, state):
@@ -337,3 +339,10 @@ def get_function_from_module(funcStr):
     mod = import_module(module_name)
     f = getattr(mod, funcStr[(split_idx+1):])
     return f
+
+
+def update_node_state(graph_to_update, graph_to_update_from):
+    for node_name, attrs in graph_to_update_from.nodes(True):
+        if node_name in graph_to_update.nodes():
+            graph_to_update.nodes[node_name]['state'] = attrs['state']
+            graph_to_update.nodes[node_name]['last_update'] = attrs['last_update']
