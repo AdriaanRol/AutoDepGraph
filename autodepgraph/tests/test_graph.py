@@ -1,4 +1,5 @@
-from unittest import TestCase
+from unittest import TestCase, expectedFailure
+from autodepgraph import visualization as vis
 import autodepgraph as adg
 import networkx as nx
 from autodepgraph.graph import AutoDepGraph_DAG
@@ -100,6 +101,12 @@ class Test_Graph(TestCase):
         # call twice to have both creation and update of plot
         self.test_graph.update_monitor()
 
+    @expectedFailure
+    def test_plotting_pg_local(self):
+        vis.draw_graph_pyqt(
+                self.test_graph, DiGraphWindow=None,
+                window_title=self.test_graph.name, remote=False)
+
     def test_plotting_svg(self):
         self.test_graph.draw_svg()
 
@@ -136,6 +143,13 @@ class Test_Graph(TestCase):
         self.assertEqual(read_testgraph.nodes()['C']['state'], 'good')
         self.assertEqual(read_testgraph.nodes()['B']['state'], 'unknown')
 
+    def test_adding_edge_nonexistent_node(self):
+        test_graph = AutoDepGraph_DAG('test graph')
+        test_graph.add_node('A')
+        with self.assertRaises(KeyError):
+            test_graph.add_edge('A', 'B')
+        with self.assertRaises(KeyError):
+            test_graph.add_edge('B', 'A')
 
 
     # def propagate_error(self, state):
