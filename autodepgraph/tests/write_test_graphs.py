@@ -116,6 +116,7 @@ class Qubit():
     def __init__(self,  name):
         self.name = name
 
+
 class Device():
     def __init__(self,  name, qubits):
         self.name = name
@@ -124,42 +125,48 @@ class Device():
 
 def create_dep_graph_single_qubit(self):
     print(self.name+' DAG')
-    DAG  = AutoDepGraph_DAG(name = self.name+' DAG')
+    DAG = AutoDepGraph_DAG(name=self.name+' DAG')
 
     DAG.add_node(self.name+' resonator frequency')
     DAG.add_node(self.name+' frequency coarse')
-    DAG.add_edge( self.name+' frequency coarse', self.name+' resonator frequency')
+    DAG.add_edge(self.name+' frequency coarse',
+                 self.name+' resonator frequency')
 
     DAG.add_node(self.name+' mixer offsets drive')
     DAG.add_node(self.name+' mixer skewness drive')
     DAG.add_node(self.name+' mixer offsets readout')
 
-    DAG.add_node(self.name  + ' pulse amplitude coarse')
-    DAG.add_edge( self.name + ' pulse amplitude coarse', self.name+' frequency coarse')
-    DAG.add_edge( self.name + ' pulse amplitude coarse', self.name+' mixer offsets drive')
-    DAG.add_edge( self.name + ' pulse amplitude coarse', self.name+' mixer skewness drive')
-    DAG.add_edge( self.name + ' pulse amplitude coarse', self.name+' mixer offsets readout')
-
-
+    DAG.add_node(self.name + ' pulse amplitude coarse')
+    DAG.add_edge(self.name + ' pulse amplitude coarse',
+                 self.name+' frequency coarse')
+    DAG.add_edge(self.name + ' pulse amplitude coarse',
+                 self.name+' mixer offsets drive')
+    DAG.add_edge(self.name + ' pulse amplitude coarse',
+                 self.name+' mixer skewness drive')
+    DAG.add_edge(self.name + ' pulse amplitude coarse',
+                 self.name+' mixer offsets readout')
 
     DAG.add_node(self.name+' T1')
     DAG.add_node(self.name+' T2-echo')
     DAG.add_node(self.name+' T2-star')
-    DAG.add_edge( self.name + ' T1', self.name+' pulse amplitude coarse')
-    DAG.add_edge( self.name + ' T2-echo', self.name+' pulse amplitude coarse')
-    DAG.add_edge( self.name + ' T2-star', self.name+' pulse amplitude coarse')
+    DAG.add_edge(self.name + ' T1', self.name+' pulse amplitude coarse')
+    DAG.add_edge(self.name + ' T2-echo', self.name+' pulse amplitude coarse')
+    DAG.add_edge(self.name + ' T2-star', self.name+' pulse amplitude coarse')
 
     DAG.add_node(self.name+' frequency fine')
-    DAG.add_edge( self.name + ' frequency fine', self.name+' pulse amplitude coarse')
+    DAG.add_edge(self.name + ' frequency fine',
+                 self.name+' pulse amplitude coarse')
 
-    DAG.add_node(self.name  + ' pulse amplitude med')
-    DAG.add_edge( self.name + ' pulse amplitude med', self.name+' frequency fine')
+    DAG.add_node(self.name + ' pulse amplitude med')
+    DAG.add_edge(self.name + ' pulse amplitude med',
+                 self.name+' frequency fine')
 
-    DAG.add_node(self.name +' optimal weights')
-    DAG.add_edge( self.name + ' optimal weights', self.name+' pulse amplitude med')
+    DAG.add_node(self.name + ' optimal weights')
+    DAG.add_edge(self.name + ' optimal weights',
+                 self.name+' pulse amplitude med')
 
     DAG.add_node(self.name+' gates restless')
-    DAG.add_edge( self.name + ' gates restless', self.name+' optimal weights')
+    DAG.add_edge(self.name + ' gates restless', self.name+' optimal weights')
 
     # easy to implement a check
     DAG.add_node(self.name+' frequency fine')
@@ -198,11 +205,11 @@ def create_dep_graph_device(self, dags):
     DAG.add_edge('CZ q1-q2', 'q2 cryo dist. corr.')
 
     DAG.add_edge('Chevron q0-q1', 'q0 gates restless')
-    DAG.add_edge('Chevron q0-q1','AWG8 Flux-staircase')
+    DAG.add_edge('Chevron q0-q1', 'AWG8 Flux-staircase')
     DAG.add_edge('Chevron q0-q1', 'q1 gates restless')
     DAG.add_edge('Chevron q0-q1', self.name+' multiplexed readout')
     DAG.add_edge('Chevron q1-q2', 'q0 gates restless')
-    DAG.add_edge('Chevron q1-q2','AWG8 Flux-staircase')
+    DAG.add_edge('Chevron q1-q2', 'AWG8 Flux-staircase')
     DAG.add_edge('Chevron q1-q2', 'q1 gates restless')
     DAG.add_edge('Chevron q1-q2', self.name+' multiplexed readout')
 
@@ -210,13 +217,13 @@ def create_dep_graph_device(self, dags):
         q_name = qubit.name
         DAG.add_edge(q_name+' room temp. dist. corr.',
                      'AWG8 Flux-staircase')
-        DAG.add_edge(self.name+' multiplexed readout', q_name+' optimal weights')
+        DAG.add_edge(self.name+' multiplexed readout',
+                     q_name+' optimal weights')
 
         DAG.add_edge(q_name+' resonator frequency',
                      self.name+' resonator frequencies coarse')
         DAG.add_edge(q_name+' pulse amplitude coarse', 'AWG8 MW-staircase')
     return DAG
-
 
 
 qubit_names = ['q0', 'q1', 'q2']
@@ -225,7 +232,7 @@ dags = []
 for qubit_name in qubit_names:
     qi = Qubit(qubit_name)
     qubits.append(qi)
-    dep_graph  = create_dep_graph_single_qubit(qi)
+    dep_graph = create_dep_graph_single_qubit(qi)
     dags.append(dep_graph)
 
 device = Device('3 qubit device', qubits)

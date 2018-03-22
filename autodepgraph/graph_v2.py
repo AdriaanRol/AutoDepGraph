@@ -94,8 +94,10 @@ class AutoDepGraph_DAG(nx.DiGraph):
         """
 
         # Nodes must already exist to ensure they have the right properties
-        assert u_of_edge in self.nodes()
-        assert v_of_edge in self.nodes()
+        if u_of_edge not in self.nodes():
+            raise KeyError('{} not in nodes'.format(u_of_edge))
+        if v_of_edge not in self.nodes():
+            raise KeyError('{} not in nodes'.format(v_of_edge))
         super().add_edge(u_of_edge, v_of_edge, **attr)
 
     def get_node_state(self, node_name):
