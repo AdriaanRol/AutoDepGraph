@@ -13,7 +13,7 @@ class Test_Graph(TestCase):
     @classmethod
     def setUpClass(self):
         cal_True_delayed = ('autodepgraph.node_functions.calibration_functions'
-            '.test_calibration_True_delayed')
+                            '.test_calibration_True_delayed')
         test_graph = AutoDepGraph_DAG('test graph')
         for node in ['A', 'B', 'C', 'D', 'E']:
             test_graph.add_node(node, calibrate_function=cal_True_delayed)
@@ -22,7 +22,20 @@ class Test_Graph(TestCase):
         test_graph.add_edge('B', 'A')
         test_graph.add_edge('D', 'A')
         test_graph.add_edge('E', 'D')
-        self.test_graph= test_graph
+        self.test_graph = test_graph
+
+    def test_default_not_implemented_cal(self):
+        test_graph = AutoDepGraph_DAG('test graph')
+        test_graph.add_node('A')
+
+        self.assertEqual(test_graph.nodes()['A']['state'], 'unknown')
+        with self.assertRaises(ValueError):
+            test_graph.maintain_node('A')
+
+        self.assertEqual(test_graph.nodes()['A']['state'], 'bad')
+
+        with self.assertRaises(ValueError):
+            test_graph.maintain_A()
 
     def test_tolerance_check(self):
         # The default check returns 1.0
@@ -50,8 +63,8 @@ class Test_Graph(TestCase):
                          'needs calibration')
 
     def test_bad_node(self):
-        cal_True_delayed= ('autodepgraph.node_functions.calibration_functions'
-            '.test_calibration_True_delayed')
+        cal_True_delayed = ('autodepgraph.node_functions.calibration_functions'
+                            '.test_calibration_True_delayed')
         test_graph = AutoDepGraph_DAG('test graph')
         for node in ['A', 'B', 'C', 'D', 'E']:
             test_graph.add_node(node, calibrate_function=cal_True_delayed)
@@ -67,8 +80,8 @@ class Test_Graph(TestCase):
         self.assertEqual(test_graph.nodes()['B']['state'], 'unknown')
         self.assertEqual(test_graph.nodes()['A']['state'], 'unknown')
 
-        cal_False= ('autodepgraph.node_functions.calibration_functions'
-            '.test_calibration_False')
+        cal_False = ('autodepgraph.node_functions.calibration_functions'
+                     '.test_calibration_False')
         test_graph.node['C']['calibrate_function'] = cal_False
 
         # Failure to calibrate should raise an error
@@ -79,11 +92,8 @@ class Test_Graph(TestCase):
         self.assertEqual(test_graph.nodes()['C']['state'], 'bad')
         self.assertEqual(test_graph.nodes()['B']['state'], 'good')
         self.assertEqual(test_graph.nodes()['A']['state'], 'good')
-        cal_True_delayed= ('autodepgraph.node_functions.calibration_functions'
-            '.test_calibration_True_delayed')
-
-
-
+        cal_True_delayed = ('autodepgraph.node_functions.calibration_functions'
+                            '.test_calibration_True_delayed')
 
     def test_plotting_mpl(self):
         self.test_graph.draw_mpl()
@@ -104,8 +114,8 @@ class Test_Graph(TestCase):
     @expectedFailure
     def test_plotting_pg_local(self):
         vis.draw_graph_pyqt(
-                self.test_graph, DiGraphWindow=None,
-                window_title=self.test_graph.name, remote=False)
+            self.test_graph, DiGraphWindow=None,
+            window_title=self.test_graph.name, remote=False)
 
     def test_plotting_svg(self):
         self.test_graph.draw_svg()
@@ -114,7 +124,6 @@ class Test_Graph(TestCase):
         self.test_graph.update_monitor()
         # call twice to have both creation and update of plot
         self.test_graph.update_monitor()
-
 
     def test_dummy_cal_three_qubit_graph(self):
         fn = os.path.join(test_dir, 'three_qubit_graph.yaml')
@@ -150,7 +159,6 @@ class Test_Graph(TestCase):
             test_graph.add_edge('A', 'B')
         with self.assertRaises(KeyError):
             test_graph.add_edge('B', 'A')
-
 
     # def propagate_error(self, state):
     #     '''

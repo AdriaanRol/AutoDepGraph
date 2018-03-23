@@ -1,3 +1,4 @@
+import logging
 import numpy as np
 import types
 import networkx as nx
@@ -225,7 +226,12 @@ class AutoDepGraph_DAG(nx.DiGraph):
         self.set_node_state(node, 'active')
 
         func = _get_function(self.nodes[node]['calibrate_function'])
-        result = func()
+        try:
+            result = func()
+        except Exception as e:
+            self.set_node_state(node, 'bad')
+            logging.warning(e)
+            return False
         if result:
             self.set_node_state(node, 'good')
             if verbose:
