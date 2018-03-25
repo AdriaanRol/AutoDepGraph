@@ -1,15 +1,14 @@
 import networkx as nx
 import numpy as np
-from autodepgraph.pg_visualization.pg_remotegraph import pg_DiGraph_window
 
 # Colormap used to map states to node colors
-state_cmap = {#'unknown': '#7f7f7f',            # middle gray
-              'unknown': '#D3D3D3',            # light gray
-              'active': '#1f77b4',             # muted blue
+state_cmap = {  # 'unknown': '#7f7f7f',            # middle gray
+    'unknown': '#D3D3D3',            # light gray
+    'active': '#1f77b4',             # muted blue
               'good': '#2ca02c',               # cooked asparagus green
               'needs calibration': '#ff7f0e',  # safety orange
               'bad': '#d62728',                # brick red
-              }
+}
 
 # symbol map
 pyqtgraph_symbol_map = {'normal': 'o',              # a circle
@@ -17,7 +16,6 @@ pyqtgraph_symbol_map = {'normal': 'o',              # a circle
 
 dot_type_symbol_map = {'normal': 'circle',              # a circle
                        'manual_cal': 'hexagon', }        # a hexagon
-
 
 
 # def get_state_col_map(snapshot):
@@ -179,8 +177,8 @@ def draw_graph_pyqt(nxG, DiGraphWindow=None, window_title=None,
     pos_dict = nx.nx_agraph.graphviz_layout(nxG, prog='dot')
 
     colors_list = [state_cmap[node_dat['state']] for node_dat in
-               nxG.nodes.values()]
-    symbols=['o']*len(colors_list)
+                   nxG.nodes.values()]
+    symbols = ['o']*len(colors_list)
 
     # else:
     #     nxG = snapshot_to_nxGraph(snapshot, add_attributes=True)
@@ -198,6 +196,9 @@ def draw_graph_pyqt(nxG, DiGraphWindow=None, window_title=None,
     labels = list(pos_dict.keys())
 
     if DiGraphWindow is None:
+        # Nested import for compatibility reasons
+        from autodepgraph.pg_visualization.pg_remotegraph import \
+            pg_DiGraph_window
         DiGraphWindow = pg_DiGraph_window(window_title=window_title,
                                           remote=remote)
 
@@ -205,7 +206,6 @@ def draw_graph_pyqt(nxG, DiGraphWindow=None, window_title=None,
                           labels=labels, pen=(60, 60, 60),
                           symbolBrush=colors_list, pxMode=False)
     return DiGraphWindow
-
 
 
 def draw_graph_svg(nxG, filename: str):
@@ -227,4 +227,3 @@ def draw_graph_svg(nxG, filename: str):
 # def write_graph_to_dotfile(snapshot, filename: str):
 #     nxG = snapshot_to_nxGraph(snapshot, add_attributes=True)
 #     nx.nx_agraph.write_dot(nxG, filename)
-
