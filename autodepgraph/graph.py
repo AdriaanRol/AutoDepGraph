@@ -340,6 +340,8 @@ def _get_function(funcStr):
             f = getattr(instr, method)
         except Exception as e:
             f = get_function_from_module(funcStr)
+    else:
+        raise Exception('could not find function %s' % funcStr)
     return f
 
 
