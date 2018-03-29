@@ -26,6 +26,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
         """
         attr['name'] = name
         self.cfg_plot_mode = cfg_plot_mode
+        self.cfg_plot_mode_args = {'fig': None}
 
         _path_name = split(__file__)[:-1][0]
         self.cfg_svg_filename = join(_path_name, 'svg_viewer', 'adg_graph.svg')
@@ -266,8 +267,11 @@ class AutoDepGraph_DAG(nx.DiGraph):
         """
         Updates a plot using the draw_graph_mpl based on matplotlib.
         """
+        fig = self.cfg_plot_mode_args.get('fig', None)
+        if fig is not None:
+            plt.figure(fig)
         plt.clf()
-        self.draw_mpl()
+        self.draw_mpl(plt.gca())
         plt.draw()
         plt.pause(.05)
 
