@@ -4,9 +4,14 @@ import types
 import networkx as nx
 from datetime import datetime
 import matplotlib.pyplot as plt
+import autodepgraph
 from autodepgraph.visualization import state_cmap
 from autodepgraph import visualization as vis
 from os.path import join, split
+import os
+import tempfile
+import webbrowser
+
 # Used to find functions in modules
 from importlib import import_module
 # Only used for finding instrument methods.
@@ -305,6 +310,21 @@ class AutoDepGraph_DAG(nx.DiGraph):
             filename = self.cfg_svg_filename
         self._update_drawing_attrs()
         vis.draw_graph_svg(self, filename)
+
+    def open_html_viewer(self):
+        """ Open html viewer for the file specified by the svg backend """
+        template = os.path.join(os.path.split(autodepgraph.__file__)[0], 'svg_viewer', 'svg_graph_viewer.html')
+        with open(template, 'rt') as fid:
+            x=fid.read()
+            
+        base, file = os.path.split(self.cfg_svg_filename)        
+        x=x.replace('adg_graph.svg', file)
+        
+        tfile=tempfile.mktemp(prefix='svgviewer-', suffix='html', dir=base)
+        with open(tfile, 'wt') as fid:
+            fid.write(x)
+        webbrowser.open_new_tab(tfile)
+        return tfile
 
     def _update_drawing_attrs(self):
         for node_name, node_attrs in self.nodes(True):
