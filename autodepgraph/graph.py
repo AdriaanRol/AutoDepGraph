@@ -239,6 +239,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
         func = _get_function(self.nodes[node]['calibrate_function'])
         try:
             result = func()
+            self.set_node_attribute(node, 'last_calibration', datetime.now() )
         except Exception as e:
             self.set_node_state(node, 'bad')
             logging.warning(e)
@@ -330,6 +331,16 @@ class AutoDepGraph_DAG(nx.DiGraph):
             fid.write(x)
         webbrowser.open_new_tab(tfile)
         return tfile
+
+    def set_node_attribute(self, node, attribute, value):
+        """ Set the attribute of the specified node 
+        
+        Args:
+            node (str): name of the node
+            attribute (str): attribute to set
+            value (ojbect): value to set
+        """
+        nx.set_node_attributes(self, {node: {attribute: value}})
 
     def set_node_description(self, node, description):
         """ Set the node description field
