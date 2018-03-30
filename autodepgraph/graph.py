@@ -326,6 +326,19 @@ class AutoDepGraph_DAG(nx.DiGraph):
         webbrowser.open_new_tab(tfile)
         return tfile
 
+    def set_node_description(self, node, description):
+        """ Set the node description field
+        
+        Args:
+            node (str): name of the node
+            description (str): description to set
+        """
+        nx.set_node_attributes(self, {node: {'description': description}})
+
+    def calibration_state(self):
+        """ Return dictionary with current calibration state """
+        return dict(self.node)
+    
     def _update_drawing_attrs(self):
         for node_name, node_attrs in self.nodes(True):
 
