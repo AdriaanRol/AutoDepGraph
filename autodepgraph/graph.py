@@ -123,7 +123,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
             self.update_monitor()
 
     def is_manual_node(self, node_name):
-        if isinstance(self.nodes[node_name]['calibrate_function'], types.FunctionType):
+        if isinstance(self.nodes[node_name]['calibrate_function'], (types.MethodType, types.FunctionType)):
             return False
         elif 'manual' in self.nodes[node_name]['calibrate_function']:
             return True
