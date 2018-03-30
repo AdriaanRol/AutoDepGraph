@@ -53,6 +53,9 @@ class Test_Graph(TestCase):
         self.assertEqual(self.test_graph.nodes()['C']['state'], 'good')
         self.assertEqual(self.test_graph.nodes()['B']['state'], 'unknown')
 
+    def test_calibration_state(self):
+        self.test_graph.calibration_state()
+        
     def test_maintain_node_require_cal(self):
         self.test_graph.set_all_node_states(
             'needs calibration')
