@@ -19,6 +19,10 @@ from qcodes.instrument.base import Instrument
 
 
 class AutoDepGraph_DAG(nx.DiGraph):
+    
+    node_states = ['good', 'needs calibration',
+                         'bad', 'unknown', 'active']
+    
     def __init__(self, name, cfg_plot_mode='svg',
                  incoming_graph_data=None, **attr):
         """
@@ -115,8 +119,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
         return self.nodes[node_name]['state']
 
     def set_node_state(self, node_name, state, update_monitor=True):
-        assert state in ['good', 'needs calibration',
-                         'bad', 'unknown', 'active']
+        assert state in self.node_states
         self.nodes[node_name]['state'] = state
         self.nodes[node_name]['last_update'] = datetime.now()
         if update_monitor:
@@ -366,7 +369,7 @@ def _construct_maintenance_method():
 
 def _get_function(funcStr):
 
-    if isinstance(funcStr, types.FunctionType):
+    if isinstance(funcStr, (types.MethodType, types.FunctionType)):
         f = funcStr
     elif '.' in funcStr:
         try:
