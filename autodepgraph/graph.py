@@ -341,6 +341,8 @@ class AutoDepGraph_DAG(nx.DiGraph):
             attribute (str): attribute to set
             value (ojbect): value to set
         """
+        if attribute in ['state']:
+            raise Exception('please use set_state directly')
         nx.set_node_attributes(self, {node: {attribute: value}})
 
     def set_node_description(self, node, description):
