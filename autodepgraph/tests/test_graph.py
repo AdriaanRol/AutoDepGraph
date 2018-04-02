@@ -59,7 +59,9 @@ class Test_Graph(TestCase):
         
     def test_set_function(self):
         self.test_graph.set_node_attribute('A', 'myattribute', 10)
+        self.assertEqual(self.test_graph.get_node_attribute('A', 'myattribute'), 10)        
         self.test_graph.set_node_description('A', 'explain node A')
+        self.assertEqual(self.test_graph.get_node_attribute('A', 'description'), 'explain node A')
         
     def test_maintain_node_require_cal(self):
         self.test_graph.set_all_node_states(

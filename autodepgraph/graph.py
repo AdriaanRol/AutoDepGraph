@@ -345,6 +345,19 @@ class AutoDepGraph_DAG(nx.DiGraph):
             raise Exception('please use set_state directly')
         nx.set_node_attributes(self, {node: {attribute: value}})
 
+    def get_node_attribute(self, node, attribute):
+        """ Return the attribute of the specified node 
+        
+        Args:
+            node (str): name of the node
+            attribute (str): attribute to get
+        Returns:
+            value (ojbect): attribute of the object
+        """
+        if attribute in ['state']:
+            raise Exception('please use get_state directly')
+        return self.node[node][attribute]
+
     def set_node_description(self, node, description):
         """ Set the node description field
         
