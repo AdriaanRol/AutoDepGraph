@@ -1,17 +1,18 @@
 import logging
 import numpy as np
 import types
-import networkx as nx
 from datetime import datetime
 import matplotlib.pyplot as plt
-import autodepgraph
-from autodepgraph.visualization import state_cmap
-from autodepgraph import visualization as vis
 from os.path import join, split
 import os
 import tempfile
 import webbrowser
 import warnings
+
+import networkx as nx
+import autodepgraph
+from autodepgraph.visualization import state_cmap
+from autodepgraph import visualization as vis
 
 # Used to find functions in modules
 from importlib import import_module
