@@ -11,6 +11,7 @@ from os.path import join, split
 import os
 import tempfile
 import webbrowser
+import warnings
 
 # Used to find functions in modules
 from importlib import import_module
@@ -381,6 +382,7 @@ def _construct_maintenance_method():
 def _get_function(funcStr):
 
     if isinstance(funcStr, (types.MethodType, types.FunctionType)):
+        warnings.warn('please set function as a str', DeprecationWarning)
         f = funcStr
     elif '.' in funcStr:
         try:
