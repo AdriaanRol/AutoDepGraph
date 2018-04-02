@@ -241,7 +241,6 @@ class AutoDepGraph_DAG(nx.DiGraph):
         func = _get_function(self.nodes[node]['calibrate_function'])
         try:
             result = func()
-            self.set_node_attribute(node, 'last_calibration', datetime.now() )
         except Exception as e:
             self.set_node_state(node, 'bad')
             logging.warning(e)
