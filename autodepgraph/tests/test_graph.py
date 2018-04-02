@@ -54,7 +54,8 @@ class Test_Graph(TestCase):
         self.assertEqual(self.test_graph.nodes()['B']['state'], 'unknown')
 
     def test_calibration_state(self):
-        self.test_graph.calibration_state()
+        s = self.test_graph.calibration_state()
+        assert( isinstance(s, dict))
         
     def test_set_function(self):
         self.test_graph.set_node_attribute('A', 'myattribute', 10)
