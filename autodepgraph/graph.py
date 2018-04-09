@@ -1,12 +1,19 @@
 import logging
 import numpy as np
 import types
-import networkx as nx
 from datetime import datetime
 import matplotlib.pyplot as plt
+from os.path import join, split
+import os
+import tempfile
+import webbrowser
+import warnings
+
+import networkx as nx
+import autodepgraph
 from autodepgraph.visualization import state_cmap
 from autodepgraph import visualization as vis
-from os.path import join, split
+
 # Used to find functions in modules
 from importlib import import_module
 # Only used for finding instrument methods.
@@ -14,6 +21,10 @@ from qcodes.instrument.base import Instrument
 
 
 class AutoDepGraph_DAG(nx.DiGraph):
+    
+    node_states = ['good', 'needs calibration',
+                         'bad', 'unknown', 'active']
+    
     def __init__(self, name, cfg_plot_mode='svg',
                  incoming_graph_data=None, **attr):
         """
@@ -110,15 +121,16 @@ class AutoDepGraph_DAG(nx.DiGraph):
         return self.nodes[node_name]['state']
 
     def set_node_state(self, node_name, state, update_monitor=True):
-        assert state in ['good', 'needs calibration',
-                         'bad', 'unknown', 'active']
+        assert state in self.node_states
         self.nodes[node_name]['state'] = state
         self.nodes[node_name]['last_update'] = datetime.now()
         if update_monitor:
             self.update_monitor()
 
     def is_manual_node(self, node_name):
-        if 'manual' in self.nodes[node_name]['calibrate_function']:
+        if isinstance(self.nodes[node_name]['calibrate_function'], (types.MethodType, types.FunctionType)):
+            return False
+        elif 'manual' in self.nodes[node_name]['calibrate_function']:
             return True
         elif 'NotImplemented' in self.nodes[node_name]['calibrate_function']:
             return True
@@ -306,6 +318,59 @@ class AutoDepGraph_DAG(nx.DiGraph):
         self._update_drawing_attrs()
         vis.draw_graph_svg(self, filename)
 
+    def open_html_viewer(self):
+        """ Open html viewer for the file specified by the svg backend """
+        template = os.path.join(os.path.split(autodepgraph.__file__)[0], 'svg_viewer', 'svg_graph_viewer.html')
+        with open(template, 'rt') as fid:
+            x=fid.read()
+            
+        base, file = os.path.split(self.cfg_svg_filename)        
+        x=x.replace('adg_graph.svg', file)
+        
+        tfile=tempfile.mktemp(prefix='svgviewer-', suffix='html', dir=base)
+        with open(tfile, 'wt') as fid:
+            fid.write(x)
+        webbrowser.open_new_tab(tfile)
+        return tfile
+
+    def set_node_attribute(self, node, attribute, value):
+        """ Set the attribute of the specified node 
+        
+        Args:
+            node (str): name of the node
+            attribute (str): attribute to set
+            value (ojbect): value to set
+        """
+        if attribute in ['state']:
+            raise Exception('please use set_state directly')
+        nx.set_node_attributes(self, {node: {attribute: value}})
+
+    def get_node_attribute(self, node, attribute):
+        """ Return the attribute of the specified node 
+        
+        Args:
+            node (str): name of the node
+            attribute (str): attribute to get
+        Returns:
+            value (ojbect): attribute of the object
+        """
+        if attribute in ['state']:
+            raise Exception('please use get_state directly')
+        return self.node[node][attribute]
+
+    def set_node_description(self, node, description):
+        """ Set the node description field
+        
+        Args:
+            node (str): name of the node
+            description (str): description to set
+        """
+        nx.set_node_attributes(self, {node: {'description': description}})
+
+    def calibration_state(self):
+        """ Return dictionary with current calibration state """
+        return dict(self.node)
+    
     def _update_drawing_attrs(self):
         for node_name, node_attrs in self.nodes(True):
 
@@ -331,7 +396,8 @@ def _construct_maintenance_method():
 
 def _get_function(funcStr):
 
-    if isinstance(funcStr, types.FunctionType):
+    if isinstance(funcStr, (types.MethodType, types.FunctionType)):
+        warnings.warn('please set function as a str', DeprecationWarning)
         f = funcStr
     elif '.' in funcStr:
         try:
@@ -340,6 +406,8 @@ def _get_function(funcStr):
             f = getattr(instr, method)
         except Exception as e:
             f = get_function_from_module(funcStr)
+    else:
+        raise Exception('could not find function %s' % funcStr)
     return f
 
 
