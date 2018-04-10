@@ -1,5 +1,6 @@
 import re
-from setuptools import setup
+from setuptools import setup, find_packages
+
 
 def get_version(verbose=1):
     """ Extract version information from source code """
@@ -16,14 +17,26 @@ def get_version(verbose=1):
         print('get_version: %s' % version)
     return version
 
-version = get_version()
+
+def readme():
+    with open('README.md') as f:
+        return f.read()
+
+
+def license():
+    with open('LICENSE') as f:
+        return f.read()
+
 
 setup(name='autodepgraph',
-      version=version,
+      version=get_version(),
       description='automated tuning based on dependency graph',
+      long_description=readme(),
       author='Adriaan Rol et al',
       author_email='adriaan.rol@gmail.com',
-      packages=['autodepgraph'],
+      packages=find_packages(),
       ext_package='autodepgraph',
-      requires=["qcodes", "pytools", "numpy(>=1.12)", "pytest", "pytest.cov", "matplotlib"]
+      license=license(),
+      requires=["qcodes", "pytools",
+                "numpy(>=1.12)", "pytest", "pytest.cov", "matplotlib"]
       )

@@ -21,10 +21,10 @@ from qcodes.instrument.base import Instrument
 
 
 class AutoDepGraph_DAG(nx.DiGraph):
-    
+
     node_states = ['good', 'needs calibration',
                          'bad', 'unknown', 'active']
-    
+
     def __init__(self, name, cfg_plot_mode='svg',
                  incoming_graph_data=None, **attr):
         """
@@ -323,10 +323,10 @@ class AutoDepGraph_DAG(nx.DiGraph):
         template = os.path.join(os.path.split(autodepgraph.__file__)[0], 'svg_viewer', 'svg_graph_viewer.html')
         with open(template, 'rt') as fid:
             x=fid.read()
-            
-        base, file = os.path.split(self.cfg_svg_filename)        
+
+        base, file = os.path.split(self.cfg_svg_filename)
         x=x.replace('adg_graph.svg', file)
-        
+
         tfile=tempfile.mktemp(prefix='svgviewer-', suffix='html', dir=base)
         with open(tfile, 'wt') as fid:
             fid.write(x)
@@ -334,8 +334,8 @@ class AutoDepGraph_DAG(nx.DiGraph):
         return tfile
 
     def set_node_attribute(self, node, attribute, value):
-        """ Set the attribute of the specified node 
-        
+        """ Set the attribute of the specified node
+
         Args:
             node (str): name of the node
             attribute (str): attribute to set
@@ -346,8 +346,8 @@ class AutoDepGraph_DAG(nx.DiGraph):
         nx.set_node_attributes(self, {node: {attribute: value}})
 
     def get_node_attribute(self, node, attribute):
-        """ Return the attribute of the specified node 
-        
+        """ Return the attribute of the specified node
+
         Args:
             node (str): name of the node
             attribute (str): attribute to get
@@ -360,7 +360,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
 
     def set_node_description(self, node, description):
         """ Set the node description field
-        
+
         Args:
             node (str): name of the node
             description (str): description to set
@@ -370,7 +370,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
     def calibration_state(self):
         """ Return dictionary with current calibration state """
         return dict(self.node)
-    
+
     def _update_drawing_attrs(self):
         for node_name, node_attrs in self.nodes(True):
 
