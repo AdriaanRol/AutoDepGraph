@@ -38,5 +38,13 @@ setup(name='autodepgraph',
       ext_package='autodepgraph',
       license=license(),
       requires=["qcodes", "pytools",
-                "numpy(>=1.12)", "pytest", "pytest.cov", "matplotlib"]
+                "numpy(>=1.12)", "pytest", "matplotlib"],
+      license="BSD",
+      keywords=['graph', 'calibration framework'],
+      url='https://github.com/AdriaanRol/AutoDepGraph',
+      classifiers=['Development Status :: 4 - Beta', 'Intended Audience :: Science/Research',
+                   'Programming Language :: Python :: 3.4',
+                   'Programming Language :: Python :: 3.5',
+                   'Programming Language :: Python :: 3.6',
+                   ]
       )
