@@ -90,3 +90,6 @@ ENV/
 
 *.html
 *.yaml
+
+# Project specific files
+autodepgraph/svg_viewer/adg_graph.svg

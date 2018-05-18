@@ -1,22 +1,6 @@
-# Module that contains the functions defining self-checks of the nodes.
-
-
-def test_check_good():
+def return_fixed_value():
     '''
-    A dummy test function for test cases. Always returns 'good'.
+    Always return 1.0,
+    useful as a default
     '''
-    return 'good'
-
-
-def test_check_bad():
-    '''
-    A dummy test function for test cases. Always returns 'bad'.
-    '''
-    return 'bad'
-
-
-def always_needs_calibration():
-    '''
-    A dummy test function for test cases. Always returns 'needs_calibration'.
-    '''
-    return 'needs calibration'
+    return 1.0

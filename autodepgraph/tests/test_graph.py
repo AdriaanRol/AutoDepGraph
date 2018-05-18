@@ -1,7 +1,8 @@
-from unittest import TestCase
+from unittest import TestCase, expectedFailure
+from autodepgraph import visualization as vis
 import autodepgraph as adg
-import qcodes as qc
-from autodepgraph.graph import CalibrationNode, Graph
+import networkx as nx
+from autodepgraph.graph import AutoDepGraph_DAG
 import yaml
 import os
 test_dir = os.path.join(adg.__path__[0], 'tests', 'test_data')
@@ -11,130 +12,174 @@ class Test_Graph(TestCase):
 
     @classmethod
     def setUpClass(self):
-        self.node_A = CalibrationNode('A')
-        self.node_B = CalibrationNode('B')
-        self.node_C = CalibrationNode('C')
-        self.node_D = CalibrationNode('D')
+        cal_True_delayed = ('autodepgraph.node_functions.calibration_functions'
+                            '.test_calibration_True_delayed')
+        test_graph = AutoDepGraph_DAG('test graph')
+        for node in ['A', 'B', 'C', 'D', 'E']:
+            test_graph.add_node(node, calibrate_function=cal_True_delayed)
+        test_graph.add_edge('C', 'A')
+        test_graph.add_edge('C', 'B')
+        test_graph.add_edge('B', 'A')
+        test_graph.add_edge('D', 'A')
+        test_graph.add_edge('E', 'D')
+        self.test_graph = test_graph
 
-    def test_adding_node(self):
-        test_graph = Graph('test_graph_adding_node')
-        nodes_before = test_graph.nodes
-        self.assertEqual(len(nodes_before.keys()), 0)
-        returned_node = test_graph.add_node(self.node_A)
-        self.assertEqual(returned_node, self.node_A)
-        nodes_after = test_graph.nodes
-        self.assertEqual(nodes_after, {self.node_A.name: self.node_A})
+    def test_default_not_implemented_cal(self):
+        test_graph = AutoDepGraph_DAG('test graph')
+        test_graph.add_node('A')
 
-        # Adding the same node multiple times
-        test_graph.add_node(self.node_A)
-        test_graph.add_node(self.node_A)
-        nodes_after = test_graph.nodes
-        self.assertEqual(nodes_after, {self.node_A.name: self.node_A})
+        self.assertEqual(test_graph.nodes()['A']['state'], 'unknown')
+        with self.assertRaises(ValueError):
+            test_graph.maintain_node('A')
 
-        # Adding a node as a string that exists
-        B = test_graph.add_node('B')
-        self.assertEqual('B', B.name)
-        nodes_after = test_graph.nodes.keys()
-        self.assertEqual(nodes_after, set(['A', 'B']))
+        self.assertEqual(test_graph.nodes()['A']['state'], 'bad')
 
-        # Adding a node as a string that does not exist yet
-        test_graph.add_node('E')
-        nodes_after = test_graph.nodes.keys()
-        self.assertEqual(nodes_after, set(['A', 'B', 'E']))
+        with self.assertRaises(ValueError):
+            test_graph.maintain_A()
 
-    def test_add_remove_edges(self):
-        # reset all edges
-        for i in [self.node_A, self.node_B, self.node_C, self.node_D]:
-            i.parents([])
+    def test_tolerance_check(self):
+        # The default check returns 1.0
+        self.test_graph.nodes['A']['tolerance'] = 0
+        self.assertEqual(self.test_graph.check_node('A'), 'needs calibration')
+        self.test_graph.nodes['A']['tolerance'] = 2
+        self.assertEqual(self.test_graph.check_node('A'), 'good')
+        self.test_graph.nodes['A']['tolerance'] = 0
+        self.assertEqual(self.test_graph.check_node('A'), 'needs calibration')
 
-        self.node_A.add_parent('B')
-        self.node_A.add_parent('D')
-        self.node_D.add_parent('C')
-        self.node_D.add_parent('B')
+    def test_maintain_node_assume_unkown_is_good(self):
+        self.test_graph.set_all_node_states(
+            'unknown')
+        self.test_graph.maintain_node('C')
+        self.assertEqual(self.test_graph.nodes()['C']['state'], 'good')
+        self.assertEqual(self.test_graph.nodes()['B']['state'], 'unknown')
 
-        self.assertEqual(self.node_A.parents(), ['B', 'D'])
-        self.assertEqual(self.node_A.children(), [])
-        self.assertEqual(self.node_B.parents(), [])
-        self.assertEqual(self.node_B.children(), ['A', 'D'])
-        self.assertEqual(self.node_C.parents(), [])
-        self.assertEqual(self.node_C.children(), ['D'])
-        self.assertEqual(self.node_D.parents(), ['C', 'B'])
-        self.assertEqual(self.node_D.children(), ['A'])
+    def test_calibration_state(self):
+        s = self.test_graph.calibration_state()
+        assert( isinstance(s, dict))
+        
+    def test_set_function(self):
+        self.test_graph.set_node_attribute('A', 'myattribute', 10)
+        self.assertEqual(self.test_graph.get_node_attribute('A', 'myattribute'), 10)        
+        self.test_graph.set_node_description('A', 'explain node A')
+        self.assertEqual(self.test_graph.get_node_attribute('A', 'description'), 'explain node A')
+        
+    def test_maintain_node_require_cal(self):
+        self.test_graph.set_all_node_states(
+            'needs calibration')
+        self.test_graph.maintain_node('C')
+        self.assertEqual(self.test_graph.nodes()['C']['state'], 'good')
+        self.assertEqual(self.test_graph.nodes()['B']['state'], 'good')
+        self.assertEqual(self.test_graph.nodes()['D']['state'],
+                         'needs calibration')
 
-        self.node_A.remove_parent('B')
-        self.node_A.remove_parent('D')
-        self.node_D.remove_parent('C')
-        self.node_D.remove_parent('B')
+    def test_bad_node(self):
+        cal_True_delayed = ('autodepgraph.node_functions.calibration_functions'
+                            '.test_calibration_True_delayed')
+        test_graph = AutoDepGraph_DAG('test graph')
+        for node in ['A', 'B', 'C', 'D', 'E']:
+            test_graph.add_node(node, calibrate_function=cal_True_delayed)
+        test_graph.add_edge('C', 'A')
+        test_graph.add_edge('C', 'B')
+        test_graph.add_edge('B', 'A')
+        test_graph.add_edge('D', 'A')
+        test_graph.add_edge('E', 'D')
 
-        self.assertEqual(self.node_A.parents(), [])
-        self.assertEqual(self.node_B.parents(), [])
-        self.assertEqual(self.node_C.parents(), [])
-        self.assertEqual(self.node_D.parents(), [])
+        test_graph.set_all_node_states('unknown')
 
-        self.assertEqual(self.node_A.children(), [])
-        self.assertEqual(self.node_B.children(), [])
-        self.assertEqual(self.node_C.children(), [])
-        self.assertEqual(self.node_D.children(), [])
+        self.assertEqual(test_graph.nodes()['C']['state'], 'unknown')
+        self.assertEqual(test_graph.nodes()['B']['state'], 'unknown')
+        self.assertEqual(test_graph.nodes()['A']['state'], 'unknown')
 
-    def test_save_graph(self):
-        test_graph = Graph('test_graph_saving')
+        cal_False = ('autodepgraph.node_functions.calibration_functions'
+                     '.test_calibration_False')
+        test_graph.node['C']['calibrate_function'] = cal_False
 
-        test_graph.add_node(self.node_A)
-        test_graph.add_node(self.node_B)
-        test_graph.add_node(self.node_C)
-        snap = test_graph.snapshot()
-        fn = os.path.join(test_dir, 'tg.yaml')
-        test_graph.save_graph(filename=fn)
-        f = open(fn)
-        loaded_snap = yaml.safe_load(f)
-        f.close()
+        # Failure to calibrate should raise an error
+        with self.assertRaises(ValueError):
+            test_graph.maintain_node('C')
+        # In the process of trying to fix node C it should try to
+        # calibrate it's requirements
+        self.assertEqual(test_graph.nodes()['C']['state'], 'bad')
+        self.assertEqual(test_graph.nodes()['B']['state'], 'good')
+        self.assertEqual(test_graph.nodes()['A']['state'], 'good')
+        cal_True_delayed = ('autodepgraph.node_functions.calibration_functions'
+                            '.test_calibration_True_delayed')
 
-        self.assertEqual(snap, loaded_snap)
-        self.assertEqual(set(loaded_snap),
-                         set(['nodes', 'meta']))
-        self.assertEqual(set(loaded_snap['nodes']),
-                         set(['A', 'B', 'C']))
-        # Could also test if the values of the attributes are identical
+    def test_plotting_mpl(self):
+        self.test_graph.draw_mpl()
 
-    def test_loading_graph_from_file(self):
+        self.test_graph.cfg_plot_mode = 'matplotlib'
+        self.test_graph.update_monitor()
+        # call twice to have both creation and update of plot
+        self.test_graph.update_monitor()
 
-        fn = os.path.join(test_dir, 'test_graph_new_nodes.yaml')
-        new_graph = Graph('new_graph')
-        new_graph.load_graph(fn, load_node_state=False)
-        # Test that both graphs refer to the same (existing) objects.
-        self.assertEqual(set(new_graph.nodes.keys()),
-                         set(['A', 'B', 'E', 'F']))
-        for node in new_graph.nodes.values():
-            self.assertEqual(node.state(), 'unknown')
+    def test_plotting_pg(self):
+        self.test_graph.draw_pg()
 
-        new_graph_2 = Graph('new_graph_2')
-        new_graph_2.load_graph(fn, load_node_state=True)
-        self.assertEqual(set(new_graph_2.nodes.keys()),
-                         set(['A', 'B', 'E', 'F']))
-        A = new_graph_2.nodes['A']
-        B = new_graph_2.nodes['B']
-        E = new_graph_2.nodes['E']
+        self.test_graph.cfg_plot_mode = 'pyqtgraph'
+        self.test_graph.update_monitor()
+        # call twice to have both creation and update of plot
+        self.test_graph.update_monitor()
 
-        self.assertEqual(A.state(), 'good')
-        self.assertEqual(B.state(), 'bad')
-        self.assertEqual(E.state(), 'unknown')
+    @expectedFailure
+    def test_plotting_pg_local(self):
+        vis.draw_graph_pyqt(
+            self.test_graph, DiGraphWindow=None,
+            window_title=self.test_graph.name, remote=False)
 
-        # TODO: add a test for also loading functions
+    def test_plotting_svg(self):
+        self.test_graph.draw_svg()
 
-    def test_loading_graph_from_file_rabi_sims(self):
+        self.test_graph.cfg_plot_mode = 'svg'
+        self.test_graph.update_monitor()
+        # call twice to have both creation and update of plot
+        self.test_graph.update_monitor()
+
+    def test_dummy_cal_three_qubit_graph(self):
+        fn = os.path.join(test_dir, 'three_qubit_graph.yaml')
+        DAG = nx.readwrite.read_yaml(fn)
+        DAG.set_all_node_states('needs calibration')
+        DAG.cfg_plot_mode = None
+        DAG.maintain_node('Chevron q0-q1')
+
+        self.assertEqual(DAG.get_node_state('Chevron q0-q1'), 'good')
+        self.assertEqual(DAG.get_node_state('CZ q0-q1'), 'needs calibration')
+
+    def test_write_read_yaml(self):
         """
-        Same as test above but a more complex example where more can go wrong
+        Mostly an example on how to read and write, but also test for
+        weird objects being present.
         """
-        fn = os.path.join(test_dir, 'rabi_sims_example_graph.yaml')
-        rmg = Graph('rabi_sims_example_graph')
-        rmg.load_graph(fn)
 
-    @classmethod
-    def tearDownClass(self):
-        # finds and closes all qcodes instruments
-        all_instrs = (list(qc.Instrument._all_instruments.keys()))
-        for insname in all_instrs:
-            try:
-                qc.Instrument.find_instrument(insname).close()
-            except KeyError:
-                pass
+        self.test_graph.nodes()['C']['state'] = 'good'
+        self.test_graph.nodes()['B']['state'] = 'unknown'
+        fn = os.path.join(test_dir, 'nx_test_graph.yaml')
+        nx.readwrite.write_yaml(self.test_graph, fn)
+        read_testgraph = nx.readwrite.read_yaml(fn)
+
+        self.assertTrue(isinstance(read_testgraph, AutoDepGraph_DAG))
+
+        self.assertEqual(read_testgraph.nodes()['C']['state'], 'good')
+        self.assertEqual(read_testgraph.nodes()['B']['state'], 'unknown')
+
+    def test_adding_edge_nonexistent_node(self):
+        test_graph = AutoDepGraph_DAG('test graph')
+        test_graph.add_node('A')
+        with self.assertRaises(KeyError):
+            test_graph.add_edge('A', 'B')
+        with self.assertRaises(KeyError):
+            test_graph.add_edge('B', 'A')
+
+    # def propagate_error(self, state):
+    #     '''
+    #     Sets the state of this node to 'state' and calls this method for all
+    #     child nodes (nodes that depend on this node). Used for recursively
+    #     propagate errors.
+    #     '''
+    #     self.state(state)
+    #     for child_name in self.children():
+    #         # This will result in a depth-first search through the graph
+    #         # that is quite inefficient and can visit many nodes multiple
+    #         # times. We don't really care though, since the graph shouldn't
+    #         # larger than ~100 nodes.
+    #         self.find_instrument(child_name).propagate_error(state)

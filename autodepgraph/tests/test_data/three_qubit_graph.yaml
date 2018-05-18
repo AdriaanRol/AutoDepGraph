@@ -1,0 +1,525 @@
+&id071 !!python/object:autodepgraph.graph_v2.AutoDepGraph_DAG
+_DiGraphWindow: null
+_adj: &id069
+  3 qubit device multiplexed readout:
+    q0 optimal weights: &id025 {}
+    q1 optimal weights: &id044 {}
+    q2 optimal weights: &id060 {}
+  3 qubit device resonator frequencies coarse: {}
+  AWG8 Flux-staircase: {}
+  AWG8 MW-staircase: {}
+  CZ q0-q1:
+    Chevron q0-q1: &id014 {}
+    q0 cryo dist. corr.: &id016 {}
+    q1 cryo dist. corr.: &id034 {}
+  CZ q1-q2:
+    Chevron q1-q2: &id015 {}
+    q1 cryo dist. corr.: &id035 {}
+    q2 cryo dist. corr.: &id053 {}
+  Chevron q0-q1:
+    3 qubit device multiplexed readout: &id001 {}
+    AWG8 Flux-staircase: &id006 {}
+    q0 gates restless: &id019 {}
+    q1 gates restless: &id038 {}
+  Chevron q1-q2:
+    3 qubit device multiplexed readout: &id002 {}
+    AWG8 Flux-staircase: &id007 {}
+    q0 gates restless: &id020 {}
+    q1 gates restless: &id039 {}
+  q0 T1:
+    q0 pulse amplitude coarse: &id027 {}
+  q0 T2-echo:
+    q0 pulse amplitude coarse: &id028 {}
+  q0 T2-star:
+    q0 pulse amplitude coarse: &id029 {}
+  q0 cryo dist. corr.:
+    q0 gates restless: &id021 {}
+    q0 room temp. dist. corr.: &id033 {}
+  q0 frequency coarse:
+    q0 resonator frequency: &id032 {}
+  q0 frequency fine:
+    q0 pulse amplitude coarse: &id030 {}
+  q0 gates restless:
+    q0 optimal weights: &id026 {}
+  q0 mixer offsets drive: {}
+  q0 mixer offsets readout: {}
+  q0 mixer skewness drive: {}
+  q0 optimal weights:
+    q0 pulse amplitude med: &id031 {}
+  q0 pulse amplitude coarse:
+    AWG8 MW-staircase: &id011 {}
+    q0 frequency coarse: &id017 {}
+    q0 mixer offsets drive: &id022 {}
+    q0 mixer offsets readout: &id023 {}
+    q0 mixer skewness drive: &id024 {}
+  q0 pulse amplitude med:
+    q0 frequency fine: &id018 {}
+  q0 resonator frequency:
+    3 qubit device resonator frequencies coarse: &id003 {}
+  q0 room temp. dist. corr.:
+    AWG8 Flux-staircase: &id008 {}
+  q1 T1:
+    q1 pulse amplitude coarse: &id046 {}
+  q1 T2-echo:
+    q1 pulse amplitude coarse: &id047 {}
+  q1 T2-star:
+    q1 pulse amplitude coarse: &id048 {}
+  q1 cryo dist. corr.:
+    q1 gates restless: &id040 {}
+    q1 room temp. dist. corr.: &id052 {}
+  q1 frequency coarse:
+    q1 resonator frequency: &id051 {}
+  q1 frequency fine:
+    q1 pulse amplitude coarse: &id049 {}
+  q1 gates restless:
+    q1 optimal weights: &id045 {}
+  q1 mixer offsets drive: {}
+  q1 mixer offsets readout: {}
+  q1 mixer skewness drive: {}
+  q1 optimal weights:
+    q1 pulse amplitude med: &id050 {}
+  q1 pulse amplitude coarse:
+    AWG8 MW-staircase: &id012 {}
+    q1 frequency coarse: &id036 {}
+    q1 mixer offsets drive: &id041 {}
+    q1 mixer offsets readout: &id042 {}
+    q1 mixer skewness drive: &id043 {}
+  q1 pulse amplitude med:
+    q1 frequency fine: &id037 {}
+  q1 resonator frequency:
+    3 qubit device resonator frequencies coarse: &id004 {}
+  q1 room temp. dist. corr.:
+    AWG8 Flux-staircase: &id009 {}
+  q2 T1:
+    q2 pulse amplitude coarse: &id062 {}
+  q2 T2-echo:
+    q2 pulse amplitude coarse: &id063 {}
+  q2 T2-star:
+    q2 pulse amplitude coarse: &id064 {}
+  q2 cryo dist. corr.:
+    q2 gates restless: &id056 {}
+    q2 room temp. dist. corr.: &id068 {}
+  q2 frequency coarse:
+    q2 resonator frequency: &id067 {}
+  q2 frequency fine:
+    q2 pulse amplitude coarse: &id065 {}
+  q2 gates restless:
+    q2 optimal weights: &id061 {}
+  q2 mixer offsets drive: {}
+  q2 mixer offsets readout: {}
+  q2 mixer skewness drive: {}
+  q2 optimal weights:
+    q2 pulse amplitude med: &id066 {}
+  q2 pulse amplitude coarse:
+    AWG8 MW-staircase: &id013 {}
+    q2 frequency coarse: &id054 {}
+    q2 mixer offsets drive: &id057 {}
+    q2 mixer offsets readout: &id058 {}
+    q2 mixer skewness drive: &id059 {}
+  q2 pulse amplitude med:
+    q2 frequency fine: &id055 {}
+  q2 resonator frequency:
+    3 qubit device resonator frequencies coarse: &id005 {}
+  q2 room temp. dist. corr.:
+    AWG8 Flux-staircase: &id010 {}
+_calib_cnt: 0
+_check_cnt: 0
+_exec_cnt: 0
+_graph_changed_since_plot: true
+_node:
+  3 qubit device multiplexed readout: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.972191', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  3 qubit device resonator frequencies coarse: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.972205', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  AWG8 Flux-staircase: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.972235', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  AWG8 MW-staircase: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.972226', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  CZ q0-q1: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.972265', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  CZ q1-q2: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.972285', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  Chevron q0-q1: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.972244', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  Chevron q1-q2: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.972252', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q0 T1: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.970132', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q0 T2-echo: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.970296', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q0 T2-star: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.970316', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q0 cryo dist. corr.: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.970469', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q0 frequency coarse: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.970036', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q0 frequency fine: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.970427', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q0 gates restless: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.970412', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q0 mixer offsets drive: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.970057', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q0 mixer offsets readout: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.970074', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q0 mixer skewness drive: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.970066', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q0 optimal weights: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.970390', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q0 pulse amplitude coarse: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.970084', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q0 pulse amplitude med: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.970365', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q0 resonator frequency: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.970010', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q0 room temp. dist. corr.: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.970452', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q1 T1: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.970756', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q1 T2-echo: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.970766', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q1 T2-star: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.970774', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q1 cryo dist. corr.: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.970895', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q1 frequency coarse: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.970620', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q1 frequency fine: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.970872', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q1 gates restless: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.970856', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q1 mixer offsets drive: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.970652', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q1 mixer offsets readout: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.970698', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q1 mixer skewness drive: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.970680', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q1 optimal weights: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.970841', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q1 pulse amplitude coarse: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.970714', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q1 pulse amplitude med: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.970820', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q1 resonator frequency: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.970601', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q1 room temp. dist. corr.: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.970881', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q2 T1: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.971171', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q2 T2-echo: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.971194', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q2 T2-star: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.971211', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q2 cryo dist. corr.: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.971373', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q2 frequency coarse: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.971057', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q2 frequency fine: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.971327', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q2 gates restless: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.971311', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q2 mixer offsets drive: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.971086', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q2 mixer offsets readout: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.971118', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q2 mixer skewness drive: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.971103', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q2 optimal weights: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.971296', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q2 pulse amplitude coarse: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.971128', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q2 pulse amplitude med: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.971279', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q2 resonator frequency: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.971029', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+  q2 room temp. dist. corr.: {calibrate_function: autodepgraph.node_functions.calibration_functions.test_calibration_True,
+    check_function: autodepgraph.node_functions.check_functions.return_fixed_value,
+    color: '#D3D3D3', fillcolor: '#D3D3D3', fixedsize: 'false', last_update: !!timestamp '2018-03-17
+      23:44:29.971342', shape: ellipse, state: unknown, style: filled, timeout: .inf,
+    tolerance: 0}
+_pred:
+  3 qubit device multiplexed readout:
+    Chevron q0-q1: *id001
+    Chevron q1-q2: *id002
+  3 qubit device resonator frequencies coarse:
+    q0 resonator frequency: *id003
+    q1 resonator frequency: *id004
+    q2 resonator frequency: *id005
+  AWG8 Flux-staircase:
+    Chevron q0-q1: *id006
+    Chevron q1-q2: *id007
+    q0 room temp. dist. corr.: *id008
+    q1 room temp. dist. corr.: *id009
+    q2 room temp. dist. corr.: *id010
+  AWG8 MW-staircase:
+    q0 pulse amplitude coarse: *id011
+    q1 pulse amplitude coarse: *id012
+    q2 pulse amplitude coarse: *id013
+  CZ q0-q1: {}
+  CZ q1-q2: {}
+  Chevron q0-q1:
+    CZ q0-q1: *id014
+  Chevron q1-q2:
+    CZ q1-q2: *id015
+  q0 T1: {}
+  q0 T2-echo: {}
+  q0 T2-star: {}
+  q0 cryo dist. corr.:
+    CZ q0-q1: *id016
+  q0 frequency coarse:
+    q0 pulse amplitude coarse: *id017
+  q0 frequency fine:
+    q0 pulse amplitude med: *id018
+  q0 gates restless:
+    Chevron q0-q1: *id019
+    Chevron q1-q2: *id020
+    q0 cryo dist. corr.: *id021
+  q0 mixer offsets drive:
+    q0 pulse amplitude coarse: *id022
+  q0 mixer offsets readout:
+    q0 pulse amplitude coarse: *id023
+  q0 mixer skewness drive:
+    q0 pulse amplitude coarse: *id024
+  q0 optimal weights:
+    3 qubit device multiplexed readout: *id025
+    q0 gates restless: *id026
+  q0 pulse amplitude coarse:
+    q0 T1: *id027
+    q0 T2-echo: *id028
+    q0 T2-star: *id029
+    q0 frequency fine: *id030
+  q0 pulse amplitude med:
+    q0 optimal weights: *id031
+  q0 resonator frequency:
+    q0 frequency coarse: *id032
+  q0 room temp. dist. corr.:
+    q0 cryo dist. corr.: *id033
+  q1 T1: {}
+  q1 T2-echo: {}
+  q1 T2-star: {}
+  q1 cryo dist. corr.:
+    CZ q0-q1: *id034
+    CZ q1-q2: *id035
+  q1 frequency coarse:
+    q1 pulse amplitude coarse: *id036
+  q1 frequency fine:
+    q1 pulse amplitude med: *id037
+  q1 gates restless:
+    Chevron q0-q1: *id038
+    Chevron q1-q2: *id039
+    q1 cryo dist. corr.: *id040
+  q1 mixer offsets drive:
+    q1 pulse amplitude coarse: *id041
+  q1 mixer offsets readout:
+    q1 pulse amplitude coarse: *id042
+  q1 mixer skewness drive:
+    q1 pulse amplitude coarse: *id043
+  q1 optimal weights:
+    3 qubit device multiplexed readout: *id044
+    q1 gates restless: *id045
+  q1 pulse amplitude coarse:
+    q1 T1: *id046
+    q1 T2-echo: *id047
+    q1 T2-star: *id048
+    q1 frequency fine: *id049
+  q1 pulse amplitude med:
+    q1 optimal weights: *id050
+  q1 resonator frequency:
+    q1 frequency coarse: *id051
+  q1 room temp. dist. corr.:
+    q1 cryo dist. corr.: *id052
+  q2 T1: {}
+  q2 T2-echo: {}
+  q2 T2-star: {}
+  q2 cryo dist. corr.:
+    CZ q1-q2: *id053
+  q2 frequency coarse:
+    q2 pulse amplitude coarse: *id054
+  q2 frequency fine:
+    q2 pulse amplitude med: *id055
+  q2 gates restless:
+    q2 cryo dist. corr.: *id056
+  q2 mixer offsets drive:
+    q2 pulse amplitude coarse: *id057
+  q2 mixer offsets readout:
+    q2 pulse amplitude coarse: *id058
+  q2 mixer skewness drive:
+    q2 pulse amplitude coarse: *id059
+  q2 optimal weights:
+    3 qubit device multiplexed readout: *id060
+    q2 gates restless: *id061
+  q2 pulse amplitude coarse:
+    q2 T1: *id062
+    q2 T2-echo: *id063
+    q2 T2-star: *id064
+    q2 frequency fine: *id065
+  q2 pulse amplitude med:
+    q2 optimal weights: *id066
+  q2 resonator frequency:
+    q2 frequency coarse: *id067
+  q2 room temp. dist. corr.:
+    q2 cryo dist. corr.: *id068
+_succ: *id069
+adjlist_inner_dict_factory: &id070 !!python/name:builtins.dict ''
+adjlist_outer_dict_factory: *id070
+cfg_plot_mode: svg
+cfg_svg_filename: /Users/Adriaan/GitHubRepos/DiCarloLab_Repositories/AutoDepGraph/autodepgraph/svg_viewer/adg_graph.svg
+edge_attr_dict_factory: *id070
+graph: {name: q2 DAG}
+node_dict_factory: *id070
+root_graph: *id071
