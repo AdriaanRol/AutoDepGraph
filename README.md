@@ -4,6 +4,7 @@
 [![Build Status](https://travis-ci.org/AdriaanRol/AutoDepGraph.svg?branch=master)](https://travis-ci.org/AdriaanRol/AutoDepGraph)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/ae46c58617ff45df9ac98446b3dc34ac)](https://www.codacy.com/app/adriaan-rol/AutoDepGraph?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=AdriaanRol/AutoDepGraph&amp;utm_campaign=Badge_Grade) 
 [![Coverage Status](https://coveralls.io/repos/github/AdriaanRol/AutoDepGraph/badge.svg?branch=master)](https://coveralls.io/github/AdriaanRol/AutoDepGraph?branch=master)
+[![DOI](https://zenodo.org/badge/85987885.svg)](https://zenodo.org/badge/latestdoi/85987885)
 
 AutoDepGraph is a framework for using dependency graphs to calibrate a system. It is heavily inspired by ["Physical qubit calibration on a directed acyclic graph"](https://arxiv.org/abs/1803.03226). 
 
