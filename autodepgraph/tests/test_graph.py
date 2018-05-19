@@ -113,19 +113,6 @@ class Test_Graph(TestCase):
         # call twice to have both creation and update of plot
         self.test_graph.update_monitor()
 
-    # def test_plotting_pg(self):
-    #     self.test_graph.draw_pg()
-
-    #     self.test_graph.cfg_plot_mode = 'pyqtgraph'
-    #     self.test_graph.update_monitor()
-    #     # call twice to have both creation and update of plot
-    #     self.test_graph.update_monitor()
-
-    # @expectedFailure
-    # def test_plotting_pg_local(self):
-    #     vis.draw_graph_pyqt(
-    #         self.test_graph, DiGraphWindow=None,
-    #         window_title=self.test_graph.name, remote=False)
 
     def test_plotting_svg(self):
         self.test_graph.draw_svg()

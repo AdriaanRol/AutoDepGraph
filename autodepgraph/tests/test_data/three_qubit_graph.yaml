@@ -1,4 +1,4 @@
-&id071 !!python/object:autodepgraph.graph_v2.AutoDepGraph_DAG
+&id071 !!python/object:autodepgraph.graph.AutoDepGraph_DAG
 _DiGraphWindow: null
 _adj: &id069
   3 qubit device multiplexed readout:
