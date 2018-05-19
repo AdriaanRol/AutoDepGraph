@@ -60,6 +60,17 @@ class AutoDepGraph_DAG(nx.DiGraph):
 
     def add_node(self, node_for_adding, **attr):
         """
+        Adds a node to the graph, including starting attributes.
+
+        attr:
+            name        (type)  = default_value
+
+            calibrate_function  = 'NotImplementedCalibration'
+            check_functions     = 'return_fixed_value'
+            tolerance   (float) = 0
+            timeout     (float) = np.inf
+            state       (str)   = 'unknown'
+
         """
         # there are set here to ensure these node attributes exist.
         # setting in this way will most likely interfere
@@ -265,15 +276,15 @@ class AutoDepGraph_DAG(nx.DiGraph):
     def update_monitor(self):
         if self.cfg_plot_mode == 'matplotlib':
             self.update_monitor_mpl()
-        elif self.cfg_plot_mode == 'pyqtgraph':
-            self.draw_pg()
+        # elif self.cfg_plot_mode == 'pyqtgraph':
+        #     self.draw_pg()
         elif self.cfg_plot_mode == 'svg':
             self.draw_svg()
         elif self.cfg_plot_mode is None or self.cfg_plot_mode == 'None':
             return
         else:
             raise ValueError('cfg_plot_mode should be in ["matplotlib",'
-                             ' "pyqtgraph", "svg", "None" ]')
+                             ' "svg", "None" ]')
 
     def update_monitor_mpl(self):
         """
@@ -299,16 +310,16 @@ class AutoDepGraph_DAG(nx.DiGraph):
         nx.draw_networkx_edges(self, pos, ax=ax, arrows=True)
         nx.draw_networkx_labels(self, pos, ax=ax)
 
-    def draw_pg(self, DiGraphWindow=None):
-        """
-        draws the graph using an interactive pyqtgraph window
-        """
-        if DiGraphWindow is None:
-            DiGraphWindow = self._DiGraphWindow
-        self._DiGraphWindow = vis.draw_graph_pyqt(
-            self, DiGraphWindow=DiGraphWindow,
-            window_title=self.name)
-        return self._DiGraphWindow
+    # def draw_pg(self, DiGraphWindow=None):
+    #     """
+    #     draws the graph using an interactive pyqtgraph window
+    #     """
+    #     if DiGraphWindow is None:
+    #         DiGraphWindow = self._DiGraphWindow
+    #     self._DiGraphWindow = vis.draw_graph_pyqt(
+    #         self, DiGraphWindow=DiGraphWindow,
+    #         window_title=self.name)
+    #     return self._DiGraphWindow
 
     def draw_svg(self, filename: str=None):
         """
@@ -327,7 +338,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
         base, file = os.path.split(self.cfg_svg_filename)
         x=x.replace('adg_graph.svg', file)
 
-        tfile=tempfile.mktemp(prefix='svgviewer-', suffix='html', dir=base)
+        tfile=tempfile.mktemp(prefix='svgviewer-', suffix='.html', dir=base)
         with open(tfile, 'wt') as fid:
             fid.write(x)
         webbrowser.open_new_tab(tfile)
