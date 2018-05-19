@@ -16,8 +16,11 @@ from autodepgraph import visualization as vis
 
 # Used to find functions in modules
 from importlib import import_module
-# Only used for finding instrument methods.
-from qcodes.instrument.base import Instrument
+try:
+    # Only used for finding instrument methods.
+    from qcodes.instrument.base import Instrument
+except ImportError:
+    Instrument = None
 
 
 class AutoDepGraph_DAG(nx.DiGraph):
