@@ -5,3 +5,4 @@ matplotlib
 pygraphviz
 pytest
 jsonschema
+qcodes
