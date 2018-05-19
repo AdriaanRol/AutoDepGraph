@@ -1,10 +1,7 @@
 numpy
-qcodes
 PyYAML
 networkx>=2.1
 matplotlib
 pygraphviz
-pyqtgraph
 pytest
 jsonschema
-pyqt5
