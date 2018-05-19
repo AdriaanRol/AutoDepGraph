@@ -1,6 +1,6 @@
 # AutoDepGraph 
 
-[![PyPI](https://img.shields.io/pypi/v/adaptive.svg)](https://pypi.python.org/pypi/adaptive)
+[![PyPI](https://img.shields.io/pypi/v/adaptive.svg)](https://pypi.python.org/pypi/autodepgraph)
 [![Build Status](https://travis-ci.org/AdriaanRol/AutoDepGraph.svg?branch=master)](https://travis-ci.org/AdriaanRol/AutoDepGraph)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/ae46c58617ff45df9ac98446b3dc34ac)](https://www.codacy.com/app/adriaan-rol/AutoDepGraph?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=AdriaanRol/AutoDepGraph&amp;utm_campaign=Badge_Grade) 
 [![Coverage Status](https://coveralls.io/repos/github/AdriaanRol/AutoDepGraph/badge.svg?branch=master)](https://coveralls.io/github/AdriaanRol/AutoDepGraph?branch=master)
