@@ -56,13 +56,13 @@ class Test_Graph(TestCase):
     def test_calibration_state(self):
         s = self.test_graph.calibration_state()
         assert( isinstance(s, dict))
-        
+
     def test_set_function(self):
         self.test_graph.set_node_attribute('A', 'myattribute', 10)
-        self.assertEqual(self.test_graph.get_node_attribute('A', 'myattribute'), 10)        
+        self.assertEqual(self.test_graph.get_node_attribute('A', 'myattribute'), 10)
         self.test_graph.set_node_description('A', 'explain node A')
         self.assertEqual(self.test_graph.get_node_attribute('A', 'description'), 'explain node A')
-        
+
     def test_maintain_node_require_cal(self):
         self.test_graph.set_all_node_states(
             'needs calibration')
@@ -113,19 +113,6 @@ class Test_Graph(TestCase):
         # call twice to have both creation and update of plot
         self.test_graph.update_monitor()
 
-    def test_plotting_pg(self):
-        self.test_graph.draw_pg()
-
-        self.test_graph.cfg_plot_mode = 'pyqtgraph'
-        self.test_graph.update_monitor()
-        # call twice to have both creation and update of plot
-        self.test_graph.update_monitor()
-
-    @expectedFailure
-    def test_plotting_pg_local(self):
-        vis.draw_graph_pyqt(
-            self.test_graph, DiGraphWindow=None,
-            window_title=self.test_graph.name, remote=False)
 
     def test_plotting_svg(self):
         self.test_graph.draw_svg()
