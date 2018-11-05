@@ -301,22 +301,6 @@ class AutoDepGraph_DAG(nx.DiGraph):
         plt.draw()
         plt.pause(.05)
 
-    def update_monitor_mpl_custom(self):
-        """
-        Updates a plot using the draw_graph_mpl based on matplotlib.
-        """
-        node_positions = getattr(self, 'node_positions', None)
-        if node_positions is None:
-            self.update_monitor_mpl()
-        else:
-            fig = self.cfg_plot_mode_args.get('fig', None)
-            if fig is not None:
-                plt.figure(fig)
-            plt.clf()
-            self.draw_mpl_custom(plt.gca(), node_positions=node_positions)
-            plt.draw()
-            plt.pause(.05)
-
     def _generate_node_positions(self, ax=None, node_positions={}):
         nodes=self.nodes()
               
