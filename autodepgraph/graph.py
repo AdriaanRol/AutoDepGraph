@@ -281,8 +281,6 @@ class AutoDepGraph_DAG(nx.DiGraph):
             self.update_monitor_mpl()
         # elif self.cfg_plot_mode == 'pyqtgraph':
         #     self.draw_pg()
-        elif self.cfg_plot_mode == 'matplotlib_custom':
-            self.update_monitor_mpl_custom()
         elif self.cfg_plot_mode == 'svg':
             self.draw_svg()
         elif self.cfg_plot_mode is None or self.cfg_plot_mode == 'None':
@@ -319,7 +317,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
             plt.draw()
             plt.pause(.05)
 
-    def draw_mpl_custom(self, ax=None, node_positions={}):
+    def _generate_node_positions(self, ax=None, node_positions={}):
         nodes=self.nodes()
               
         def position_generator(N=10, centre=[0,5]):
@@ -333,18 +331,20 @@ class AutoDepGraph_DAG(nx.DiGraph):
                 
         positions=position_generator(len(nodes))                
         pos=dict([ (node, node_positions.get(node, next(positions)) ) for node in nodes] )
+        return pos        
         
-        self.draw_mpl(ax, pos)
-        
-    def draw_mpl(self, ax=None, pos=None):
+    def draw_mpl(self, ax=None):
         if ax is None:
             f, ax = plt.subplots()
             ax.axis('off')
         ax.set_title(self.name)
         colors_list = [state_cmap[node_dat['state']] for node_dat in
                        self.nodes.values()]
-        if pos is None:
+        node_positions = getattr(self, 'node_positions', None)
+        if node_positions is None:
             pos = nx.nx_agraph.graphviz_layout(self, prog='dot')
+        else:
+            pos = self._generate_node_positions(node_positions)
         nx.draw_networkx_nodes(self, pos, ax=ax, node_color=colors_list)
         nx.draw_networkx_edges(self, pos, ax=ax, arrows=True)
         nx.draw_networkx_labels(self, pos, ax=ax)
