@@ -315,7 +315,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
             if fig is not None:
                 plt.figure(fig)
             plt.clf()
-            draw_mpl_custom(self, plt.gca(), node_positions=node_positions)
+            self.draw_mpl_custom(plt.gca(), node_positions=node_positions)
             plt.draw()
             plt.pause(.05)
 
