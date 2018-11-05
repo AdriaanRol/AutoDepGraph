@@ -281,6 +281,8 @@ class AutoDepGraph_DAG(nx.DiGraph):
             self.update_monitor_mpl()
         # elif self.cfg_plot_mode == 'pyqtgraph':
         #     self.draw_pg()
+        elif self.cfg_plot_mode == 'matplotlib_custom':
+            self.update_monitor_mpl_custom()
         elif self.cfg_plot_mode == 'svg':
             self.draw_svg()
         elif self.cfg_plot_mode is None or self.cfg_plot_mode == 'None':
@@ -301,14 +303,48 @@ class AutoDepGraph_DAG(nx.DiGraph):
         plt.draw()
         plt.pause(.05)
 
-    def draw_mpl(self, ax=None):
+    def update_monitor_mpl_custom(self):
+        """
+        Updates a plot using the draw_graph_mpl based on matplotlib.
+        """
+        node_positions = getattr(self, 'node_positions', None)
+        if node_positions is None:
+            self.update_monitor_mpl()
+        else:
+            fig = self.cfg_plot_mode_args.get('fig', None)
+            if fig is not None:
+                plt.figure(fig)
+            plt.clf()
+            draw_mpl_custom(self, plt.gca(), node_positions=node_positions)
+            plt.draw()
+            plt.pause(.05)
+
+    def draw_mpl_custom(self, ax=None, node_positions={}):
+        nodes=self.nodes()
+              
+        def position_generator(N=10, centre=[0,5]):
+            """ Generate circle of positions around centre """
+            idx=0
+            while True:
+                phi=2*np.pi*(idx/N)+np.pi/2
+                pos = 2.1*np.array([np.cos(phi), np.sin(phi)]) + centre
+                yield pos
+                idx=idx+1
+                
+        positions=position_generator(len(nodes))                
+        pos=dict([ (node, node_positions.get(node, next(positions)) ) for node in nodes] )
+        
+        self.draw_mpl(ax, pos)
+        
+    def draw_mpl(self, ax=None, pos=None):
         if ax is None:
             f, ax = plt.subplots()
             ax.axis('off')
         ax.set_title(self.name)
         colors_list = [state_cmap[node_dat['state']] for node_dat in
                        self.nodes.values()]
-        pos = nx.nx_agraph.graphviz_layout(self, prog='dot')
+        if pos is None:
+            pos = nx.nx_agraph.graphviz_layout(self, prog='dot')
         nx.draw_networkx_nodes(self, pos, ax=ax, node_color=colors_list)
         nx.draw_networkx_edges(self, pos, ax=ax, arrows=True)
         nx.draw_networkx_labels(self, pos, ax=ax)
