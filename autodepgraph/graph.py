@@ -301,7 +301,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
         plt.draw()
         plt.pause(.05)
 
-    def _generate_node_positions(self, ax=None, node_positions={}):
+    def _generate_node_positions(self, node_positions={}):
         nodes=self.nodes()
               
         def position_generator(N=10, centre=[0,5]):
