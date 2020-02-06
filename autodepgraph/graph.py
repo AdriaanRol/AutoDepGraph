@@ -56,6 +56,10 @@ class AutoDepGraph_DAG(nx.DiGraph):
         self._exec_cnt = 0
         self._calib_cnt = 0
         self._check_cnt = 0
+        
+        self.matplotlib_edge_properties = {'edge_color': 'k', 'alpha': .8}
+        self.matplotlib_label_properties = {'font_color': 'k'}
+        
 
     def fresh_copy(self):
         return AutoDepGraph_DAG(name=self.name,
@@ -330,8 +334,8 @@ class AutoDepGraph_DAG(nx.DiGraph):
         else:
             pos = self._generate_node_positions(node_positions)
         nx.draw_networkx_nodes(self, pos, ax=ax, node_color=colors_list)
-        nx.draw_networkx_edges(self, pos, ax=ax, arrows=True)
-        nx.draw_networkx_labels(self, pos, ax=ax)
+        nx.draw_networkx_edges(self, pos, ax=ax, arrows=True, **self.matplotlib_edge_properties)
+        nx.draw_networkx_labels(self, pos, ax=ax, **self.matplotlib_label_properties)
 
     # def draw_pg(self, DiGraphWindow=None):
     #     """
