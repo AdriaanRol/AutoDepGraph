@@ -10,6 +10,8 @@ python:
 env:
     - TRAVISCI=true PYTHON=3.6
 
+services:
+  - xvfb
 
 before_install:
     - if [ ${TRAVIS_PYTHON_VERSION:0:1} == "2" ]; then wget http://repo.continuum.io/miniconda/Miniconda-3.5.5-Linux-x86_64.sh -O miniconda.sh; else wget http://repo.continuum.io/miniconda/Miniconda3-3.5.5-Linux-x86_64.sh -O miniconda.sh; fi
@@ -39,11 +41,6 @@ install:
     - pip install coveralls
     - pip install codacy-coverage
     - pip install -e .
-
-before_script: # configure a headless display to test plot generation
-- "export DISPLAY=:99.0"
-- "sh -e /etc/init.d/xvfb start"
-- sleep 3 # give xvfb some time to start
 
 # command to run tests
 script:

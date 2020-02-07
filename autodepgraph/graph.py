@@ -56,6 +56,10 @@ class AutoDepGraph_DAG(nx.DiGraph):
         self._exec_cnt = 0
         self._calib_cnt = 0
         self._check_cnt = 0
+        
+        self.matplotlib_edge_properties = {'edge_color': 'k', 'alpha': .8}
+        self.matplotlib_label_properties = {'font_color': 'k'}
+        
 
     def fresh_copy(self):
         return AutoDepGraph_DAG(name=self.name,
@@ -247,7 +251,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
 
         return self.nodes[node]['state']
 
-    def calibrate_node(self, node, verbose=False):
+    def calibrate_node(self, node : str, verbose : bool =False):
         if verbose:
             print('\tCalibrating node {}.'.format(node))
         self.set_node_state(node, 'active')
@@ -299,9 +303,9 @@ class AutoDepGraph_DAG(nx.DiGraph):
         plt.clf()
         self.draw_mpl(plt.gca())
         plt.draw()
-        #plt.pause(.05)
+        plt.pause(.01)
 
-    def _generate_node_positions(self, node_positions={}):
+    def _generate_node_positions(self, node_positions : dict ={}):
         nodes=self.nodes()
               
         def position_generator(N=10, centre=[0,5]):
@@ -331,11 +335,12 @@ class AutoDepGraph_DAG(nx.DiGraph):
         else:
             pos = self._generate_node_positions(node_positions)
         nx.draw_networkx_nodes(self, pos, ax=ax, node_color=colors_list)
-        nx.draw_networkx_edges(self, pos, ax=ax, arrows=True)
-        nx.draw_networkx_labels(self, pos, ax=ax)
+        nx.draw_networkx_edges(self, pos, ax=ax, arrows=True, **self.matplotlib_edge_properties)
+        nx.draw_networkx_labels(self, pos, ax=ax, **self.matplotlib_label_properties)
         self._format_mpl_plot(ax)        
 
     def _format_mpl_plot(self, ax):
+        """ Method to format the generated matplotlib figure """
         ax.set_xticks([])
         ax.set_yticks([])
 
