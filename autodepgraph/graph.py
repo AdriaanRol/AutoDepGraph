@@ -299,7 +299,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
         plt.clf()
         self.draw_mpl(plt.gca())
         plt.draw()
-        plt.pause(.05)
+        #plt.pause(.05)
 
     def _generate_node_positions(self, node_positions={}):
         nodes=self.nodes()
@@ -317,6 +317,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
         pos=dict([ (node, node_positions.get(node, next(positions)) ) for node in nodes] )
         return pos        
         
+ 
     def draw_mpl(self, ax=None):
         if ax is None:
             f, ax = plt.subplots()
@@ -332,6 +333,11 @@ class AutoDepGraph_DAG(nx.DiGraph):
         nx.draw_networkx_nodes(self, pos, ax=ax, node_color=colors_list)
         nx.draw_networkx_edges(self, pos, ax=ax, arrows=True)
         nx.draw_networkx_labels(self, pos, ax=ax)
+        self._format_mpl_plot(ax)        
+
+    def _format_mpl_plot(self, ax):
+        ax.set_xticks([])
+        ax.set_yticks([])
 
     # def draw_pg(self, DiGraphWindow=None):
     #     """
