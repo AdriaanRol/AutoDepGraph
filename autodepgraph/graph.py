@@ -1,6 +1,7 @@
 import logging
 import numpy as np
 import types
+from typing import Dict, Any, List
 from datetime import datetime
 import matplotlib.pyplot as plt
 from os.path import join, split
@@ -24,9 +25,18 @@ except ImportError:
 
 
 class AutoDepGraph_DAG(nx.DiGraph):
-
-    node_states = ['good', 'needs calibration',
+    """
+    
+    Attributes:
+        node_states: Allowed states for the nodes
+        matplotlib_edge_properties: Properties passed to networkx plotting of edges
+        matplotlib_label_properties: Properties passed to networkx plotting of labels
+        
+    """
+    node_states : List[str] = ['good', 'needs calibration',
                          'bad', 'unknown', 'active']
+    matplotlib_edge_properties : Dict[str, Any] = {'edge_color': 'k', 'alpha': .8}
+    matplotlib_label_properties : Dict[str, Any] = {'font_color': 'k'}
 
     def __init__(self, name, cfg_plot_mode='svg',
                  incoming_graph_data=None, **attr):
@@ -56,9 +66,6 @@ class AutoDepGraph_DAG(nx.DiGraph):
         self._exec_cnt = 0
         self._calib_cnt = 0
         self._check_cnt = 0
-        
-        self.matplotlib_edge_properties = {'edge_color': 'k', 'alpha': .8}
-        self.matplotlib_label_properties = {'font_color': 'k'}
         
 
     def fresh_copy(self):
