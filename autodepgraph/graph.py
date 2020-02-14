@@ -258,7 +258,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
 
         return self.nodes[node]['state']
 
-    def calibrate_node(self, node, verbose=False):
+    def calibrate_node(self, node : str, verbose : bool =False):
         if verbose:
             print('\tCalibrating node {}.'.format(node))
         self.set_node_state(node, 'active')
@@ -310,9 +310,9 @@ class AutoDepGraph_DAG(nx.DiGraph):
         plt.clf()
         self.draw_mpl(plt.gca())
         plt.draw()
-        plt.pause(.05)
+        plt.pause(.01)
 
-    def _generate_node_positions(self, node_positions={}):
+    def _generate_node_positions(self, node_positions : dict ={}):
         nodes=self.nodes()
               
         def position_generator(N=10, centre=[0,5]):
@@ -328,6 +328,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
         pos=dict([ (node, node_positions.get(node, next(positions)) ) for node in nodes] )
         return pos        
         
+ 
     def draw_mpl(self, ax=None):
         if ax is None:
             f, ax = plt.subplots()
@@ -343,6 +344,12 @@ class AutoDepGraph_DAG(nx.DiGraph):
         nx.draw_networkx_nodes(self, pos, ax=ax, node_color=colors_list)
         nx.draw_networkx_edges(self, pos, ax=ax, arrows=True, **self.matplotlib_edge_properties)
         nx.draw_networkx_labels(self, pos, ax=ax, **self.matplotlib_label_properties)
+        self._format_mpl_plot(ax)        
+
+    def _format_mpl_plot(self, ax):
+        """ Method to format the generated matplotlib figure """
+        ax.set_xticks([])
+        ax.set_yticks([])
 
     # def draw_pg(self, DiGraphWindow=None):
     #     """
