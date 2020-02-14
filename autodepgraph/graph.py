@@ -1,7 +1,7 @@
 import logging
 import numpy as np
 import types
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from datetime import datetime
 import matplotlib.pyplot as plt
 from os.path import join, split
@@ -312,9 +312,11 @@ class AutoDepGraph_DAG(nx.DiGraph):
         plt.draw()
         plt.pause(.01)
 
-    def _generate_node_positions(self, node_positions : dict ={}):
+    def _generate_node_positions(self, node_positions : Optional[dict] = None):
         nodes=self.nodes()
-              
+
+        if node_positions is None:
+            node_positions = {}             
         def position_generator(N=10, centre=[0,5]):
             """ Generate circle of positions around centre """
             idx=0
@@ -344,9 +346,10 @@ class AutoDepGraph_DAG(nx.DiGraph):
         nx.draw_networkx_nodes(self, pos, ax=ax, node_color=colors_list)
         nx.draw_networkx_edges(self, pos, ax=ax, arrows=True, **self.matplotlib_edge_properties)
         nx.draw_networkx_labels(self, pos, ax=ax, **self.matplotlib_label_properties)
-        self._format_mpl_plot(ax)        
+        self._format_mpl_plot(ax)
 
-    def _format_mpl_plot(self, ax):
+    @staticmethod
+    def _format_mpl_plot(ax):
         """ Method to format the generated matplotlib figure """
         ax.set_xticks([])
         ax.set_yticks([])
