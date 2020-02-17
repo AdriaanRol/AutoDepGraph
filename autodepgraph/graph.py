@@ -85,8 +85,8 @@ class AutoDepGraph_DAG(nx.DiGraph):
             'autodepgraph.node_functions.calibration_functions' +
             '.NotImplementedCalibration')
 
-        attr['calibrate_function_args'] = attr.get(
-            'calibrate_function_args', None)
+        attr['calibrate_function_kwargs'] = attr.get(
+            'calibrate_function_kwargs', {})
 
         attr['check_function'] = attr.get(
             'check_function',
@@ -256,10 +256,10 @@ class AutoDepGraph_DAG(nx.DiGraph):
         self.set_node_state(node, 'active')
 
         func = _get_function(self.nodes[node]['calibrate_function'])
-        func_args = self.nodes[node]['calibrate_function_args']
+        func_kwargs = self.nodes[node]['calibrate_function_kwargs']
 
         try:
-            result = func(**func_args)
+            result = func(**func_kwargs)
         except Exception as e:
             self.set_node_state(node, 'bad')
             logging.warning(e)
