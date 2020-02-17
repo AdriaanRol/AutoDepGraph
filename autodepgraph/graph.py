@@ -85,6 +85,9 @@ class AutoDepGraph_DAG(nx.DiGraph):
             'autodepgraph.node_functions.calibration_functions' +
             '.NotImplementedCalibration')
 
+        attr['calibrate_function_args'] = attr.get(
+            'calibrate_function_args', None)
+
         attr['check_function'] = attr.get(
             'check_function',
             'autodepgraph.node_functions.check_functions' +
@@ -253,8 +256,10 @@ class AutoDepGraph_DAG(nx.DiGraph):
         self.set_node_state(node, 'active')
 
         func = _get_function(self.nodes[node]['calibrate_function'])
+        func_args = self.nodes[node]['calibrate_function_args']
+
         try:
-            result = func()
+            result = func(**func_args)
         except Exception as e:
             self.set_node_state(node, 'bad')
             logging.warning(e)
@@ -303,7 +308,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
 
     def _generate_node_positions(self, node_positions={}):
         nodes=self.nodes()
-              
+
         def position_generator(N=10, centre=[0,5]):
             """ Generate circle of positions around centre """
             idx=0
@@ -312,11 +317,11 @@ class AutoDepGraph_DAG(nx.DiGraph):
                 pos = 2.1*np.array([np.cos(phi), np.sin(phi)]) + centre
                 yield pos
                 idx=idx+1
-                
-        positions=position_generator(len(nodes))                
+
+        positions=position_generator(len(nodes))
         pos=dict([ (node, node_positions.get(node, next(positions)) ) for node in nodes] )
-        return pos        
-        
+        return pos
+
     def draw_mpl(self, ax=None):
         if ax is None:
             f, ax = plt.subplots()
