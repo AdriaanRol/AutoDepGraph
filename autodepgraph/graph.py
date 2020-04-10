@@ -427,7 +427,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
         """
         if attribute in ['state']:
             raise Exception('please use get_state directly')
-        return self.node[node][attribute]
+        return self.nodes[node][attribute]
 
     def set_node_description(self, node, description):
         """ Set the node description field
