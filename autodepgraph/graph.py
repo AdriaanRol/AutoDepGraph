@@ -1,6 +1,7 @@
 import logging
 import numpy as np
 import types
+from typing import Dict, Any, List, Optional
 from datetime import datetime
 import matplotlib.pyplot as plt
 from os.path import join, split
@@ -24,9 +25,18 @@ except ImportError:
 
 
 class AutoDepGraph_DAG(nx.DiGraph):
-
-    node_states = ['good', 'needs calibration',
+    """
+    
+    Attributes:
+        node_states: Allowed states for the nodes
+        matplotlib_edge_properties: Properties passed to networkx plotting of edges
+        matplotlib_label_properties: Properties passed to networkx plotting of labels
+        
+    """
+    node_states : List[str] = ['good', 'needs calibration',
                          'bad', 'unknown', 'active']
+    matplotlib_edge_properties : Dict[str, Any] = {'edge_color': 'k', 'alpha': .8}
+    matplotlib_label_properties : Dict[str, Any] = {'font_color': 'k'}
 
     def __init__(self, name, cfg_plot_mode='svg',
                  incoming_graph_data=None, **attr):
@@ -56,9 +66,6 @@ class AutoDepGraph_DAG(nx.DiGraph):
         self._exec_cnt = 0
         self._calib_cnt = 0
         self._check_cnt = 0
-        
-        self.matplotlib_edge_properties = {'edge_color': 'k', 'alpha': .8}
-        self.matplotlib_label_properties = {'font_color': 'k'}
         
 
     def fresh_copy(self):
@@ -321,9 +328,11 @@ class AutoDepGraph_DAG(nx.DiGraph):
         plt.draw()
         plt.pause(.01)
 
-    def _generate_node_positions(self, node_positions : dict ={}):
+    def _generate_node_positions(self, node_positions : Optional[dict] = None):
         nodes=self.nodes()
-              
+
+        if node_positions is None:
+            node_positions = {}             
         def position_generator(N=10, centre=[0,5]):
             """ Generate circle of positions around centre """
             idx=0
@@ -353,9 +362,10 @@ class AutoDepGraph_DAG(nx.DiGraph):
         nx.draw_networkx_nodes(self, pos, ax=ax, node_color=colors_list)
         nx.draw_networkx_edges(self, pos, ax=ax, arrows=True, **self.matplotlib_edge_properties)
         nx.draw_networkx_labels(self, pos, ax=ax, **self.matplotlib_label_properties)
-        self._format_mpl_plot(ax)        
+        self._format_mpl_plot(ax)
 
-    def _format_mpl_plot(self, ax):
+    @staticmethod
+    def _format_mpl_plot(ax):
         """ Method to format the generated matplotlib figure """
         ax.set_xticks([])
         ax.set_yticks([])
