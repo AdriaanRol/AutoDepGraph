@@ -231,6 +231,14 @@ class AutoDepGraph_DAG(nx.DiGraph):
         return state
 
     def check_node(self, node, verbose=False):
+        """ Perform check method on specified node 
+
+        Args:
+            node: Node to check
+            verbose: Verbosity level
+        Returns:
+            Returns node state after the check
+        """
         if verbose:
             print('\tChecking node {}.'.format(node))
         self.set_node_state(node, 'active')
@@ -259,6 +267,14 @@ class AutoDepGraph_DAG(nx.DiGraph):
         return self.nodes[node]['state']
 
     def calibrate_node(self, node : str, verbose : bool =False):
+        """ Calibate specified node 
+
+        Args:
+            node: Node to calibration
+            verbose: Verbosity level
+        Returns:
+            Returns True if the calibration was succesfull, otherwise False
+        """
         if verbose:
             print('\tCalibrating node {}.'.format(node))
         self.set_node_state(node, 'active')
