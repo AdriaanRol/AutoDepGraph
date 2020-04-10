@@ -231,7 +231,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
         return state
 
     def check_node(self, node, verbose=False):
-        """ Perform check method on specified node 
+        """ Perform check method on specified node
 
         Args:
             node: Node to check
@@ -267,7 +267,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
         return self.nodes[node]['state']
 
     def calibrate_node(self, node : str, verbose : bool =False):
-        """ Calibate specified node 
+        """ Calibrate specified node
 
         Args:
             node: Node to calibration
