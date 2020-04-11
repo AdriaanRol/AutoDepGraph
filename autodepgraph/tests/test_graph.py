@@ -92,7 +92,7 @@ class Test_Graph(TestCase):
 
         cal_False = ('autodepgraph.node_functions.calibration_functions'
                      '.test_calibration_False')
-        test_graph.node['C']['calibrate_function'] = cal_False
+        test_graph.nodes['C']['calibrate_function'] = cal_False
 
         # Failure to calibrate should raise an error
         with self.assertRaises(ValueError):
