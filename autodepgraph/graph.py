@@ -303,7 +303,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
 
     def _generate_node_positions(self, node_positions={}):
         nodes=self.nodes()
-              
+
         def position_generator(N=10, centre=[0,5]):
             """ Generate circle of positions around centre """
             idx=0
@@ -312,11 +312,11 @@ class AutoDepGraph_DAG(nx.DiGraph):
                 pos = 2.1*np.array([np.cos(phi), np.sin(phi)]) + centre
                 yield pos
                 idx=idx+1
-                
-        positions=position_generator(len(nodes))                
+
+        positions=position_generator(len(nodes))
         pos=dict([ (node, node_positions.get(node, next(positions)) ) for node in nodes] )
-        return pos        
-        
+        return pos
+
     def draw_mpl(self, ax=None):
         if ax is None:
             f, ax = plt.subplots()
@@ -390,7 +390,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
         """
         if attribute in ['state']:
             raise Exception('please use get_state directly')
-        return self.node[node][attribute]
+        return self.nodes[node][attribute]
 
     def set_node_description(self, node, description):
         """ Set the node description field
@@ -403,7 +403,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
 
     def calibration_state(self):
         """ Return dictionary with current calibration state """
-        return dict(self.node)
+        return dict(self.nodes)
 
     def _update_drawing_attrs(self):
         for node_name, node_attrs in self.nodes(True):
