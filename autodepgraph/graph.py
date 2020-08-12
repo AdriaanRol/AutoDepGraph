@@ -26,12 +26,12 @@ except ImportError:
 
 class AutoDepGraph_DAG(nx.DiGraph):
     """
-    
+
     Attributes:
         node_states: Allowed states for the nodes
         matplotlib_edge_properties: Properties passed to networkx plotting of edges
         matplotlib_label_properties: Properties passed to networkx plotting of labels
-        
+
     """
     node_states : List[str] = ['good', 'needs calibration',
                          'bad', 'unknown', 'active']
@@ -52,9 +52,6 @@ class AutoDepGraph_DAG(nx.DiGraph):
         self.cfg_plot_mode = cfg_plot_mode
         self.cfg_plot_mode_args = {'fig': None}
 
-        _path_name = split(__file__)[:-1][0]
-        self.cfg_svg_filename = join(_path_name, 'svg_viewer', 'adg_graph.svg')
-
         super().__init__(incoming_graph_data, **attr)
 
         # internal attributes
@@ -66,7 +63,15 @@ class AutoDepGraph_DAG(nx.DiGraph):
         self._exec_cnt = 0
         self._calib_cnt = 0
         self._check_cnt = 0
-        
+
+
+    @property
+    def cfg_svg_filename(self):
+        """
+        Default location for storing svg based visualizations of the DAG.
+        """
+        _path_name = split(__file__)[:-1][0]
+        return join(_path_name, 'svg_viewer', 'adg_graph.svg')
 
     def fresh_copy(self):
         return AutoDepGraph_DAG(name=self.name,
@@ -95,9 +100,6 @@ class AutoDepGraph_DAG(nx.DiGraph):
             'calibrate_function',
             'autodepgraph.node_functions.calibration_functions' +
             '.NotImplementedCalibration')
-
-        attr.setdefault('calibrate_function_kwargs', {})
-            'calibrate_function_kwargs', {})
 
         attr['check_function'] = attr.get(
             'check_function',
@@ -283,10 +285,8 @@ class AutoDepGraph_DAG(nx.DiGraph):
         self.set_node_state(node, 'active')
 
         func = _get_function(self.nodes[node]['calibrate_function'])
-        func_kwargs = self.nodes[node]['calibrate_function_kwargs']
-
         try:
-            result = func(**func_kwargs)
+            result = func()
         except Exception as e:
             self.set_node_state(node, 'bad')
             logging.warning(e)
@@ -311,8 +311,6 @@ class AutoDepGraph_DAG(nx.DiGraph):
     def update_monitor(self):
         if self.cfg_plot_mode == 'matplotlib':
             self.update_monitor_mpl()
-        # elif self.cfg_plot_mode == 'pyqtgraph':
-        #     self.draw_pg()
         elif self.cfg_plot_mode == 'svg':
             self.draw_svg()
         elif self.cfg_plot_mode is None or self.cfg_plot_mode == 'None':
@@ -337,8 +335,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
         nodes=self.nodes()
 
         if node_positions is None:
-            node_positions = {}             
-
+            node_positions = {}
         def position_generator(N=10, centre=[0,5]):
             """ Generate circle of positions around centre """
             idx=0
@@ -350,9 +347,8 @@ class AutoDepGraph_DAG(nx.DiGraph):
 
         positions=position_generator(len(nodes))
         pos=dict([ (node, node_positions.get(node, next(positions)) ) for node in nodes] )
-        return pos        
-        
- 
+        return pos
+
     def draw_mpl(self, ax=None):
         if ax is None:
             f, ax = plt.subplots()
@@ -375,17 +371,6 @@ class AutoDepGraph_DAG(nx.DiGraph):
         """ Method to format the generated matplotlib figure """
         ax.set_xticks([])
         ax.set_yticks([])
-
-    # def draw_pg(self, DiGraphWindow=None):
-    #     """
-    #     draws the graph using an interactive pyqtgraph window
-    #     """
-    #     if DiGraphWindow is None:
-    #         DiGraphWindow = self._DiGraphWindow
-    #     self._DiGraphWindow = vis.draw_graph_pyqt(
-    #         self, DiGraphWindow=DiGraphWindow,
-    #         window_title=self.name)
-    #     return self._DiGraphWindow
 
     def draw_svg(self, filename: str=None):
         """
@@ -446,7 +431,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
 
     def calibration_state(self):
         """ Return dictionary with current calibration state """
-        return dict(self.node)
+        return dict(self.nodes)
 
     def _update_drawing_attrs(self):
         for node_name, node_attrs in self.nodes(True):
