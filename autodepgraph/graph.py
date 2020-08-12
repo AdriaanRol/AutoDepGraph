@@ -96,7 +96,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
             'autodepgraph.node_functions.calibration_functions' +
             '.NotImplementedCalibration')
 
-        attr['calibrate_function_kwargs'] = attr.get(
+        attr.setdefault('calibrate_function_kwargs', {})
             'calibrate_function_kwargs', {})
 
         attr['check_function'] = attr.get(
