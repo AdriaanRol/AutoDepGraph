@@ -42,9 +42,6 @@ class AutoDepGraph_DAG(nx.DiGraph):
         self.cfg_plot_mode = cfg_plot_mode
         self.cfg_plot_mode_args = {'fig': None}
 
-        _path_name = split(__file__)[:-1][0]
-        self.cfg_svg_filename = join(_path_name, 'svg_viewer', 'adg_graph.svg')
-
         super().__init__(incoming_graph_data, **attr)
 
         # internal attributes
@@ -56,6 +53,14 @@ class AutoDepGraph_DAG(nx.DiGraph):
         self._exec_cnt = 0
         self._calib_cnt = 0
         self._check_cnt = 0
+
+    @property
+    def cfg_svg_filename(self):
+        """
+        Default location for storing svg based visualizations of the DAG.
+        """
+        _path_name = split(__file__)[:-1][0]
+        return join(_path_name, 'svg_viewer', 'adg_graph.svg')
 
     def fresh_copy(self):
         return AutoDepGraph_DAG(name=self.name,
@@ -279,8 +284,6 @@ class AutoDepGraph_DAG(nx.DiGraph):
     def update_monitor(self):
         if self.cfg_plot_mode == 'matplotlib':
             self.update_monitor_mpl()
-        # elif self.cfg_plot_mode == 'pyqtgraph':
-        #     self.draw_pg()
         elif self.cfg_plot_mode == 'svg':
             self.draw_svg()
         elif self.cfg_plot_mode is None or self.cfg_plot_mode == 'None':
@@ -332,17 +335,6 @@ class AutoDepGraph_DAG(nx.DiGraph):
         nx.draw_networkx_nodes(self, pos, ax=ax, node_color=colors_list)
         nx.draw_networkx_edges(self, pos, ax=ax, arrows=True)
         nx.draw_networkx_labels(self, pos, ax=ax)
-
-    # def draw_pg(self, DiGraphWindow=None):
-    #     """
-    #     draws the graph using an interactive pyqtgraph window
-    #     """
-    #     if DiGraphWindow is None:
-    #         DiGraphWindow = self._DiGraphWindow
-    #     self._DiGraphWindow = vis.draw_graph_pyqt(
-    #         self, DiGraphWindow=DiGraphWindow,
-    #         window_title=self.name)
-    #     return self._DiGraphWindow
 
     def draw_svg(self, filename: str=None):
         """
