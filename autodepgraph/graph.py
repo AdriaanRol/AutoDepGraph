@@ -151,7 +151,8 @@ class AutoDepGraph_DAG(nx.DiGraph):
         return self.nodes[node_name]['state']
 
     def set_node_state(self, node_name, state, update_monitor=True):
-        assert state in self.node_states
+        if state not in self.node_states:
+            raise IndexError(f'state {state} not in {self.node_states}')
         self.nodes[node_name]['state'] = state
         self.nodes[node_name]['last_update'] = datetime.now()
         if update_monitor:
