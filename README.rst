@@ -13,8 +13,8 @@ AutoDepGraph
 .. image:: https://gitlab.com/AdriaanRol/AutoDepGraph/badges/develop/coverage.svg
     :target: https://gitlab.com/AdriaanRol/AutoDepGraph/pipelines/
 
-.. image:: https://readthedocs.com/projects/autodepgraph/badge/?version=latest
-    :target: https://autodepgraph.readthedocs-hosted.org/en/latest/?badge=latest
+.. image:: https://readthedocs.org/projects/autodepgraph/badge/?version=latest
+    :target: https://autodepgraph.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 .. image:: https://img.shields.io/badge/License-MIT-blue.svg
     :target: https://gitlab.com/AdriaanRol/AutoDepGraph/-/blob/master/LICENSE
