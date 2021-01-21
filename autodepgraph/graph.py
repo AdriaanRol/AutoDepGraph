@@ -162,7 +162,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
         else:
             return False
 
-    def maintain_node(self, node, verbose=True):
+    def maintain_node(self, node : str, verbose=True) -> str:
         """
         Maintaining a node attempts to go from any state to a good state.
             any_state -> good
@@ -175,6 +175,11 @@ class AutoDepGraph_DAG(nx.DiGraph):
             2. perform the "check" experiment on the node itself. This quick
                check
             3. Perform calibration and second round of maintaining dependencies
+            
+        Returns:
+            State of the node after maintaining the node
+        Raises:
+            Exception if the node could not be calibrated
         """
         self._exec_cnt += 1
         if verbose:
