@@ -91,6 +91,7 @@ flake8:
 run:
   stage: Test
   script:
+    - apt install -y graphviz graphviz-dev
     - python setup.py bdist_wheel
     # an alternative approach is to install and run:
     - pip install dist/*
