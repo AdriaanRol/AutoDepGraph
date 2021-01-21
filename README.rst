@@ -62,16 +62,10 @@ A Graph is a container of nodes, it is used for:
     - if a node has no calibrate function defined it is a manual node and has a hexagonal instead of a circle as symbol
     - mouseover information lists more properties (planned)
 
-![Example calibration graph](docs/example_graph.png)
+.. image:: /docs/example_graph.png
+    :alt: Example calibration graph
 
 Examples
 ================
 
 For an introductory example see the example notebook. If you want to see how to use a specific function, see the tests located in the autodepgraph/tests folder.
-
-
-
-Acknowledgements
-================================
-
-I would like to thank Julian Kelly for the idea of using a dependency graph for calibrations and for early discussions. I would like to thank Joe Weston for discussions and help in working out the initial design. I would like to acknowledge Livio Ciorciaro for disucssions and as a coauthor of this project.
