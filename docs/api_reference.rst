@@ -1,0 +1,6 @@
+
+autodepgraph
+=============
+
+.. automodule:: autodepgraph
+   :members:

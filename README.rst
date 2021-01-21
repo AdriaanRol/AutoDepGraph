@@ -1,16 +1,32 @@
+================
 AutoDepGraph
 ================
 
-[![PyPI](https://img.shields.io/pypi/v/autodepgraph.svg)](https://pypi.python.org/pypi/autodepgraph)
-[![Build Status](https://travis-ci.org/AdriaanRol/AutoDepGraph.svg?branch=master)](https://travis-ci.org/AdriaanRol/AutoDepGraph)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/ae46c58617ff45df9ac98446b3dc34ac)](https://www.codacy.com/app/adriaan-rol/AutoDepGraph?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=AdriaanRol/AutoDepGraph&amp;utm_campaign=Badge_Grade)
-[![Coverage Status](https://coveralls.io/repos/github/AdriaanRol/AutoDepGraph/badge.svg?branch=master)](https://coveralls.io/github/AdriaanRol/AutoDepGraph?branch=master)
-[![DOI](https://zenodo.org/badge/85987885.svg)](https://zenodo.org/badge/latestdoi/85987885)
 
-AutoDepGraph is a framework for using dependency graphs to calibrate a system. It is heavily inspired by ["Physical qubit calibration on a directed acyclic graph"](https://arxiv.org/abs/1803.03226).
+.. image:: https://gitlab.com/AdriaanRol/AutoDepGraph/badges/develop/pipeline.svg
+    :target: https://gitlab.com/AdriaanRol/AutoDepGraph/pipelines/
+
+.. image:: https://img.shields.io/pypi/v/autodepgraph.svg
+    :target: https://pypi.python.org/pypi/autodepgraph
+    :alt: PyPI
+
+.. image:: https://gitlab.com/AdriaanRol/AutoDepGraph/badges/develop/coverage.svg
+    :target: https://gitlab.com/AdriaanRol/AutoDepGraph/pipelines/
+
+.. image:: https://readthedocs.com/projects/autodepgraph/badge/?version=latest
+    :target: https://autodepgraph.readthedocs-hosted.org/en/latest/?badge=latest
+    :alt: Documentation Status
+.. image:: https://img.shields.io/badge/License-MIT-blue.svg
+    :target: https://gitlab.com/AdriaanRol/AutoDepGraph/-/blob/master/LICENSE
+.. image:: https://zenodo.org/badge/85987885.svg
+    :target: https://zenodo.org/badge/latestdoi/85987885
+    :alt: DOI
+
+
+AutoDepGraph is a framework for using dependency graphs to calibrate a system. It is inspired by `"Physical qubit calibration on a directed acyclic graph" <https://arxiv.org/abs/1803.03226>`_.
 
 Overview
-------------
+================
 
 AutoDepGraph consists of two main classes, the CalibrationNode and the Graph.
 Calibration is done by calling a node that one wants to execute, the node contains the logic required to satisfy the nodes it depends on (parents).
@@ -49,33 +65,13 @@ A Graph is a container of nodes, it is used for:
 ![Example calibration graph](docs/example_graph.png)
 
 Examples
-------------
+================
+
 For an introductory example see the example notebook. If you want to see how to use a specific function, see the tests located in the autodepgraph/tests folder.
 
-Installation
-------------------
-- Clone the repository
-- install the [requirements](requirements.txt)
-- navigate to the repository and run `pip install -e .`
-- verify success of installation by running `py.test`
 
-N.B. windows can be "problematic"
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Installation on windows is a bit more difficult, this relates mostly to the installation of pygraphviz. To install graphviz and pygraphviz on windows follow these steps:
-
-- get the 64 bit version of ![graphviz for windows](https://github.com/mahkoCosmo/GraphViz_x64/), copy it to e.g., program files and add the bin folder to the system path.
-- the 64 bit version lacks the libxml2.dll, you most likely have this from some other program. You can find this by searching for `libxml2.dll` in the program files folder. After that just copy paste it to the bin folder of graphviz.
-- get pygraphviz by downloading the master from github.
-- Now you will need to edit pygraphviz/graphviz.i and pygraphviz/graphviz_wrap.c according to the changes at https://github.com/Kagami/pygraphviz/tree/py3-windows-iobase. A reference can be found in the _install folder
-- Next install using
-```
-python setup.py install --include-path="C:\Program Files\graphviz-2.38_x64\include" --library-path="C:\Program Files\graphviz-2.38_x64\lib"
-```
-
-- then install autodepgraph and test the installation using `py.test`
 
 Acknowledgements
----------------------
+================================
 
 I would like to thank Julian Kelly for the idea of using a dependency graph for calibrations and for early discussions. I would like to thank Joe Weston for discussions and help in working out the initial design. I would like to acknowledge Livio Ciorciaro for disucssions and as a coauthor of this project.
