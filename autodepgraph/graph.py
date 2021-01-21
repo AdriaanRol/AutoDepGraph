@@ -236,7 +236,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
         return state
 
     def check_node(self, node, verbose=False):
-        """ Perform check method on specified node 
+        """ Perform check method on specified node
 
         Args:
             node: Node to check
@@ -272,7 +272,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
         return self.nodes[node]['state']
 
     def calibrate_node(self, node : str, verbose : bool =False):
-        """ Calibate specified node 
+        """ Calibrate specified node
 
         Args:
             node: Node to calibration
@@ -432,7 +432,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
         """
         if attribute in ['state']:
             raise Exception('please use get_state directly')
-        return self.node[node][attribute]
+        return self.nodes[node][attribute]
 
     def set_node_description(self, node, description):
         """ Set the node description field
