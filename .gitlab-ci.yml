@@ -41,6 +41,7 @@ stages:
 test:
   stage: Test
   script:
+    - apt install -y graphviz graphviz-dev
     - pip install -e .
     - pip install -r requirements_dev.txt
     - xvfb-run py.test -s --cov=autodepgraph --cov-report xml --cov-report html --cov-report term --cov-config=.coveragerc --color=yes
