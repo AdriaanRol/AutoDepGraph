@@ -2,6 +2,7 @@ numpy
 PyYAML
 networkx>=2.1
 matplotlib
+pytools
 pygraphviz
 pytest
 jsonschema

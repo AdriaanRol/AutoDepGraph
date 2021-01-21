@@ -1,4 +1,5 @@
-# AutoDepGraph
+AutoDepGraph
+================
 
 [![PyPI](https://img.shields.io/pypi/v/autodepgraph.svg)](https://pypi.python.org/pypi/autodepgraph)
 [![Build Status](https://travis-ci.org/AdriaanRol/AutoDepGraph.svg?branch=master)](https://travis-ci.org/AdriaanRol/AutoDepGraph)
@@ -8,7 +9,9 @@
 
 AutoDepGraph is a framework for using dependency graphs to calibrate a system. It is heavily inspired by ["Physical qubit calibration on a directed acyclic graph"](https://arxiv.org/abs/1803.03226).
 
-## Overview
+Overview
+------------
+
 AutoDepGraph consists of two main classes, the CalibrationNode and the Graph.
 Calibration is done by calling a node that one wants to execute, the node contains the logic required to satisfy the nodes it depends on (parents).
 
@@ -45,16 +48,20 @@ A Graph is a container of nodes, it is used for:
 
 ![Example calibration graph](docs/example_graph.png)
 
-## Examples
+Examples
+------------
 For an introductory example see the example notebook. If you want to see how to use a specific function, see the tests located in the autodepgraph/tests folder.
 
-## Installation
+Installation
+------------------
 - Clone the repository
 - install the [requirements](requirements.txt)
 - navigate to the repository and run `pip install -e .`
 - verify success of installation by running `py.test`
 
-#### N.B. windows can be "problematic"
+N.B. windows can be "problematic"
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 Installation on windows is a bit more difficult, this relates mostly to the installation of pygraphviz. To install graphviz and pygraphviz on windows follow these steps:
 
 - get the 64 bit version of ![graphviz for windows](https://github.com/mahkoCosmo/GraphViz_x64/), copy it to e.g., program files and add the bin folder to the system path.
@@ -68,5 +75,7 @@ python setup.py install --include-path="C:\Program Files\graphviz-2.38_x64\inclu
 
 - then install autodepgraph and test the installation using `py.test`
 
-## Acknowledgements
+Acknowledgements
+---------------------
+
 I would like to thank Julian Kelly for the idea of using a dependency graph for calibrations and for early discussions. I would like to thank Joe Weston for discussions and help in working out the initial design. I would like to acknowledge Livio Ciorciaro for disucssions and as a coauthor of this project.

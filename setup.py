@@ -18,9 +18,16 @@ def get_version(verbose=1):
     return version
 
 
-def readme():
-    with open('README.md') as f:
-        return f.read()
+with open('CHANGELOG.rst') as history_file:
+    history = history_file.read()
+
+
+with open('requirements.txt') as reqs:
+    requirements = reqs.read().splitlines()
+
+
+with open('README.rst') as readme_file:
+    readme = readme_file.read()
 
 
 def license():
@@ -28,19 +35,25 @@ def license():
         return f.read()
 
 
+setup_requirements = ['pytest-runner', 'wheel', ]
+
+test_requirements = ['pytest>=3',]
+
 setup(name='autodepgraph',
       version=get_version(),
-      description='automated tuning based on dependency graph',
-      long_description=readme(),
+      python_requires='>=3.7',
+      description='Framework for automated tuning based on a directed acyclic graph.',
+      long_description=readme + '\n\n' + history,
       long_description_content_type='text/markdown',
-      author='Adriaan Rol et al',
+      author='Adriaan Rol et al.',
       author_email='adriaan.rol@gmail.com',
       packages=find_packages(),
       ext_package='autodepgraph',
       license='MIT',
-      requires=["qcodes", "pytools",
-                "numpy", "pytest", "matplotlib"],
-      install_requires=['networkx>=2.0'],
+      install_requires=requirements,
+      setup_requires=setup_requirements,
+      test_suite='tests',
+      tests_require=test_requirements,
       keywords=['graph', 'calibration framework'],
       url='https://github.com/AdriaanRol/AutoDepGraph',
       classifiers=['Development Status :: 4 - Beta', 'Intended Audience :: Science/Research',
