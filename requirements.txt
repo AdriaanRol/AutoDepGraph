@@ -1,5 +1,5 @@
 numpy
-PyYAML==3.5.1 # Workaround for networkx issue 4548
+pyyaml==3.5.1
 networkx>=2.1
 matplotlib
 pytools

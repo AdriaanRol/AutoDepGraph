@@ -42,7 +42,7 @@ test_requirements = ['pytest>=3',]
 setup(name='autodepgraph',
       version=get_version(),
       python_requires='>=3.7',
-      description='Framework for automated tuning based on a directed acyclic graph.',
+      description='Framework for automated calibrations based on a directed acyclic graph.',
       long_description=readme + '\n\n' + history,
       long_description_content_type='text/markdown',
       author='Adriaan Rol et al.',
