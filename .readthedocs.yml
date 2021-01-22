@@ -18,6 +18,6 @@ python:
   install:
     - requirements: requirements_dev.txt
     - requirements: requirements.txt
-    - method: setuptools
+    - method: pip
       path: .
   system_packages: true

@@ -70,7 +70,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
         Default location for storing svg based visualizations of the DAG.
         """
         _path_name = split(__file__)[:-1][0]
-        return join(_path_name, 'adg_graph.svg')
+        return join(_path_name, 'svg_viewer', 'adg_graph.svg')
 
     def fresh_copy(self):
         return AutoDepGraph_DAG(name=self.name,

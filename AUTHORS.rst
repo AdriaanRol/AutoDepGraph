@@ -16,6 +16,7 @@ Contributors
 * Koen Martens
 * Niels Bultink
 * Jorge Marques
+* Kelvin Loh
 
 Acknowledgements
 -------------------

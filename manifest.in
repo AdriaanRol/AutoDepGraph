@@ -1,3 +1,5 @@
 include README.rst
+include autodepgraph/svg_viewer/svg_graph_viewer.html
+include autodepgraph/tests/test_data/three_qubit_graph.yaml
 include autodepgraph/svg_viewer/*
 include autodepgraph/tests/test_data/*
