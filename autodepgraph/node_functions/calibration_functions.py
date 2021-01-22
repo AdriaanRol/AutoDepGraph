@@ -26,4 +26,3 @@ def test_calibration_False():
 
 def NotImplementedCalibration():
     raise NotImplementedError('Calibration not implemented')
-

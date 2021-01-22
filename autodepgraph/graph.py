@@ -26,11 +26,14 @@ except ImportError:
 
 class AutoDepGraph_DAG(nx.DiGraph):
     """
-
     Attributes:
-        node_states: Allowed states for the nodes
-        matplotlib_edge_properties: Properties passed to networkx plotting of edges
-        matplotlib_label_properties: Properties passed to networkx plotting of labels
+    ---------------
+        node_states:
+            Allowed states for the nodes
+        matplotlib_edge_properties:
+            Properties passed to networkx plotting of edges
+        matplotlib_label_properties:
+            Properties passed to networkx plotting of labels
 
     """
     node_states: List[str] = ['good', 'needs calibration',

@@ -1,5 +1,4 @@
 import networkx as nx
-import numpy as np
 
 # Colormap used to map states to node colors
 state_cmap = {  # 'unknown': '#7f7f7f',            # middle gray
@@ -27,4 +26,3 @@ def draw_graph_svg(nxG, filename: str):
     """
     gvG = nx.nx_agraph.to_agraph(nxG)
     gvG.draw(filename, prog='dot')
-
