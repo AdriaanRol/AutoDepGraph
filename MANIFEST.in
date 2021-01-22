@@ -1,0 +1,3 @@
+include README.rst
+include autodepgraph/svg_viewer/svg_graph_viewer.html
+include autodepgraph/tests/test_data/*

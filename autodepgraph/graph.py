@@ -33,10 +33,10 @@ class AutoDepGraph_DAG(nx.DiGraph):
         matplotlib_label_properties: Properties passed to networkx plotting of labels
 
     """
-    node_states : List[str] = ['good', 'needs calibration',
-                         'bad', 'unknown', 'active']
-    matplotlib_edge_properties : Dict[str, Any] = {'edge_color': 'k', 'alpha': .8}
-    matplotlib_label_properties : Dict[str, Any] = {'font_color': 'k'}
+    node_states: List[str] = ['good', 'needs calibration',
+                              'bad', 'unknown', 'active']
+    matplotlib_edge_properties: Dict[str, Any] = {'edge_color': 'k', 'alpha': .8}
+    matplotlib_label_properties: Dict[str, Any] = {'font_color': 'k'}
 
     def __init__(self, name, cfg_plot_mode='svg',
                  incoming_graph_data=None, **attr):
@@ -63,7 +63,6 @@ class AutoDepGraph_DAG(nx.DiGraph):
         self._exec_cnt = 0
         self._calib_cnt = 0
         self._check_cnt = 0
-
 
     @property
     def cfg_svg_filename(self):
@@ -120,15 +119,15 @@ class AutoDepGraph_DAG(nx.DiGraph):
             self._construct_maintenance_method(node_name=n)
 
     def _construct_maintenance_method(self, node_name):
-            node_name_no_space = node_name.replace(' ', '_').replace('-', '_')
+        node_name_no_space = node_name.replace(' ', '_').replace('-', '_')
 
-            # This name exists so that text based storing falls back
-            # on the right placeholder function
-            def _construct_maintenance_method():
-                self.maintain_node(node_name)
+        # This name exists so that text based storing falls back
+        # on the right placeholder function
+        def _construct_maintenance_method():
+            self.maintain_node(node_name)
 
-            self.__setattr__('maintain_{}'.format(node_name_no_space),
-                             _construct_maintenance_method)
+        self.__setattr__('maintain_{}'.format(node_name_no_space),
+                         _construct_maintenance_method)
 
     def add_edge(self, u_of_edge, v_of_edge, **attr):
         """
@@ -168,7 +167,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
         else:
             return False
 
-    def maintain_node(self, node : str, verbose=True) -> str:
+    def maintain_node(self, node: str, verbose=True) -> str:
         """
         Maintaining a node attempts to go from any state to a good state.
             any_state -> good
@@ -181,7 +180,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
             2. perform the "check" experiment on the node itself. This quick
                check
             3. Perform calibration and second round of maintaining dependencies
-            
+
         Returns:
             State of the node after maintaining the node
         Raises:
@@ -277,7 +276,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
 
         return self.nodes[node]['state']
 
-    def calibrate_node(self, node : str, verbose : bool =False):
+    def calibrate_node(self, node: str, verbose: bool = False):
         """ Calibrate specified node
 
         Args:
@@ -337,22 +336,24 @@ class AutoDepGraph_DAG(nx.DiGraph):
         plt.draw()
         plt.pause(.01)
 
-    def _generate_node_positions(self, node_positions : Optional[dict] = None):
-        nodes=self.nodes()
+    def _generate_node_positions(self, node_positions: Optional[dict] = None):
+        nodes = self.nodes()
 
         if node_positions is None:
             node_positions = {}
-        def position_generator(N=10, centre=[0,5]):
+
+        def position_generator(N=10, centre=[0, 5]):
             """ Generate circle of positions around centre """
-            idx=0
+            idx = 0
             while True:
-                phi=2*np.pi*(idx/N)+np.pi/2
+                phi = 2*np.pi*(idx/N)+np.pi/2
                 pos = 2.1*np.array([np.cos(phi), np.sin(phi)]) + centre
                 yield pos
-                idx=idx+1
+                idx = idx+1
 
-        positions=position_generator(len(nodes))
-        pos=dict([ (node, node_positions.get(node, next(positions)) ) for node in nodes] )
+        positions = position_generator(len(nodes))
+        pos = dict([(node, node_positions.get(node, next(positions)))
+                    for node in nodes])
         return pos
 
     def draw_mpl(self, ax=None):
@@ -368,8 +369,10 @@ class AutoDepGraph_DAG(nx.DiGraph):
         else:
             pos = self._generate_node_positions(node_positions)
         nx.draw_networkx_nodes(self, pos, ax=ax, node_color=colors_list)
-        nx.draw_networkx_edges(self, pos, ax=ax, arrows=True, **self.matplotlib_edge_properties)
-        nx.draw_networkx_labels(self, pos, ax=ax, **self.matplotlib_label_properties)
+        nx.draw_networkx_edges(self, pos, ax=ax, arrows=True,
+                               **self.matplotlib_edge_properties)
+        nx.draw_networkx_labels(
+            self, pos, ax=ax, **self.matplotlib_label_properties)
         self._format_mpl_plot(ax)
 
     @staticmethod
@@ -378,7 +381,7 @@ class AutoDepGraph_DAG(nx.DiGraph):
         ax.set_xticks([])
         ax.set_yticks([])
 
-    def draw_svg(self, filename: str=None):
+    def draw_svg(self, filename: str = None):
         """
         """
         if filename is None:
@@ -388,14 +391,15 @@ class AutoDepGraph_DAG(nx.DiGraph):
 
     def open_html_viewer(self):
         """ Open html viewer for the file specified by the svg backend """
-        template = os.path.join(os.path.split(autodepgraph.__file__)[0], 'svg_viewer', 'svg_graph_viewer.html')
+        template = os.path.join(os.path.split(autodepgraph.__file__)[
+                                0], 'svg_viewer', 'svg_graph_viewer.html')
         with open(template, 'rt') as fid:
-            x=fid.read()
+            x = fid.read()
 
         base, file = os.path.split(self.cfg_svg_filename)
-        x=x.replace('adg_graph.svg', file)
+        x = x.replace('adg_graph.svg', file)
 
-        tfile=tempfile.mktemp(prefix='svgviewer-', suffix='.html', dir=base)
+        tfile = tempfile.mktemp(prefix='svgviewer-', suffix='.html', dir=base)
         with open(tfile, 'wt') as fid:
             fid.write(x)
         webbrowser.open_new_tab(tfile)
