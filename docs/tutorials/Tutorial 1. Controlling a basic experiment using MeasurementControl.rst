@@ -89,8 +89,8 @@ Graphviz based SVG drawing of the graph
 
     # The html page is located at the location specified by the url.
     # The page generated based on a template when the open_html_viewer command is called.
-    url = test_graph.open_html_viewer()
-    print(url)
+    # url = test_graph.open_html_viewer()
+    # print(url)
 
 Matplotlib drawing of the graph
 ------------------------------------
