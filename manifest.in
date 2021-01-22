@@ -1,2 +1,3 @@
 include README.rst
 include autodepgraph/svg_viewer/*
+include autodepgraph/tests/test_data/*

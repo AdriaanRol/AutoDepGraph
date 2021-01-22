@@ -8,6 +8,7 @@ Changelog
 * Set up sphinx documentation.
 * Improved error message for invalid node states.
 * Updated docstring for maintaining nodes.
+* Fixed a bug where the svg_viewer was not packaged making the pip installed version of this package not work.
 
 
 0.3.5 (2020-08-12)
