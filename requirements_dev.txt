@@ -17,5 +17,5 @@ twine==1.14.0
 pytest
 pytest-runner
 pytest-cov
-pygments==2.6.1
+pygments==2.7.4
 flake8-html
