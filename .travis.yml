@@ -5,10 +5,10 @@ notifications:
 cache: pip
 
 python:
-  - "3.6"
+  - "3.8"
 
 env:
-    - TRAVISCI=true PYTHON=3.6
+    - TRAVISCI=true PYTHON=3.8
 
 services:
   - xvfb
